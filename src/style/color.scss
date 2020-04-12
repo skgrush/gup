@@ -1,0 +1,26 @@
+$primary-light: rgb(59, 124, 41);
+$primary-dark: $primary-light;
+
+$secondary-light: black;
+$secondary-dark: white;
+
+$background-light: rgb(255, 255, 255);
+$background-dark: rgb(0, 0, 0);
+
+@mixin global {
+  :root {
+    color-scheme: light dark;
+
+    --primary-color: #{$primary-light};
+    --secondary-color: #{$secondary-light};
+    --background-color: #{$background-light};
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --primary-color: #{$primary-dark};
+      --secondary-color: #{$secondary-dark};
+      --background-color: #{$background-dark};
+    }
+  }
+}

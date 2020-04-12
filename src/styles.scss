@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+
+@use 'style/font';
+@use 'style/color';
+
+@include color.global;
+@include font.global;
+
+html {
+  @include font.family;
+  @include font.size;
+
+  color: var(--primary-color);
+  background: var(--background-color);
+}
