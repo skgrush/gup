@@ -2,9 +2,24 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.1.
 
+## `private` variables
+
+You'll need to define the file [`env.json`](env.json) as follows:
+
+```json
+{
+  "GOOGLE_CLIENT_ID": "<required>",
+  "GOOGLE_REDIRECT_URI": "<required>",
+  "AWS_ROLE_ARN": "<required>",
+  "GOOGLE_HD": "<optional>"
+}
+```
+
+Fields valued above as "<optional>" may be omitted and will be undefined in [`env.ts`](src/environments/env.ts).
+
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `npm start` for a ~~dev server~~ HTTP server. Navigate to `http://localhost:8080/`. The app will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 
