@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CognitoIdentity } from 'aws-sdk/clients/all';
+import * as CognitoIdentity from 'aws-sdk/clients/cognitoidentity';
 import { BehaviorSubject } from 'rxjs';
 
 import { IEnv, IEnvConfigService } from './env-config/env-config.interface';
