@@ -1,0 +1,29 @@
+form {
+  .sign-in-wrapper {
+    display: flex;
+    align-items: center;
+
+    & > span {
+      padding-right: 0.3em;
+    }
+
+    & > button {
+      display: flex;
+      align-items: center;
+
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 4px;
+
+      color: rgba(0, 0, 0, 0.54);
+      background-color: white;
+
+      img {
+        width: 18px;
+        height: 18px;
+      }
+
+      // span {}
+    }
+  }
+}

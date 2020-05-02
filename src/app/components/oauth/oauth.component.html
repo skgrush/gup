@@ -1,0 +1,33 @@
+<div>
+  <form *ngIf="ready" method="GET" [action]="oauthService.endpoint">
+    <div class="sign-in-wrapper">
+      <span>Sign in with </span>
+      <button>
+        <img *ngIf="oauthService.iconSrc" [src]="oauthService.iconSrc" />
+        <span>{{ oauthService.name }}</span>
+      </button>
+    </div>
+
+    <input type="hidden" name="client_id" [value]="oauthService.clientId" />
+    <input
+      type="hidden"
+      name="redirect_uri"
+      [value]="oauthService.redirectUri"
+    />
+    <input
+      type="hidden"
+      name="response_type"
+      [value]="oauthService.responseType"
+    />
+    <input type="hidden" name="scope" [value]="oauthService.scope" />
+    <input
+      *ngIf="oauthService.state"
+      type="hidden"
+      name="state"
+      [value]="oauthService.state"
+    />
+    <ng-container *ngFor="let tuple of additionalParams">
+      <input type="hidden" [name]="tuple[0]" [value]="tuple[1]" />
+    </ng-container>
+  </form>
+</div>
