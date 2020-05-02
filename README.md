@@ -11,7 +11,12 @@ You **must** provide all "<required:\*>" fields.
 {
   "awsRoleArn": "<required>",
   "awsIdentityRegion": "<required>",
-  "awsIdentityGuid": "<
+  "awsIdentityGuid": "<required>",
+  "awsIdentityPool": "<required>",
+  "awsUserPoolSuffix": "<required>",
+  "awsUserPool": "<required>",
+  "awsS3EndpointARN": "<required>",
+  "awsS3Prefix": "<required|\"\">",
   "oauth": {
     "provider": "cognito|google",
     "endpoint": "<required|optional>",
