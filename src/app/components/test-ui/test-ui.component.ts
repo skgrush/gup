@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OAuthProvider } from 'src/app/services/oauth/oauth-provider.interface';
-import { ApiAuthService } from 'src/app/services/api-auth.service';
-import { ApiService } from 'src/app/services/api.service';
+import { ApiAuthService } from 'src/app/services/api/api-auth.service';
+import { ApiService } from 'src/app/services/api/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { KeyStore } from 'src/app/classes/key-store';
 import { EnvConfigService } from 'src/app/services/env-config/env-config.service';

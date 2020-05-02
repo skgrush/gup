@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { OAuthProvider } from './oauth-provider.interface';
 import { KeyStore } from '../../classes/key-store';
 import { IEnvConfigService } from '../env-config/env-config.interface';
-import { ApiAuthService } from '../api-auth.service';
+import { ApiAuthService } from '../api/api-auth.service';
 import { AuthService } from '../auth.service';
 import { ReadyState } from '../../classes/readyable';
 

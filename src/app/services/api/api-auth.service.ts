@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import * as CognitoIdentity from 'aws-sdk/clients/cognitoidentity';
 import { BehaviorSubject } from 'rxjs';
 
-import { IEnv, IEnvConfigService } from './env-config/env-config.interface';
-import { Readyable, ReadyState } from '../classes/readyable';
-import { PromisifyAWS } from '../utils/aws-sdk-helpers';
+import { IEnv, IEnvConfigService } from '../env-config/env-config.interface';
+import { Readyable, ReadyState } from '../../classes/readyable';
+import { PromisifyAWS } from '../../utils/aws-sdk-helpers';
 
 @Injectable({
   providedIn: 'root',
