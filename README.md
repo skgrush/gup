@@ -2,20 +2,29 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.1.
 
-## `private` variables
+## Environment variables
 
-You'll need to define the file [`env.json`](env.json) as follows:
+You'll need to define the file [`env.json`](env.json) to set your specific variable values.
+You **must** provide all "<required:\*>" fields.
 
 ```json
 {
-  "GOOGLE_CLIENT_ID": "<required>",
-  "GOOGLE_REDIRECT_URI": "<required>",
-  "AWS_ROLE_ARN": "<required>",
+  "awsRoleArn": "<required>",
+  "awsIdentityRegion": "<required>",
+  "awsIdentityGuid": "<
+  "oauth": {
+    "provider": "cognito|google",
+    "endpoint": "<required|optional>",
+    "clientId": "<required>",
+    "redirectUri": "<required>"
+  },
   "GOOGLE_HD": "<optional>"
 }
 ```
 
-Fields valued above as "<optional>" may be omitted and will be undefined in [`env.ts`](src/environments/env.ts).
+This interface to match against is [`src/app/services/env-config/env-config.interface.ts`](src/app/services/env-config/env-config.interface.ts).
+
+**Google OAuth is not currently supported, but can be used through Cognito.**
 
 ## Development server
 
