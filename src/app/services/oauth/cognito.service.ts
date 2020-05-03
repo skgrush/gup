@@ -36,7 +36,6 @@ export class CognitoService extends OAuthProvider {
   // oauth parameters
   endpoint = '';
   clientId = '';
-  redirectUri = '';
   readonly responseType = 'token';
   readonly scope = 'email openid';
   readonly state = undefined;
@@ -66,15 +65,15 @@ export class CognitoService extends OAuthProvider {
     this._envConfig.env.subscribe((e) => {
       this.endpoint = e.oauth.endpoint;
       this.clientId = e.oauth.clientId;
-      this.redirectUri = e.oauth.redirectUri;
+      if (e.oauth.redirectUri) {
+        (this.redirectUri as any) = e.oauth.redirectUri;
+      }
       this._envPoolRegion = e.awsIdentityRegion;
       this._envUserPool = e.awsUserPool;
       this._envIdentityPool = e.awsIdentityPool;
 
       this.valid.next(
-        this.endpoint && this.clientId && this.redirectUri
-          ? ReadyState.Ready
-          : ReadyState.Failed
+        this.endpoint && this.clientId ? ReadyState.Ready : ReadyState.Failed
       );
       this.valid.complete();
     });
@@ -108,7 +107,6 @@ export class CognitoService extends OAuthProvider {
     this.approximateExpiration = new Date(Date.now() + expiresIn * 1e3);
     this._keyStore.idToken = params.id_token;
 
-    // cognito-idp.us-east-2.amazonaws.com/us-east-2_8M4Ux7UmM
     const provider = `cognito-idp.${this._envPoolRegion}.amazonaws.com/${this._envUserPool}`;
     const logins = {
       [provider]: this.oauthIdJWT,

@@ -55,7 +55,9 @@ export class EnvConfigService extends IEnvConfigService {
 
   validate(env: IEnv): Readonly<IEnv> {
     // validate awsRoleArn
-    if (!env.awsRoleArn?.match(_roleArnRE)) {
+    if (!env.awsRoleArn) {
+      env.awsRoleArn = undefined;
+    } else if (env.awsRoleArn.match(_roleArnRE)) {
       throw new EnvConfigValidationError(['awsRoleArn'], [env.awsRoleArn], '');
     }
 
@@ -67,9 +69,7 @@ export class EnvConfigService extends IEnvConfigService {
         ''
       );
     }
-    if (!env.awsIdentityPool) {
-      env.awsIdentityPool = `${env.awsIdentityRegion}:${env.awsIdentityGuid}`;
-    }
+    env.awsIdentityPool = `${env.awsIdentityRegion}:${env.awsIdentityGuid}`;
     if (!env.awsUserPoolSuffix) {
       throw new EnvConfigValidationError(
         ['awsUserPoolSuffix'],
@@ -85,8 +85,7 @@ export class EnvConfigService extends IEnvConfigService {
     if (
       !env.oauth ||
       !['cognito', 'google'].includes(env.oauth.provider) ||
-      !env.oauth.clientId?.length ||
-      !env.oauth.redirectUri?.length
+      !env.oauth.clientId?.length
     ) {
       throw new EnvConfigValidationError(['oauth'], [env.oauth], '');
     }
@@ -107,7 +106,7 @@ export class EnvConfigService extends IEnvConfigService {
         ''
       );
     }
-    if (typeof env.awsS3Prefix !== 'string') {
+    if (!['string', 'undefined'].includes(typeof env.awsS3Prefix)) {
       throw new EnvConfigValidationError(
         ['awsS3Prefix'],
         [env.awsS3Prefix],

@@ -18,9 +18,9 @@ export class ApiAuthService extends Readyable {
 
   readonly ReadyConditions = [this._envConfig, this._envValid];
 
-  get defaultRoleARN(): string {
+  get defaultRoleARN(): string | undefined {
     this.readyOrThrow();
-    return this._env?.awsRoleArn as string;
+    return this._env?.awsRoleArn;
   }
 
   get defaultIdentityPool(): string {
@@ -81,13 +81,13 @@ export class ApiAuthService extends Readyable {
 
   async getCredentialsFromLogins(
     identityPoolId: string,
-    logins: CognitoIdentity.LoginsMap
-    // roleARN?: string
+    logins: CognitoIdentity.LoginsMap,
+    roleARN?: string
   ) {
     // the following will check readiness
     const cognitoIdentity = this._cognitoIdentity ?? this.initCognito();
 
-    // roleARN = roleARN ?? this.defaultRoleARN;
+    roleARN = roleARN ?? this.defaultRoleARN ?? undefined;
 
     const getIdParams = {
       IdentityPoolId: identityPoolId,
@@ -106,7 +106,7 @@ export class ApiAuthService extends Readyable {
 
     const getCredentialsParams = {
       IdentityId,
-      // CustomRoleArn: roleARN,
+      CustomRoleArn: roleARN,
       Logins: logins,
     };
 

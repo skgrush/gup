@@ -17,7 +17,7 @@ export abstract class OAuthProvider extends Readyable {
   /** `client_id` parameter for the endpoint. */
   abstract readonly clientId: string;
   /** `redirect_uri` parameter for the endpoint.  */
-  readonly redirectUri = `${document.baseURI}?oauth`;
+  readonly redirectUri = `${document.baseURI}?path=/authed`;
 
   abstract readonly scope: string;
   abstract readonly state?: string;
