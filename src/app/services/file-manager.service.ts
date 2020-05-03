@@ -1,23 +1,20 @@
 import { Injectable } from '@angular/core';
 import { AWSError } from 'aws-sdk/global';
 
-import {
-  IFileEntity,
-  IFileEntityListed,
-  EntityState,
-  IFileEntityHeaded,
-} from '../interfaces/file-management';
+import { IFileEntity, EntityState } from '../interfaces/file-management';
 import { ApiService } from './api/api.service';
 import { IEnvConfigService, IEnv } from './env-config/env-config.interface';
-import { Readyable } from '../classes/readyable';
+import { Readyable, ReadyState } from '../classes/readyable';
 import * as S3 from 'aws-sdk/clients/s3';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FileManagerService extends Readyable {
-  protected readonly ReadyConditions = [this._envConfig];
-  readonly #store: IFileEntity[] = [];
+  private _envValid = new BehaviorSubject(ReadyState.Init);
+  protected readonly ReadyConditions = [this._envValid];
+  private readonly _store: IFileEntity[] = [];
   private _env!: Readonly<IEnv>;
   private _lastError?: Error;
 
@@ -28,7 +25,7 @@ export class FileManagerService extends Readyable {
   }
 
   get store(): ReadonlyArray<Readonly<IFileEntity>> {
-    return this.#store;
+    return this._store;
   }
 
   constructor(
@@ -37,7 +34,11 @@ export class FileManagerService extends Readyable {
   ) {
     super();
     this.readyInit();
-    this._envConfig.env.subscribe((env) => (this._env = env));
+    this._envConfig.env.subscribe((env) => {
+      this._envValid.next(ReadyState.Ready);
+      this._envValid.complete();
+      this._env = env;
+    });
   }
 
   async refresh() {
@@ -77,10 +78,10 @@ export class FileManagerService extends Readyable {
       throw new Error('listObjects response was missing Contents');
     }
 
-    this.#store.length = 0;
+    this._store.length = 0;
     for (const obj of listResponse.Contents) {
       const entity = this._processListObject(obj);
-      this.#store.push(entity);
+      this._store.push(entity);
       this._headEntity(entity);
     }
   }
@@ -89,11 +90,16 @@ export class FileManagerService extends Readyable {
     if (!obj.Key || !obj.ETag || obj.Size === undefined || !obj.LastModified) {
       console.warn('Missing a crucial key in obj:', obj);
     }
+    const lastModified =
+      typeof obj.LastModified !== 'string'
+        ? (obj.LastModified ?? new Date(-1)).toISOString()
+        : obj.LastModified;
+
     return {
       key: obj.Key ?? 'MISSING_KEY',
       eTag: obj.ETag ?? 'MISSING_ETAG',
       size: obj.Size ?? NaN,
-      lastModified: obj.LastModified ?? new Date(-1),
+      lastModified,
       entityState: EntityState.list,
     };
   }
@@ -109,10 +115,17 @@ export class FileManagerService extends Readyable {
     this._api.headObject(awsS3EndpointARN, ent.key).then((result) => {
       // add the new fields to the entity directly, unless it's already bee updated
       if (ent.entityState < EntityState.head) {
+        const redirectLocation = result.WebsiteRedirectLocation;
+        const contentType =
+          redirectLocation !== undefined
+            ? `redirect=${redirectLocation}`
+            : result.ContentType ?? '';
+
         Object.assign(ent, {
           entityState: EntityState.head,
-          contentType: result.ContentType ?? '',
+          contentType,
           uploader: result.Metadata?.uploader,
+          redirectLocation,
         });
       }
     });

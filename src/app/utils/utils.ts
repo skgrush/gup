@@ -5,3 +5,8 @@ export function urlSearchParamsObject<T extends any>(params: string): T {
   });
   return obj;
 }
+
+export function round(value: number, precision: number) {
+  const offset = 10 ** precision;
+  return Math.round((value + Number.EPSILON) * offset) / offset;
+}

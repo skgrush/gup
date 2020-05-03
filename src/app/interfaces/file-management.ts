@@ -9,7 +9,7 @@ export interface IFileEntityBase {
 
   eTag: string;
   key: string;
-  lastModified: Date;
+  lastModified: string;
   size: number;
 }
 
@@ -20,6 +20,7 @@ export interface IFileEntityListed extends IFileEntityBase {
 export interface IFileEntityHeaded extends IFileEntityBase {
   entityState: EntityState.head;
   contentType: string;
+  redirectLocation?: string;
   uploader?: string;
 }
 

@@ -21,8 +21,8 @@ export class EnvConfigService extends IEnvConfigService {
 
   constructor() {
     super();
-    this._load();
     this.readyInit();
+    this._load();
   }
 
   /**
@@ -48,6 +48,8 @@ export class EnvConfigService extends IEnvConfigService {
       }
     } else {
       console.error('load config failed:', resp);
+      this._envValid.next(ReadyState.Failed);
+      this._envValid.complete();
     }
 
     return resp.ok;

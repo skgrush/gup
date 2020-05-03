@@ -1,5 +1,5 @@
 import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 
 export class NotReadyError extends Error {
   readonly name = 'NotReadyError';
@@ -56,7 +56,9 @@ export abstract class Readyable {
    */
   static observeMultiple(...readyables: ReadyCondition[]) {
     const observables = readyables.map((r) =>
-      r instanceof Readyable ? r.observeReadyFinalize() : r
+      r instanceof Readyable
+        ? r.observeReadyFinalize()
+        : r.pipe(filter(readyStateFinalized))
     );
     return forkJoin(observables).pipe(
       map((states) => {
@@ -74,6 +76,7 @@ export abstract class Readyable {
    */
   readyInit() {
     this.observeReadyFinalize().subscribe((state) => {
+      console.debug('readyInit result:', state, this);
       if (!this.#ready.closed) {
         this.#ready.next(state);
         this.#ready.complete();
@@ -86,7 +89,6 @@ export abstract class Readyable {
    * Still make sure to check that it's actually ready!
    */
   observeReadyFinalize(): Observable<ReadyState.Failed | ReadyState.Ready> {
-    // return this._ready.pipe(filter(readyStateFinalized));
     return Readyable.observeMultiple(...this.ReadyConditions);
   }
 
