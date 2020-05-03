@@ -15,7 +15,7 @@ export function PromisifyAWS<MethodThisT, RetT, ErrT, ParamT>(
 ) {
   return new Promise<RetT>((resolve, reject) => {
     method.call(mThis, arg, (err, data) =>
-      data !== null ? resolve(data) : reject(err)
+      err !== null ? reject(err) : resolve(data)
     );
   });
 }

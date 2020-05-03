@@ -64,7 +64,7 @@ I chose to create an OAuth 2.0 provider using my existing Google API Project
 using [AWS's knowledge center article on setting up Google as a federated
 identity provider in an Amazon Cognito user pool](https://aws.amazon.com/premiumsupport/knowledge-center/cognito-google-social-identity-provider/),
 and set the callback URL to `$HOST/gup?path=authed`, where `$HOST` is the domain where this app is hosted.
-I then filled the file [`env.json`](./env.json) with the associated data from the User Pools "App integration" section: `oauth.provider` is set to `"cognito"`, `oauth.endpoint` set to the URL like `"$AUTH_DOMAIN/login"` from the "Domain name" page and `"clientId"` from yourClientId from "App client settings".
+I then filled the file [`env.json`](./env.json) with the associated data from the User Pools "App integration" section: `oauth.provider` is set to `"cognito"`, `oauth.endpoint` set to the URL like `"$AUTH_DOMAIN/login"` from the "Domain name" page, and `clientId` from yourClientId from "App client settings".
 Finally I set `awsUserPoolSuffix` to the last half of the User Pool ID from "General settings".
 
 Next I created a Cognito Identity Pool where the authentication provider is set to Cognito, with the user pool ID (including region!) and client ID from the aforementioned user pool.
@@ -150,8 +150,10 @@ Since we utilize S3's HTTP endpoints, our browsers _will_ care about CORS settin
     <AllowedMethod>DELETE</AllowedMethod>
     <!-- necessary for detecting redirect files -->
     <ExposeHeader>x-amz-website-redirect-location</ExposeHeader>
-    <!-- necessary for seeing  -->
+    <!-- necessary for seeing the uploader -->
     <ExposeHeader>x-amz-meta-uploader</ExposeHeader>
+    <!-- necessary for seeing the ETag -->
+    <ExposeHeader>ETag</ExposeHeader>
   </CORSRule>
 </CORSConfiguration>
 ```
