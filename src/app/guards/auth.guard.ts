@@ -66,19 +66,17 @@ export class AuthGuard extends Readyable implements CanActivate {
   async handleAuthedEndpoint(
     next: ActivatedRouteSnapshot
   ): Promise<false | UrlTree> {
-    console.debug('handleAuthedEndpoint:', next);
-
     const isToken = this.oauthService.responseType === 'token';
     const argVal = isToken
-      ? urlSearchParamsObject(next.fragment)
+      ? urlSearchParamsObject(document.location.hash.substring(1))
       : next.queryParamMap;
     const success = await this.oauthService.parseOAuthCallback(argVal);
 
     console.debug('handleAuthedEndpoint success =', success);
     if (success) {
+      document.location.hash = '';
       return this.router.createUrlTree(['']);
     } else {
-      next.fragment = '';
       return false;
     }
   }

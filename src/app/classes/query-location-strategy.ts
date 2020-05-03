@@ -1,4 +1,8 @@
 // tslint:disable:no-redundant-jsdoc
+/**
+ * Heavily based on (if not just copied-from and modified)
+ * https://gist.github.com/bergwerf/966ccd3ad851a70c4a56ebeb571adb77
+ */
 
 import { Injectable, Optional, Inject } from '@angular/core';
 import {
@@ -23,40 +27,40 @@ export class QueryLocationStrategy extends LocationStrategy {
 
   /**
    * @override
+   */
+  hash() {
+    return this._getHash();
+  }
+
+  /**
+   * @override
    * Get the current internal path from the browser's query param.
    *
    * @param includeHash - ignored, not relevant to query strat.
    */
   path(includeHash: boolean = false): string {
-    let p = this._getSearchParams().get(QueryLocationStrategy.pathQuery) ?? '';
-    if (includeHash) {
-      p += this._getHash();
-    }
-    console.debug('path', p);
-    return p;
+    return this._getSearchParams().get(QueryLocationStrategy.pathQuery) ?? '';
   }
 
   /**
    * @override
    *
-   * @param internalUrl
+   * @param internalPath
    */
-  prepareExternalUrl(internalPath: string, queryParams: string = ''): string {
-    const extParams = this._getSearchParams();
+  prepareExternalUrl(internalPath: string): string {
+    return this.externalUrl(internalPath);
+  }
 
-    // merge internal and external params
-    new URLSearchParams(queryParams).forEach((val, key) =>
-      extParams.set(key, val)
-    );
+  externalUrl(str: string, queryParams = ''): string {
+    const internalParams = new URLSearchParams(queryParams);
+    const externalParams = this._getSearchParams();
+    internalParams.forEach((value, key) => {
+      externalParams.set(key, value);
+    });
 
-    if (internalPath.length) {
-      extParams.set(QueryLocationStrategy.pathQuery, internalPath);
-    }
-
-    const stringParams = extParams.toString();
-    return stringParams.length > 0
-      ? `?${stringParams}${this._getHash()}`
-      : this._getHash();
+    const path = (!str ? '' : str.substring(1)).replace(/\//g, '_');
+    externalParams.set(QueryLocationStrategy.pathQuery, path);
+    return `?${externalParams}${this.hash()}`;
   }
 
   /**
@@ -71,7 +75,7 @@ export class QueryLocationStrategy extends LocationStrategy {
     this._platformLoc.pushState(
       state,
       title,
-      this.prepareExternalUrl(url, queryParams)
+      this.externalUrl(url, queryParams)
     );
   }
 
@@ -92,7 +96,7 @@ export class QueryLocationStrategy extends LocationStrategy {
     this._platformLoc.replaceState(
       state,
       title,
-      this.prepareExternalUrl(url, queryParams)
+      this.externalUrl(url, queryParams)
     );
   }
 
@@ -122,7 +126,6 @@ export class QueryLocationStrategy extends LocationStrategy {
    * @override
    */
   getBaseHref(): string {
-    // console.debug('getBaseHref', this._baseHref);
     return this._baseHref;
   }
 
@@ -130,7 +133,6 @@ export class QueryLocationStrategy extends LocationStrategy {
    * Gets the browser's URL hash string (# prefixed).
    */
   private _getHash(): string {
-    // console.debug('_getHash', this._platformLoc.hash);
     return this._platformLoc.hash;
   }
 
@@ -138,7 +140,6 @@ export class QueryLocationStrategy extends LocationStrategy {
    * Gets the browser's URL query parameters.
    */
   private _getSearchParams(): URLSearchParams {
-    // console.debug('_getSearchParams', this._platformLoc.search);
     return new URLSearchParams(this._platformLoc.search);
   }
 }
