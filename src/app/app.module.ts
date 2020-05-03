@@ -15,9 +15,22 @@ import { OAuthProviderPicker } from './services/oauth/oauth-provider-picker';
 import { KeyStore } from './classes/key-store';
 import { IEnvConfigService } from './services/env-config/env-config.interface';
 import { EnvConfigService } from './services/env-config/env-config.service';
+import { FileManagerComponent } from './components/file-manager/file-manager.component';
+import { FileListComponent } from './components/file-manager/file-list/file-list.component';
+import { FileRowComponent } from './components/file-manager/file-row/file-row.component';
+import { ByteFormatPipe } from './pipes/byte-format.pipe';
 
 @NgModule({
-  declarations: [AppComponent, OauthComponent, TestUiComponent, MainComponent],
+  declarations: [
+    AppComponent,
+    OauthComponent,
+    TestUiComponent,
+    MainComponent,
+    FileListComponent,
+    FileManagerComponent,
+    FileRowComponent,
+    ByteFormatPipe,
+  ],
   imports: [
     AppRoutingModule,
     BrowserModule,

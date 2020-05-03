@@ -1,0 +1,9 @@
+<div class="gup-file-manager-toolbar">
+  <button (click)="refresh()" [disabled]="!ready || loading">Refresh</button>
+</div>
+<div class="gup-file-manager-table-container">
+  <gup-file-list
+    [disabled]="!ready || loading"
+    [fileData]="fileManager.store"
+  ></gup-file-list>
+</div>

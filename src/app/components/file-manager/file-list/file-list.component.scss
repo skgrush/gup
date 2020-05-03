@@ -1,0 +1,7 @@
+:host {
+  display: flex;
+
+  & > table {
+    flex: auto;
+  }
+}

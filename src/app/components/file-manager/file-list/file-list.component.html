@@ -1,0 +1,15 @@
+<table>
+  <thead>
+    <tr>
+      <th *ngFor="let headerTup of headerEntries" [id]="headerTup[0]">
+        {{ headerTup[1] }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <gup-file-row
+      *ngFor="let file of fileData"
+      [fileEntity]="file"
+    ></gup-file-row>
+  </tbody>
+</table>
