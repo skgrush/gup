@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AWSError } from 'aws-sdk/global';
 
-import {
-  IFileEntity,
-  EntityState,
-  IFileEntityGot,
-} from '../interfaces/file-management';
+import { IFileEntity, EntityState } from '../interfaces/file-management';
 import { ApiService } from './api/api.service';
 import { IEnvConfigService, IEnv } from './env-config/env-config.interface';
 import { Readyable, ReadyState } from '../classes/readyable';
@@ -13,9 +8,11 @@ import * as S3 from 'aws-sdk/clients/s3';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from './auth.service';
 import { SortOrder } from '../enums/sort-order.enum';
+import { FEKeysMovable, FEKeys } from '../enums/file-entity-headers.enum';
 import { sortFactory } from '../utils/sort';
 
-export type SortField = keyof IFileEntityGot;
+export type SortField = typeof FEKeys[number];
+export type SortableColumn = typeof FEKeysMovable[number];
 export type StoreType = ReadonlyArray<Readonly<IFileEntity>>;
 
 @Injectable({
@@ -26,6 +23,7 @@ export class FileManagerService extends Readyable {
   protected readonly ReadyConditions = [this._envValid];
   private readonly _store: IFileEntity[] = [];
   private readonly _sortedStore = new BehaviorSubject([] as StoreType);
+  private readonly _columnOrder = new BehaviorSubject<SortableColumn[]>([]);
   private _env!: Readonly<IEnv>;
   private _lastError?: Error;
 
@@ -43,6 +41,10 @@ export class FileManagerService extends Readyable {
     return this._sortedStore.asObservable();
   }
 
+  get columnOrder() {
+    return this._columnOrder.asObservable();
+  }
+
   sortField: undefined | SortField = undefined;
   sortOrder: SortOrder = SortOrder.Ascending;
 
@@ -58,6 +60,8 @@ export class FileManagerService extends Readyable {
       this._envValid.complete();
       this._env = env;
     });
+
+    this._columnOrder.next([...FEKeysMovable]);
   }
 
   changeSort(key: SortField) {

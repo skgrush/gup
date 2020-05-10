@@ -3,14 +3,9 @@
   vertical-align: inherit;
   border: inherit;
 
-  & > td,
   & > th {
     white-space: nowrap;
     text-overflow: ellipsis;
     border: inherit;
-
-    &.align-right {
-      text-align: right;
-    }
   }
 }

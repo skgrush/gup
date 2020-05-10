@@ -8,6 +8,7 @@
     [disabled]="!ready || loading"
     [sortField]="fileManager.sortField"
     [sortOrder]="fileManager.sortOrder"
+    [columnOrder]="columnOrder"
     (changeSort)="fileManager.changeSort($event)"
   ></gup-file-list>
 </div>

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import {
   FileManagerService,
   StoreType,
+  SortableColumn,
 } from 'src/app/services/file-manager.service';
 import { IFileEntity } from 'src/app/interfaces/file-management';
 import { ReadyState } from 'src/app/classes/readyable';
@@ -17,6 +18,8 @@ export class FileManagerComponent implements OnInit {
   loading = true;
 
   sortedFiles: StoreType = [];
+
+  columnOrder = [] as SortableColumn[];
 
   constructor(readonly fileManager: FileManagerService) {
     console.debug(
@@ -38,6 +41,9 @@ export class FileManagerComponent implements OnInit {
     this.fileManager.sortedStore.subscribe((data) => {
       console.debug('received new sorted files');
       this.sortedFiles = data;
+    });
+    this.fileManager.columnOrder.subscribe((cols) => {
+      this.columnOrder = cols;
     });
   }
 

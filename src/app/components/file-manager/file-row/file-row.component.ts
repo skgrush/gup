@@ -1,9 +1,14 @@
-import { Component, OnInit, Input, HostBinding } from '@angular/core';
 import {
-  IFileEntity,
-  EntityState,
-  IFileEntityHeaded,
-} from 'src/app/interfaces/file-management';
+  Component,
+  OnInit,
+  Input,
+  HostBinding,
+  Injector,
+  SimpleChanges,
+} from '@angular/core';
+import { IFileEntity, EntityState } from 'src/app/interfaces/file-management';
+import { BaseFileCellComponent } from '../file-cell/base-file-cell.component';
+import { FILE_ENTITY } from 'src/app/tokens';
 
 @Component({
   selector: 'gup-file-row',
@@ -16,6 +21,9 @@ export class FileRowComponent implements OnInit {
   @Input()
   fileEntity?: IFileEntity;
 
+  @Input()
+  cellComponents!: Array<typeof BaseFileCellComponent>;
+
   @HostBinding('attr.data-key')
   get dataKey() {
     return this.fileEntity?.key;
@@ -27,19 +35,28 @@ export class FileRowComponent implements OnInit {
     }
   }
 
-  get contentType() {
-    if (this.fileEntity && this.fileEntity.entityState >= EntityState.head) {
-      return (this.fileEntity as IFileEntityHeaded).contentType;
-    }
+  readonly fileEntityInjector: Injector;
+
+  constructor(readonly injector: Injector) {
+    this.fileEntityInjector = Injector.create({
+      providers: [
+        {
+          provide: FILE_ENTITY,
+          useFactory: () => this.fileEntity,
+        },
+      ],
+      parent: injector,
+    });
   }
 
-  get uploader() {
-    if (this.fileEntity && this.fileEntity.entityState >= EntityState.head) {
-      return (this.fileEntity as IFileEntityHeaded).uploader;
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.fileEntity) {
+      console.debug('row fileEntity updated', this.fileEntity);
+    }
+    if (this.cellComponents) {
+      console.debug('row colComponents updated', this.cellComponents);
     }
   }
-
-  constructor() {}
 
   ngOnInit(): void {}
 }

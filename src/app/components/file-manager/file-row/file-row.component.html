@@ -1,17 +1,8 @@
-<th headers="file-col-key" scope="row" [title]="keyTitle">
+<th headers="file-col-key" role="cell" scope="row" [title]="keyTitle">
   {{ fileEntity?.key }}
 </th>
-<td headers="file-col-size" [title]="fileEntity?.size" class="align-right">
-  {{ fileEntity?.size | byteFormat }}
-</td>
-<td headers="file-col-contentType">
-  {{ contentType }}
-</td>
-<td headers="file-col-uploader">
-  {{ uploader }}
-</td>
-<td headers="file-col-lastModified" class="align-right">
-  <time *ngIf="fileEntity?.lastModified" [dateTime]="fileEntity?.lastModified">
-    {{ fileEntity?.lastModified | date }}
-  </time>
-</td>
+<ng-container *ngFor="let cellComponent of cellComponents">
+  <ng-container
+    *ngComponentOutlet="cellComponent; injector: fileEntityInjector"
+  ></ng-container>
+</ng-container>

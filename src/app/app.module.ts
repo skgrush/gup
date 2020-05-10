@@ -19,6 +19,10 @@ import { FileManagerComponent } from './components/file-manager/file-manager.com
 import { FileListComponent } from './components/file-manager/file-list/file-list.component';
 import { FileRowComponent } from './components/file-manager/file-row/file-row.component';
 import { ByteFormatPipe } from './pipes/byte-format.pipe';
+import { FileCellSizeComponent } from './components/file-manager/file-cell/file-cell-size.component';
+import { FileCellContenttypeComponent } from './components/file-manager/file-cell/file-cell-contenttype.component';
+import { FileCellLastmodifiedComponent } from './components/file-manager/file-cell/file-cell-lastmodified.component';
+import { FileCellUploaderComponent } from './components/file-manager/file-cell/file-cell-uploader.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +34,10 @@ import { ByteFormatPipe } from './pipes/byte-format.pipe';
     FileManagerComponent,
     FileRowComponent,
     ByteFormatPipe,
+    FileCellSizeComponent,
+    FileCellContenttypeComponent,
+    FileCellLastmodifiedComponent,
+    FileCellUploaderComponent,
   ],
   imports: [
     AppRoutingModule,

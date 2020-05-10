@@ -18,6 +18,7 @@
   <tbody>
     <gup-file-row
       *ngFor="let file of fileData"
+      [cellComponents]="cellComponents"
       [fileEntity]="file"
     ></gup-file-row>
   </tbody>

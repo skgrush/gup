@@ -6,6 +6,13 @@ export const FEKeys = Object.freeze([
   'lastModified',
 ] as const);
 
+export const FEKeysMovable = Object.freeze([
+  'size',
+  'contentType',
+  'uploader',
+  'lastModified',
+] as const);
+
 export enum FEHeaderId {
   key = 'file-col-key',
   size = 'file-col-size',
