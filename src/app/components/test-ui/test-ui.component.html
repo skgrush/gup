@@ -24,44 +24,13 @@
       </dd>
     </dl>
     <div>
-      <button (click)="authGetCredentials()">getCredentials()</button>
-      <aside>reloads credentials only if _credentials is set</aside>
-      <div *ngIf="getCredentialsResponse">
-        Response:
-        <code>{{ getCredentialsResponse }}</code>
-      </div>
+      <button (click)="authNoCredentials()">noCredentials()</button>
+      <aside>Calls noCredentialsCallback on the credentials.</aside>
     </div>
   </section>
 
   <section name="ApiAuthService">
     <h4>ApiAuthService</h4>
-    <!--
-    <div>
-      <button (click)="apiAuthAssumeRole(accessTokenI, roleNameI)">
-        assumeRole(accessToken, roleName)
-      </button>
-      <aside>Hit the AWS STS endpoint for AssumeRoleWithWebCredentials</aside>
-
-      <div>
-        <label for="accessToken-input">accessToken</label>
-        <input id="accessToken-input" #accessTokenI />
-      </div>
-      <div>
-        <label for="roleName-input">roleName</label>
-        <input
-          id="roleName-input"
-          #roleNameI
-          [placeholder]="apiAuth.defaultRoleARN"
-        />
-      </div>
-      <div *ngIf="assumeRoleResponse">
-        Response:
-        <label for="aRR-success">Success?</label>
-        <input type="checkbox" disabled [checked]="assumeRoleResponseSuccess" />
-        <code>{{ assumeRoleResponse }}</code>
-      </div>
-    </div>
-    -->
     <div>
       <button (click)="apiAuthGetId(providerI, tokenI, identityPoolI)">
         getId(identityPool, {{ "{" }} provider: token })

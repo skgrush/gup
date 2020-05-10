@@ -1,9 +1,13 @@
 <div class="gup-file-manager-toolbar">
   <button (click)="refresh()" [disabled]="!ready || loading">Refresh</button>
+  <div *ngIf="fileManager.errorMessage">{{ fileManager.errorMessage }}</div>
 </div>
 <div class="gup-file-manager-table-container">
   <gup-file-list
+    [fileData]="sortedFiles"
     [disabled]="!ready || loading"
-    [fileData]="fileManager.store"
+    [sortField]="fileManager.sortField"
+    [sortOrder]="fileManager.sortOrder"
+    (changeSort)="fileManager.changeSort($event)"
   ></gup-file-list>
 </div>

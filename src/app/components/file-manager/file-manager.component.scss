@@ -1,3 +1,10 @@
 :host {
   display: block;
+
+  & > .gup-file-manager-toolbar {
+  }
+
+  & > .gup-file-manager-table-container {
+    overflow-x: scroll;
+  }
 }

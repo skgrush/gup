@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
-import { FileManagerService } from 'src/app/services/file-manager.service';
+import {
+  FileManagerService,
+  StoreType,
+} from 'src/app/services/file-manager.service';
 import { IFileEntity } from 'src/app/interfaces/file-management';
 import { ReadyState } from 'src/app/classes/readyable';
 
@@ -12,6 +15,8 @@ import { ReadyState } from 'src/app/classes/readyable';
 export class FileManagerComponent implements OnInit {
   ready = false;
   loading = true;
+
+  sortedFiles: StoreType = [];
 
   constructor(readonly fileManager: FileManagerService) {
     console.debug(
@@ -29,6 +34,11 @@ export class FileManagerComponent implements OnInit {
         this.ready = state === ReadyState.Ready;
       });
     }
+
+    this.fileManager.sortedStore.subscribe((data) => {
+      console.debug('received new sorted files');
+      this.sortedFiles = data;
+    });
   }
 
   ngOnInit(): void {}

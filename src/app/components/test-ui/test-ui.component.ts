@@ -20,6 +20,7 @@ export class TestUiComponent implements OnInit {
     'idToken',
     'oauthState',
     'secretKey',
+    'expiredTime',
   ];
 
   readonly oauthProviderProps: Array<keyof OAuthProvider> = [
@@ -71,10 +72,8 @@ export class TestUiComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  authGetCredentials() {
-    this.auth
-      .getCredentials()
-      .then((res) => (this.getCredentialsResponse = JSON.stringify(res)));
+  authNoCredentials() {
+    this.auth.noCredentials();
   }
 
   keyStoreGet(key: keyof KeyStore) {
@@ -88,25 +87,6 @@ export class TestUiComponent implements OnInit {
   oauthProviderGet(key: keyof OAuthProvider) {
     return JSON.stringify(this.oauthProvider[key], null, 2);
   }
-
-  // apiAuthAssumeRole(
-  //   accessTokenI: HTMLInputElement,
-  //   roleNameI: HTMLInputElement
-  // ) {
-  //   const accessToken = accessTokenI.value;
-  //   const roleName = roleNameI.value || roleNameI.placeholder;
-  //
-  //   this.apiAuth
-  //     .assumeRole(accessToken, roleName)
-  //     .then((res) => {
-  //       this.assumeRoleResponse = JSON.stringify(res);
-  //       this.assumeRoleResponseSuccess = true;
-  //     })
-  //     .catch((reason) => {
-  //       this.assumeRoleResponse = JSON.stringify(reason);
-  //       this.assumeRoleResponseSuccess = false;
-  //     });
-  // }
 
   apiAuthGetId(
     loginProviderI: HTMLInputElement,

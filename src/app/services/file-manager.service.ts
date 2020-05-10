@@ -1,12 +1,22 @@
 import { Injectable } from '@angular/core';
 import { AWSError } from 'aws-sdk/global';
 
-import { IFileEntity, EntityState } from '../interfaces/file-management';
+import {
+  IFileEntity,
+  EntityState,
+  IFileEntityGot,
+} from '../interfaces/file-management';
 import { ApiService } from './api/api.service';
 import { IEnvConfigService, IEnv } from './env-config/env-config.interface';
 import { Readyable, ReadyState } from '../classes/readyable';
 import * as S3 from 'aws-sdk/clients/s3';
 import { BehaviorSubject } from 'rxjs';
+import { AuthService } from './auth.service';
+import { SortOrder } from '../enums/sort-order.enum';
+import { sortFactory } from '../utils/sort';
+
+export type SortField = keyof IFileEntityGot;
+export type StoreType = ReadonlyArray<Readonly<IFileEntity>>;
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +25,7 @@ export class FileManagerService extends Readyable {
   private _envValid = new BehaviorSubject(ReadyState.Init);
   protected readonly ReadyConditions = [this._envValid];
   private readonly _store: IFileEntity[] = [];
+  private readonly _sortedStore = new BehaviorSubject([] as StoreType);
   private _env!: Readonly<IEnv>;
   private _lastError?: Error;
 
@@ -24,13 +35,21 @@ export class FileManagerService extends Readyable {
     return this._lastError?.message;
   }
 
-  get store(): ReadonlyArray<Readonly<IFileEntity>> {
+  get store(): StoreType {
     return this._store;
   }
 
+  get sortedStore() {
+    return this._sortedStore.asObservable();
+  }
+
+  sortField: undefined | SortField = undefined;
+  sortOrder: SortOrder = SortOrder.Ascending;
+
   constructor(
     private readonly _api: ApiService,
-    private readonly _envConfig: IEnvConfigService
+    private readonly _envConfig: IEnvConfigService,
+    private readonly _auth: AuthService
   ) {
     super();
     this.readyInit();
@@ -39,6 +58,21 @@ export class FileManagerService extends Readyable {
       this._envValid.complete();
       this._env = env;
     });
+  }
+
+  changeSort(key: SortField) {
+    if (key === this.sortField) {
+      this.sortOrder = this.flipSortOrder();
+    } else {
+      this.sortField = key;
+    }
+    this._sortTheStore();
+  }
+
+  flipSortOrder() {
+    return this.sortOrder === SortOrder.Ascending
+      ? SortOrder.Descending
+      : SortOrder.Ascending;
   }
 
   async refresh() {
@@ -55,11 +89,27 @@ export class FileManagerService extends Readyable {
     } catch (exc) {
       // always store the error, but only rethrow unexpected non-AWSErrors.
       this._lastError = exc;
-      if (exc instanceof AWSError) {
-        console.error('listObjects failed with AWSError:', exc);
-      } else {
-        throw exc;
+      console.log('_lastError:', [exc]);
+      if (exc instanceof Error) {
+        if (['InvalidAccessKeyId', 'ExpiredToken'].includes(exc.name)) {
+          console.warn('Credentials expired with error', exc.name);
+          this._auth.noCredentials();
+        } else {
+          console.warn('Non-credentials-expired error');
+        }
       }
+      throw exc;
+    }
+  }
+
+  private _sortTheStore() {
+    const { sortField, sortOrder } = this;
+    console.debug('sorting the store on ', sortField, sortOrder);
+    if (!sortField) {
+      this._sortedStore.next([...this._store]);
+    } else {
+      const method = sortFactory(sortField, sortOrder);
+      this._sortedStore.next(this._store.sort(method));
     }
   }
 
@@ -84,6 +134,8 @@ export class FileManagerService extends Readyable {
       this._store.push(entity);
       this._headEntity(entity);
     }
+
+    this._sortTheStore();
   }
 
   private _processListObject(obj: S3.Object): IFileEntity {

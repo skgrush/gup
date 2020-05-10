@@ -1,7 +1,7 @@
 <th headers="file-col-key" scope="row" [title]="keyTitle">
   {{ fileEntity?.key }}
 </th>
-<td headers="file-col-size" [title]="fileEntity?.size">
+<td headers="file-col-size" [title]="fileEntity?.size" class="align-right">
   {{ fileEntity?.size | byteFormat }}
 </td>
 <td headers="file-col-contentType">
@@ -10,7 +10,7 @@
 <td headers="file-col-uploader">
   {{ uploader }}
 </td>
-<td headers="file-col-lastModified">
+<td headers="file-col-lastModified" class="align-right">
   <time *ngIf="fileEntity?.lastModified" [dateTime]="fileEntity?.lastModified">
     {{ fileEntity?.lastModified | date }}
   </time>

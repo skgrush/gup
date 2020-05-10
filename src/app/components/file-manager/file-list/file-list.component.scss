@@ -3,5 +3,45 @@
 
   & > table {
     flex: auto;
+
+    border-collapse: collapse;
+
+    & > thead,
+    & > tbody {
+      border-color: var(--secondary-color);
+      border-width: 1px;
+      border-style: solid;
+    }
+
+    & > thead > tr {
+      border: inherit;
+      & > th {
+        white-space: nowrap;
+        border: inherit;
+        border-width: 3px;
+        padding: 1px;
+        padding-left: 2ch;
+
+        cursor: pointer;
+
+        &::after {
+          content: " ";
+          display: inline-block;
+          line-height: 1;
+          width: 1ch;
+        }
+
+        &[data-sortorder="Ascending"] {
+          &::after {
+            content: "⇓";
+          }
+        }
+        &[data-sortorder="Descending"] {
+          &::after {
+            content: "⇑";
+          }
+        }
+      }
+    }
   }
 }

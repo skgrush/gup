@@ -1,8 +1,17 @@
 <table>
   <thead>
     <tr>
-      <th *ngFor="let headerTup of headerEntries" [id]="headerTup[0]">
-        {{ headerTup[1] }}
+      <th
+        *ngFor="let header of headerEntries"
+        [id]="header.headerId"
+        [attr.data-sortorder]="header.sortOrder"
+        [attr.aria-sort]="
+          header.sortOrder ? header.sortOrder?.toLowerCase() : 'none'
+        "
+        (click)="!disabled && changeSort.emit(header.key)"
+        role="columnheader"
+      >
+        {{ header.name }}
       </th>
     </tr>
   </thead>
