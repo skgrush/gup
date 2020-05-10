@@ -31,4 +31,17 @@ export abstract class OAuthProvider extends Readyable {
   abstract parseOAuthCallback(arg: any): Promise<boolean>;
 
   abstract generateNewState(): string | undefined;
+
+  navigateToProvider() {
+    const params = new URLSearchParams(this.additionalParams);
+    params.set('client_id', this.clientId);
+    params.set('redirect_uri', this.redirectUri);
+    params.set('response_type', this.responseType);
+    params.set('scope', this.scope);
+    if (this.state) {
+      params.set('state', this.state);
+    }
+
+    window.location.assign(`${this.endpoint}?${params}`);
+  }
 }

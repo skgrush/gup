@@ -78,6 +78,8 @@ export class CognitoService extends OAuthProvider {
       this.valid.complete();
     });
     this.readyInit();
+
+    this._auth.setNoCredentialsCallback(this.navigateToProvider.bind(this));
   }
 
   generateNewState() {
@@ -122,10 +124,11 @@ export class CognitoService extends OAuthProvider {
       return this._handleError('Error in getId/getCredentials:', exc);
     }
 
-    this._auth.update({
+    this._auth.addCredentials({
       accessKeyId: credentials.AccessKeyId,
-      secretKey: credentials.SecretKey,
+      secretAccessKey: credentials.SecretKey,
       sessionToken: credentials.SessionToken,
+      expireTime: credentials.Expiration,
     });
 
     console.debug('new credentials:', credentials);

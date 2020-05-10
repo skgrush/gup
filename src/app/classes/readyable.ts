@@ -76,7 +76,6 @@ export abstract class Readyable {
    */
   readyInit() {
     this.observeReadyFinalize().subscribe((state) => {
-      console.debug('readyInit result:', state, this);
       if (!this.#ready.closed) {
         this.#ready.next(state);
         this.#ready.complete();
