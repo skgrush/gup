@@ -1,7 +1,10 @@
 const _keys = Object.freeze({
+  // aws auth keys
   accessKeyId: 'gup:AWSAccessKeyId',
   secretKey: 'gup:Key',
   sessionToken: 'gup:sessionToken',
+  expiredTime: 'gup:expiryTime',
+  // oauth keys
   accessToken: 'gup:OAuthAccessToken',
   oauthState: 'gup:OAuthState',
 });
@@ -39,6 +42,20 @@ export class KeyStore {
   }
   set secretKey(value: string | null) {
     this._setter(_keys.secretKey, value);
+  }
+
+  /**
+   * AWS token expiration time
+   */
+  get expiredTime() {
+    const value = this._getter(_keys.expiredTime);
+    return value === null ? null : new Date(value);
+  }
+  set expiredTime(value: Date | null) {
+    this._setter(
+      _keys.expiredTime,
+      value === null ? null : value.toISOString()
+    );
   }
 
   /**
