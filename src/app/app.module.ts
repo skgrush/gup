@@ -23,6 +23,7 @@ import { FileCellSizeComponent } from './components/file-manager/file-cell/file-
 import { FileCellContenttypeComponent } from './components/file-manager/file-cell/file-cell-contenttype.component';
 import { FileCellLastmodifiedComponent } from './components/file-manager/file-cell/file-cell-lastmodified.component';
 import { FileCellUploaderComponent } from './components/file-manager/file-cell/file-cell-uploader.component';
+import { DraggableHeaderDirective } from './directives/draggable-header.directive';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { FileCellUploaderComponent } from './components/file-manager/file-cell/f
     FileCellContenttypeComponent,
     FileCellLastmodifiedComponent,
     FileCellUploaderComponent,
+    DraggableHeaderDirective,
   ],
   imports: [
     AppRoutingModule,

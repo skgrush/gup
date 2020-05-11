@@ -3,13 +3,17 @@
     <tr>
       <th
         *ngFor="let header of headerEntries"
+        role="columnheader"
         [id]="header.headerId"
-        [attr.data-sortorder]="header.sortOrder"
+        [attr.data-key]="header.key"
         [attr.aria-sort]="
           header.sortOrder ? header.sortOrder?.toLowerCase() : 'none'
         "
         (click)="!disabled && changeSort.emit(header.key)"
-        role="columnheader"
+        gupDraggableHeader
+        [draggable]="!disabled && header.draggable && allowColumnReordering"
+        [dragKey]="header.draggable ? header.key : undefined"
+        (moveHeaderFromTo)="moveHeaderFromTo.emit($event)"
       >
         {{ header.name }}
       </th>

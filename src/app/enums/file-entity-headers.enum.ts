@@ -5,13 +5,15 @@ export const FEKeys = Object.freeze([
   'uploader',
   'lastModified',
 ] as const);
+export type FEKeyType = typeof FEKeys[number];
 
-export const FEKeysMovable = Object.freeze([
+export const FEMovableKeys = Object.freeze([
   'size',
   'contentType',
   'uploader',
   'lastModified',
 ] as const);
+export type FEMovableKeyType = typeof FEMovableKeys[number];
 
 export enum FEHeaderId {
   key = 'file-col-key',

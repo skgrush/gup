@@ -1,12 +1,12 @@
-import { SortField } from 'src/app/services/file-manager.service';
 import { BaseFileCellComponent } from './base-file-cell.component';
 import { FileCellContenttypeComponent } from './file-cell-contenttype.component';
 import { FileCellLastmodifiedComponent } from './file-cell-lastmodified.component';
 import { FileCellSizeComponent } from './file-cell-size.component';
 import { FileCellUploaderComponent } from './file-cell-uploader.component';
+import { FEKeyType } from 'src/app/enums/file-entity-headers.enum';
 
 export function pickFileCellComponent(
-  key: SortField
+  key: FEKeyType
 ): typeof BaseFileCellComponent {
   switch (key) {
     case 'contentType':

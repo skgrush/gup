@@ -3,10 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import {
   FileManagerService,
   StoreType,
-  SortableColumn,
 } from 'src/app/services/file-manager.service';
-import { IFileEntity } from 'src/app/interfaces/file-management';
 import { ReadyState } from 'src/app/classes/readyable';
+import { FEMovableKeyType } from 'src/app/enums/file-entity-headers.enum';
 
 @Component({
   selector: 'gup-file-manager',
@@ -19,7 +18,7 @@ export class FileManagerComponent implements OnInit {
 
   sortedFiles: StoreType = [];
 
-  columnOrder = [] as SortableColumn[];
+  columnOrder = [] as FEMovableKeyType[];
 
   constructor(readonly fileManager: FileManagerService) {
     console.debug(

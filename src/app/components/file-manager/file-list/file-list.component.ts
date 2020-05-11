@@ -12,19 +12,18 @@ import { SortOrder } from 'src/app/enums/sort-order.enum';
 import {
   FEHeaderId,
   FEHeaderName,
+  FEMovableKeyType,
+  FEKeyType,
 } from 'src/app/enums/file-entity-headers.enum';
-import {
-  SortField,
-  SortableColumn,
-} from 'src/app/services/file-manager.service';
 import { BaseFileCellComponent } from '../file-cell/base-file-cell.component';
 import { pickFileCellComponent } from '../file-cell/pick-file-cell';
 
 interface IHeaderEntry {
   headerId: FEHeaderId;
   sortOrder: SortOrder | undefined;
+  draggable: boolean;
   name: FEHeaderName;
-  key: SortField;
+  key: FEKeyType;
 }
 
 @Component({
@@ -40,19 +39,24 @@ export class FileListComponent implements OnInit, OnChanges {
   disabled = false;
 
   @Input()
-  sortField?: SortField;
+  sortField?: FEKeyType;
 
   @Input()
   sortOrder: SortOrder = SortOrder.Ascending;
 
   @Input()
-  columnOrder: SortableColumn[] = [];
+  columnOrder: FEMovableKeyType[] = [];
 
   @Output()
-  changeSort = new EventEmitter<SortField>();
+  changeSort = new EventEmitter<FEKeyType>();
+
+  @Output()
+  moveHeaderFromTo = new EventEmitter<[FEMovableKeyType, FEMovableKeyType]>();
 
   cellComponents: Array<typeof BaseFileCellComponent>;
   headerEntries: IHeaderEntry[];
+
+  allowColumnReordering = true;
 
   constructor() {
     [this.cellComponents, this.headerEntries] = this._orderColumns();
@@ -78,6 +82,7 @@ export class FileListComponent implements OnInit, OnChanges {
         name: FEHeaderName[key],
         sortOrder,
         key,
+        draggable: key !== 'key',
       });
     }
     return entries;

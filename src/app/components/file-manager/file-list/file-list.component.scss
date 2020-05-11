@@ -20,23 +20,29 @@
         border: inherit;
         border-width: 3px;
         padding: 1px;
-        padding-left: 2ch;
+        padding-left: 1ch;
 
         cursor: pointer;
+        user-select: none;
+
+        &[draggable="true"] {
+          cursor: move;
+        }
 
         &::after {
           content: " ";
           display: inline-block;
           line-height: 1;
           width: 1ch;
+          margin-left: -1ch;
         }
 
-        &[data-sortorder="Ascending"] {
+        &[aria-sort="ascending"] {
           &::after {
             content: "⇓";
           }
         }
-        &[data-sortorder="Descending"] {
+        &[aria-sort="descending"] {
           &::after {
             content: "⇑";
           }

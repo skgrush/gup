@@ -8,10 +8,10 @@ function sorter<T>(key: string, posRet: number, negRet: number, a: T, b: T) {
     return 0;
   }
   if (aval === undefined) {
-    return -1;
+    return 1;
   }
   if (bval === undefined) {
-    return 1;
+    return -1;
   }
   if (aval < bval) {
     return negRet;

@@ -8,11 +8,13 @@ import * as S3 from 'aws-sdk/clients/s3';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from './auth.service';
 import { SortOrder } from '../enums/sort-order.enum';
-import { FEKeysMovable, FEKeys } from '../enums/file-entity-headers.enum';
+import {
+  FEMovableKeyType,
+  FEKeyType,
+  FEMovableKeys,
+} from '../enums/file-entity-headers.enum';
 import { sortFactory } from '../utils/sort';
 
-export type SortField = typeof FEKeys[number];
-export type SortableColumn = typeof FEKeysMovable[number];
 export type StoreType = ReadonlyArray<Readonly<IFileEntity>>;
 
 @Injectable({
@@ -23,7 +25,7 @@ export class FileManagerService extends Readyable {
   protected readonly ReadyConditions = [this._envValid];
   private readonly _store: IFileEntity[] = [];
   private readonly _sortedStore = new BehaviorSubject([] as StoreType);
-  private readonly _columnOrder = new BehaviorSubject<SortableColumn[]>([]);
+  private readonly _columnOrder = new BehaviorSubject<FEMovableKeyType[]>([]);
   private _env!: Readonly<IEnv>;
   private _lastError?: Error;
 
@@ -45,7 +47,7 @@ export class FileManagerService extends Readyable {
     return this._columnOrder.asObservable();
   }
 
-  sortField: undefined | SortField = undefined;
+  sortField: undefined | FEKeyType = undefined;
   sortOrder: SortOrder = SortOrder.Ascending;
 
   constructor(
@@ -61,10 +63,10 @@ export class FileManagerService extends Readyable {
       this._env = env;
     });
 
-    this._columnOrder.next([...FEKeysMovable]);
+    this._columnOrder.next([...FEMovableKeys]);
   }
 
-  changeSort(key: SortField) {
+  changeSort(key: FEKeyType) {
     if (key === this.sortField) {
       this.sortOrder = this.flipSortOrder();
     } else {
@@ -77,6 +79,18 @@ export class FileManagerService extends Readyable {
     return this.sortOrder === SortOrder.Ascending
       ? SortOrder.Descending
       : SortOrder.Ascending;
+  }
+
+  changeColumnOrder(key: FEMovableKeyType, destination: FEMovableKeyType) {
+    const currentOrder = [...this._columnOrder.value];
+    const oldIndex = currentOrder.indexOf(key);
+    const newIndex = currentOrder.indexOf(destination);
+
+    if (oldIndex >= 0 && newIndex >= 0) {
+      console.debug('changeColumnOrder', oldIndex, newIndex);
+      currentOrder.splice(newIndex, 0, currentOrder.splice(oldIndex, 1)[0]);
+      this._columnOrder.next(currentOrder);
+    }
   }
 
   async refresh() {
