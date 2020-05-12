@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
-import { AuthService } from './services/auth.service';
-import { LocationStrategy } from '@angular/common';
+import { Component, Inject } from '@angular/core';
+import { SHOW_DEBUG } from './tokens';
 
 @Component({
   selector: 'gup-root',
@@ -10,5 +9,5 @@ import { LocationStrategy } from '@angular/common';
 export class AppComponent {
   title = 'grushup';
 
-  constructor() {}
+  constructor(@Inject(SHOW_DEBUG) readonly showDebug: boolean) {}
 }

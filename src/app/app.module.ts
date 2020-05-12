@@ -24,6 +24,7 @@ import { FileCellContenttypeComponent } from './components/file-manager/file-cel
 import { FileCellLastmodifiedComponent } from './components/file-manager/file-cell/file-cell-lastmodified.component';
 import { FileCellUploaderComponent } from './components/file-manager/file-cell/file-cell-uploader.component';
 import { DraggableHeaderDirective } from './directives/draggable-header.directive';
+import { SHOW_DEBUG } from './tokens';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,10 @@ import { DraggableHeaderDirective } from './directives/draggable-header.directiv
     {
       provide: IEnvConfigService,
       useClass: EnvConfigService,
+    },
+    {
+      provide: SHOW_DEBUG,
+      useValue: false,
     },
   ],
   bootstrap: [AppComponent],
