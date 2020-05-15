@@ -20,6 +20,7 @@ export class AuthService {
     sts: '2011-06-15',
   });
   private readonly _keyStore = new KeyStore();
+  private _identity?: string;
   private _credentials: KeyStoreCredentials;
   private _credProvider: CredentialProviderChain;
 
@@ -27,7 +28,12 @@ export class AuthService {
     return this._credProvider.providers;
   }
 
+  get identity(): string | undefined {
+    return this._identity;
+  }
+
   constructor() {
+    this._identity = this._keyStore.identity ?? undefined;
     this._credentials = new KeyStoreCredentials(this._keyStore);
     this._credProvider = new CredentialProviderChain([() => this._credentials]);
 
@@ -51,6 +57,8 @@ export class AuthService {
       this.providerChain.unshift(credentials);
     } else {
       console.debug('Storing credentials info in KeyStore');
+      this._identity = credentials.identity;
+      this._keyStore.identity = credentials.identity ?? null;
       this._keyStore.accessKeyId = credentials.accessKeyId ?? null;
       this._keyStore.secretKey = credentials.secretAccessKey ?? null;
       this._keyStore.sessionToken = credentials.sessionToken ?? null;

@@ -47,7 +47,7 @@ export class FileManagerService extends Readyable {
     return this._columnOrder.asObservable();
   }
 
-  sortField: undefined | FEKeyType = undefined;
+  sortField: FEKeyType = 'key';
   sortOrder: SortOrder = SortOrder.Ascending;
 
   constructor(
@@ -93,7 +93,7 @@ export class FileManagerService extends Readyable {
     }
   }
 
-  async refresh() {
+  async refreshFileStore() {
     this.readyOrThrow();
     const { awsS3EndpointARN, awsS3Prefix } = this._env;
 

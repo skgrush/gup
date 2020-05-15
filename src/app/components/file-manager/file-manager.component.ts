@@ -53,6 +53,6 @@ export class FileManagerComponent implements OnInit {
       return;
     }
     this.loading = true;
-    this.fileManager.refresh().finally(() => (this.loading = false));
+    this.fileManager.refreshFileStore().finally(() => (this.loading = false));
   }
 }

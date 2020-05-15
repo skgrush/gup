@@ -48,7 +48,7 @@ export class CognitoService extends OAuthProvider {
 
   lastCallback?: EitherResponse;
 
-  oauthIdJWT?: string;
+  oauthIdJWT?: CognitoJwt;
   approximateExpiration?: Date;
 
   private _envPoolRegion = '';
@@ -107,11 +107,13 @@ export class CognitoService extends OAuthProvider {
 
     const expiresIn = +params.expires_in;
     this.approximateExpiration = new Date(Date.now() + expiresIn * 1e3);
-    this._keyStore.idToken = this.oauthIdJWT = params.id_token;
+    this._keyStore.idToken = params.id_token;
+
+    this.oauthIdJWT = this.updateIdToken(params.id_token);
 
     const provider = `cognito-idp.${this._envPoolRegion}.amazonaws.com/${this._envUserPool}`;
     const logins = {
-      [provider]: this.oauthIdJWT,
+      [provider]: this.oauthIdJWT.rawJWT,
     };
 
     let credentials: CognitoIdentity.Credentials;
@@ -125,6 +127,7 @@ export class CognitoService extends OAuthProvider {
     }
 
     this._auth.addCredentials({
+      identity: this.oauthIdJWT.email,
       accessKeyId: credentials.AccessKeyId,
       secretAccessKey: credentials.SecretKey,
       sessionToken: credentials.SessionToken,
@@ -135,13 +138,18 @@ export class CognitoService extends OAuthProvider {
   }
 
   /**
-   * Parse the current token.
+   * Parse the token, update and return `this.oauthIdJWT`.
    */
-  getParseToken() {
-    const token = this.oauthIdJWT ?? this._keyStore.idToken;
-    if (token) {
-      return new CognitoJwt(token);
+  updateIdToken(idToken: string): CognitoJwt;
+  updateIdToken(idToken?: undefined): CognitoJwt | null;
+  updateIdToken(idToken?: string) {
+    if (!idToken) {
+      idToken = this._keyStore.idToken ?? undefined;
+      if (!idToken) {
+        return null;
+      }
     }
+    return (this.oauthIdJWT = new CognitoJwt(idToken));
   }
 
   private _handleErrorCode(params: ICognitoOAuthError): Promise<false> {

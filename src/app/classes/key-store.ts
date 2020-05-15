@@ -7,6 +7,8 @@ const _keys = Object.freeze({
   // oauth keys
   accessToken: 'gup:OAuthAccessToken',
   oauthState: 'gup:OAuthState',
+  // misc
+  identity: 'gup:Identity',
 });
 
 function _lsExists() {
@@ -23,6 +25,16 @@ function _lsExists() {
 export class KeyStore {
   private readonly _storage: Storage = localStorage;
   private readonly _sessionStorage: Storage = sessionStorage;
+
+  /**
+   * Human-readable identity of the user, e.g. their email.
+   */
+  get identity(): string | null {
+    return this._getter(_keys.identity);
+  }
+  set identity(value: string | null) {
+    this._setter(_keys.identity, value);
+  }
 
   /**
    * AWS access key ID (in base64).
