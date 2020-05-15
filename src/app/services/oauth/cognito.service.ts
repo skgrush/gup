@@ -8,6 +8,7 @@ import { IEnvConfigService } from '../env-config/env-config.interface';
 import { ApiAuthService } from '../api/api-auth.service';
 import { AuthService } from '../auth.service';
 import { ReadyState } from '../../classes/readyable';
+import { CognitoJwt } from 'src/app/classes/cognito-jwt';
 
 interface ICognitoOAuthResponse {
   /** JWT from Cognito */
@@ -104,10 +105,9 @@ export class CognitoService extends OAuthProvider {
       );
     }
 
-    this.oauthIdJWT = params.id_token;
     const expiresIn = +params.expires_in;
     this.approximateExpiration = new Date(Date.now() + expiresIn * 1e3);
-    this._keyStore.idToken = params.id_token;
+    this._keyStore.idToken = this.oauthIdJWT = params.id_token;
 
     const provider = `cognito-idp.${this._envPoolRegion}.amazonaws.com/${this._envUserPool}`;
     const logins = {
@@ -131,9 +131,17 @@ export class CognitoService extends OAuthProvider {
       expireTime: credentials.Expiration,
     });
 
-    console.debug('new credentials:', credentials);
-
     return true;
+  }
+
+  /**
+   * Parse the current token.
+   */
+  getParseToken() {
+    const token = this.oauthIdJWT ?? this._keyStore.idToken;
+    if (token) {
+      return new CognitoJwt(token);
+    }
   }
 
   private _handleErrorCode(params: ICognitoOAuthError): Promise<false> {
