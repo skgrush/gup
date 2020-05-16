@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 
-import { IFileEntity, EntityState } from '../interfaces/file-management';
+import {
+  IFileEntity,
+  EntityState,
+  IFileFormValue,
+  IFileEntityListed,
+  IFileEntityGot,
+} from '../interfaces/file-management';
 import { ApiService } from './api/api.service';
 import { IEnvConfigService, IEnv } from './env-config/env-config.interface';
 import { Readyable, ReadyState } from '../classes/readyable';
@@ -29,7 +35,8 @@ export class FileManagerService extends Readyable {
   private _env!: Readonly<IEnv>;
   private _lastError?: Error;
 
-  bucketName?: string;
+  bucketName!: string;
+  prefix?: string;
 
   get errorMessage() {
     return this._lastError?.message;
@@ -61,6 +68,9 @@ export class FileManagerService extends Readyable {
       this._envValid.next(ReadyState.Ready);
       this._envValid.complete();
       this._env = env;
+
+      this.bucketName = env.awsS3EndpointARN;
+      this.prefix = env.awsS3Prefix;
     });
 
     this._columnOrder.next([...FEMovableKeys]);
@@ -120,6 +130,36 @@ export class FileManagerService extends Readyable {
     }
   }
 
+  async uploadFile({ file, name, progress, maxAge, expires }: IFileFormValue) {
+    this.readyOrThrow();
+    const key = (this.prefix ?? '') + name;
+    const cacheControl = maxAge ? `max-age=${maxAge}` : undefined;
+    const preTimestamp = new Date();
+
+    progress({ loaded: 0, total: file.size });
+
+    const res = await this._api.uploadObjectBlob(this.bucketName, key, file, {
+      cb: progress,
+      cacheControl,
+      expires,
+    });
+
+    const { data, uploader } = res;
+
+    const fileEntity: IFileEntityGot = {
+      contentType: file.type,
+      eTag: data.ETag,
+      key,
+      lastModified: preTimestamp.toISOString(),
+      size: file.size,
+      uploader,
+      entityState: EntityState.get,
+    };
+
+    this._store.push(fileEntity);
+    this._sortTheStore();
+  }
+
   private _sortTheStore() {
     const { sortField, sortOrder } = this;
     console.debug('sorting the store on ', sortField, sortOrder);
@@ -148,15 +188,13 @@ export class FileManagerService extends Readyable {
 
     this._store.length = 0;
     for (const obj of listResponse.Contents) {
-      const entity = this._processListObject(obj);
-      this._store.push(entity);
-      this._headEntity(entity);
+      this._processListObject(obj);
     }
 
     this._sortTheStore();
   }
 
-  private _processListObject(obj: S3.Object): IFileEntity {
+  private _processListObject(obj: S3.Object): IFileEntityListed {
     if (!obj.Key || !obj.ETag || obj.Size === undefined || !obj.LastModified) {
       console.warn('Missing a crucial key in obj:', obj);
     }
@@ -165,13 +203,18 @@ export class FileManagerService extends Readyable {
         ? (obj.LastModified ?? new Date(-1)).toISOString()
         : obj.LastModified;
 
-    return {
+    const entity: IFileEntity = {
       key: obj.Key ?? 'MISSING_KEY',
       eTag: obj.ETag ?? 'MISSING_ETAG',
       size: obj.Size ?? NaN,
       lastModified,
       entityState: EntityState.list,
     };
+
+    this._store.push(entity);
+    this._headEntity(entity);
+
+    return entity;
   }
 
   private _headEntity(ent: IFileEntity): void {

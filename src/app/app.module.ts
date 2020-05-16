@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { LocationStrategy } from '@angular/common';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
@@ -25,6 +26,7 @@ import { FileCellLastmodifiedComponent } from './components/file-manager/file-ce
 import { FileCellUploaderComponent } from './components/file-manager/file-cell/file-cell-uploader.component';
 import { DraggableHeaderDirective } from './directives/draggable-header.directive';
 import { SHOW_DEBUG } from './tokens';
+import { UploadFormComponent } from './components/upload-form/upload-form.component';
 
 @NgModule({
   declarations: [
@@ -41,10 +43,12 @@ import { SHOW_DEBUG } from './tokens';
     FileCellLastmodifiedComponent,
     FileCellUploaderComponent,
     DraggableHeaderDirective,
+    UploadFormComponent,
   ],
   imports: [
     AppRoutingModule,
     BrowserModule,
+    ReactiveFormsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
     }),

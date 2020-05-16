@@ -1,0 +1,25 @@
+:host {
+  & > dialog {
+    & > form {
+      display: flex;
+      flex-direction: column;
+    }
+    & > .progress-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      progress {
+        margin-right: 2ch;
+      }
+
+      abbr {
+        &[title="undefined"] {
+          &::after {
+            content: "...";
+          }
+        }
+      }
+    }
+  }
+}

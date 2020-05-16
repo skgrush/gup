@@ -1,6 +1,7 @@
 <div class="gup-file-manager-toolbar">
   <button (click)="refresh()" [disabled]="!ready || loading">Refresh</button>
   <div *ngIf="fileManager.errorMessage">{{ fileManager.errorMessage }}</div>
+  <button (click)="uploadForm.open()">Upload</button>
 </div>
 <div class="gup-file-manager-table-container">
   <gup-file-list
@@ -13,3 +14,8 @@
     (moveHeaderFromTo)="fileManager.changeColumnOrder($event[0], $event[1])"
   ></gup-file-list>
 </div>
+
+<gup-upload-form
+  #uploadForm
+  (fileSubmit)="onFileSubmit($event)"
+></gup-upload-form>

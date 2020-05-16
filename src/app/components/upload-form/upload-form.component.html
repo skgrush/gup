@@ -1,0 +1,60 @@
+<dialog #uploadDialog [attr.open]="this.isOpen || null">
+  <form (ngSubmit)="this.onSubmit($event)" [formGroup]="formGroup">
+    <label>
+      Name:
+      <input
+        type="text"
+        name="name"
+        [placeholder]="namePlaceholder"
+        formControlName="name"
+      />
+    </label>
+
+    <label>
+      File:
+      <input
+        required
+        type="file"
+        name="file"
+        (input)="onFileInput($event)"
+        formControlName="file"
+      />
+    </label>
+
+    <label>
+      Expires:
+      <input type="datetime-local" name="expires" formControlName="expires" />
+    </label>
+
+    <label>
+      Max age:
+      <input type="number" name="maxAge" formControlName="maxAge" />
+    </label>
+
+    <menu>
+      <button type="submit">Submit</button>
+      <button type="button" (click)="this.close()">Cancel</button>
+    </menu>
+  </form>
+  <div class="progress-container" *ngIf="inProgress">
+    <progress
+      *ngIf="progressDeterminate"
+      [value]="progressLoaded"
+      [max]="progressTotal"
+    >
+      {{ progressLoaded! / progressTotal! | percent }}
+    </progress>
+    <progress *ngIf="!progressDeterminate">
+      Indeterminate...
+    </progress>
+    <div>
+      <abbr [title]="progressLoaded">
+        {{ progressLoaded | byteFormat }}
+      </abbr>
+      of
+      <abbr [title]="progressTotal">
+        {{ progressTotal | byteFormat }}
+      </abbr>
+    </div>
+  </div>
+</dialog>

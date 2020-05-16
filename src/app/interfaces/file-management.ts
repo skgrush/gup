@@ -34,3 +34,16 @@ export type IFileEntity =
   | IFileEntityListed
   | IFileEntityHeaded
   | IFileEntityGot;
+
+export type IProgress =
+  | { loaded: number; total?: number }
+  | { success: true }
+  | { success: false; error: string };
+
+export interface IFileFormValue {
+  name: string;
+  file: File;
+  progress: (p: IProgress) => void;
+  maxAge?: number;
+  expires?: Date;
+}

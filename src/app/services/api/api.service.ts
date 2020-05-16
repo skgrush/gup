@@ -80,7 +80,7 @@ export class ApiService {
     return result;
   }
 
-  uploadObjectBlob(
+  async uploadObjectBlob(
     bucket: string,
     key: string,
     blob: Blob,
@@ -110,16 +110,19 @@ export class ApiService {
           uploader,
         },
       },
-      (err, data) => {
-        console.log('upload complete?:', err, data);
-      }
+      console.log.bind(console, 'upload complete?:')
     );
 
     if (opts?.cb) {
       managed.on('httpUploadProgress', opts.cb);
     }
 
-    return managed.promise();
+    const data = await managed.promise();
+
+    return {
+      data,
+      uploader,
+    };
   }
 
   async uploadObjectRedirect(
@@ -151,15 +154,18 @@ export class ApiService {
         },
         WebsiteRedirectLocation: location,
       },
-      (err, data) => {
-        console.log('upload complete?:', err, data);
-      }
+      console.log.bind(console, 'upload complete?:')
     );
 
     if (opts?.cb) {
       managed.on('httpUploadProgress', opts.cb);
     }
 
-    return managed.promise();
+    const data = await managed.promise();
+
+    return {
+      data,
+      uploader,
+    };
   }
 }

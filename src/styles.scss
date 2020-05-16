@@ -2,9 +2,11 @@
 
 @use 'style/font';
 @use 'style/color';
+@use 'style/shims';
 
 @include color.global;
 @include font.global;
+@include shims.global;
 
 html {
   @include font.family;

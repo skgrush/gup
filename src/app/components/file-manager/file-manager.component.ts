@@ -6,6 +6,7 @@ import {
 } from 'src/app/services/file-manager.service';
 import { ReadyState } from 'src/app/classes/readyable';
 import { FEMovableKeyType } from 'src/app/enums/file-entity-headers.enum';
+import { IFileFormValue } from 'src/app/interfaces/file-management';
 
 @Component({
   selector: 'gup-file-manager',
@@ -54,5 +55,17 @@ export class FileManagerComponent implements OnInit {
     }
     this.loading = true;
     this.fileManager.refreshFileStore().finally(() => (this.loading = false));
+  }
+
+  async onFileSubmit(formVal: IFileFormValue) {
+    console.debug('onFileSubmit', formVal);
+    try {
+      const managed = await this.fileManager.uploadFile(formVal);
+      formVal.progress({ success: true });
+      console.debug('onFileSubmit success');
+    } catch (exc) {
+      formVal.progress({ success: false, error: `${exc}` });
+      console.debug('onFileSubmit fail', exc);
+    }
   }
 }
