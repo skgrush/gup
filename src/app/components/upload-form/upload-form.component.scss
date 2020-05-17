@@ -3,7 +3,24 @@
     & > form {
       display: flex;
       flex-direction: column;
+
+      & > * {
+        margin-bottom: 0.2em;
+      }
+
+      input {
+        &.ng-invalid,
+        &:invalid {
+          box-shadow: inset red 0 0 5px;
+          outline: red 1px solid;
+        }
+      }
+
+      gup-tabbed {
+        min-width: 320px;
+      }
     }
+
     & > .progress-container {
       display: flex;
       flex-wrap: wrap;

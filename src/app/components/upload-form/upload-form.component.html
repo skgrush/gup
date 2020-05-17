@@ -10,16 +10,37 @@
       />
     </label>
 
-    <label>
-      File:
-      <input
-        required
-        type="file"
-        name="file"
-        (input)="onFileInput($event)"
-        formControlName="file"
-      />
-    </label>
+    <gup-tabbed
+      [tabNames]="['Upload', 'Link']"
+      defaultSelection="Link"
+      (tabSelected)="onTabSelected($event)"
+    >
+      <ng-template tab>
+        <label>
+          File:
+          <input
+            [required]="selectedTab === 'file'"
+            type="file"
+            name="file"
+            (input)="onFileInput($event)"
+            formControlName="file"
+          />
+        </label>
+      </ng-template>
+      <ng-template tab>
+        <label>
+          URL:
+          <input
+            [required]="selectedTab === 'url'"
+            type="url"
+            name="url"
+            pattern="https://.*"
+            placeholder="https://example.com"
+            formControlName="url"
+          />
+        </label>
+      </ng-template>
+    </gup-tabbed>
 
     <label>
       Expires:

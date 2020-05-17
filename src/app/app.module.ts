@@ -27,6 +27,7 @@ import { FileCellUploaderComponent } from './components/file-manager/file-cell/f
 import { DraggableHeaderDirective } from './directives/draggable-header.directive';
 import { SHOW_DEBUG } from './tokens';
 import { UploadFormComponent } from './components/upload-form/upload-form.component';
+import { TabbedComponent } from './components/tabbed/tabbed.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { UploadFormComponent } from './components/upload-form/upload-form.compon
     FileCellUploaderComponent,
     DraggableHeaderDirective,
     UploadFormComponent,
+    TabbedComponent,
   ],
   imports: [
     AppRoutingModule,

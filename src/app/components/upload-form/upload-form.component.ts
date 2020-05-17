@@ -12,9 +12,14 @@ import {
   FormControl,
   Validators,
   AbstractControl,
+  ValidatorFn,
 } from '@angular/forms';
 
-import { IFileFormValue, IProgress } from 'src/app/interfaces/file-management';
+import {
+  IFileFormValue,
+  IProgress,
+  IUrlFormValue,
+} from 'src/app/interfaces/file-management';
 
 @Component({
   selector: 'gup-upload-form',
@@ -25,19 +30,32 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
   @Output()
   fileSubmit = new EventEmitter<IFileFormValue>();
 
+  @Output()
+  urlSubmit = new EventEmitter<IUrlFormValue>();
+
   @ViewChild('uploadDialog')
   uploadDialog?: ElementRef<HTMLDialogElement>;
 
   isOpen = false;
   inProgress = false;
   file?: File;
-  namePlaceholder = '';
+  _namePlaceholder = '';
 
   progressLoaded?: number;
   progressTotal?: number;
   progressDeterminate = false;
 
   formGroup!: FormGroup;
+
+  selectedTab: 'file' | 'url' = 'file';
+
+  get namePlaceholder() {
+    if (this.selectedTab === 'file') {
+      return this._namePlaceholder;
+    } else {
+      return '';
+    }
+  }
 
   constructor() {}
 
@@ -53,8 +71,9 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.formGroup = new FormGroup({
-      name: new FormControl(''),
-      file: new FormControl('', [Validators.required]),
+      name: new FormControl('', [this.validateNameOrPlaceholder]),
+      file: new FormControl(''),
+      url: new FormControl(''),
       expires: new FormControl('', [validateDateField]),
       maxAge: new FormControl(''),
     });
@@ -68,20 +87,34 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit(e: Event) {
+    const name: string = this.formGroup.value.name ?? this.namePlaceholder;
+    const progress = this.progress.bind(this);
     const expires: string | null = this.formGroup.value.expires;
     const maxAge: number | null = this.formGroup.value.maxAge;
 
     console.debug('submit:', e, this.formGroup);
-    if (this.file && !this.formGroup.invalid) {
+    if (!this.formGroup.invalid) {
       this.inProgress = true;
       this.formGroup.disable();
-      this.fileSubmit.emit({
-        file: this.file,
-        name: this.formGroup.value.name ?? this.namePlaceholder,
-        expires: expires ? new Date(expires) : undefined,
-        maxAge: maxAge ?? undefined,
-        progress: this.progress.bind(this),
-      });
+
+      if (this.selectedTab === 'file' && this.file) {
+        this.fileSubmit.emit({
+          file: this.file,
+          name,
+          expires: expires ? new Date(expires) : undefined,
+          maxAge: maxAge ?? undefined,
+          progress,
+        });
+      } else if (this.selectedTab === 'url') {
+        const url: string = this.formGroup.value.url;
+        this.urlSubmit.emit({
+          url,
+          name,
+          expires: expires ? new Date(expires) : undefined,
+          maxAge: maxAge ?? undefined,
+          progress,
+        });
+      }
     }
     e.preventDefault();
   }
@@ -91,10 +124,30 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
     if (e.target instanceof HTMLInputElement) {
       const { files } = e.target;
       this.file = (files && files[0]) ?? undefined;
-      this.namePlaceholder = this.file?.name ?? '';
+      this._namePlaceholder = this.file?.name ?? '';
+      this.formGroup.controls.name.updateValueAndValidity();
     }
   }
 
+  onUrlInput(e: InputEvent) {
+    this.formGroup.controls.name.updateValueAndValidity();
+  }
+
+  onTabSelected(tabName: string) {
+    console.debug('tabSelected:', tabName);
+    if (tabName === 'Upload') {
+      this.selectedTab = 'file';
+    } else if (tabName === 'Link') {
+      this.selectedTab = 'url';
+    } else {
+      console.warn('unexpected tab selected:', tabName);
+    }
+    this.formGroup.updateValueAndValidity();
+  }
+
+  /**
+   * Callback when progress is made on the upload.
+   */
   progress(p: IProgress) {
     if ('success' in p) {
       this.inProgress = false;
@@ -116,10 +169,18 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
 
   reset() {
     this.inProgress = false;
-    this.namePlaceholder = '';
+    this._namePlaceholder = '';
     this.file = undefined;
     this.formGroup.reset();
   }
+
+  validateNameOrPlaceholder: ValidatorFn = (control: AbstractControl) => {
+    console.debug('validateNameOrPlaceholder', control, this.formGroup);
+    if (this.formGroup && !control.value && !this.namePlaceholder) {
+      return { missingName: { value: control.value } };
+    }
+    return null;
+  };
 }
 
 function validateDateField(control: AbstractControl) {

@@ -6,6 +6,7 @@ import {
   IFileFormValue,
   IFileEntityListed,
   IFileEntityGot,
+  IUrlFormValue,
 } from '../interfaces/file-management';
 import { ApiService } from './api/api.service';
 import { IEnvConfigService, IEnv } from './env-config/env-config.interface';
@@ -153,6 +154,42 @@ export class FileManagerService extends Readyable {
       lastModified: preTimestamp.toISOString(),
       size: file.size,
       uploader,
+      entityState: EntityState.get,
+    };
+
+    this._store.push(fileEntity);
+    this._sortTheStore();
+  }
+
+  async uploadUrl({ url, name, progress, maxAge, expires }: IUrlFormValue) {
+    this.readyOrThrow();
+    const key = (this.prefix ?? '') + name;
+    const cacheControl = maxAge ? `max-age=${maxAge}` : undefined;
+    const preTimestamp = new Date();
+
+    progress({ loaded: 0 });
+
+    const res = await this._api.uploadObjectRedirect(
+      this.bucketName,
+      key,
+      url,
+      {
+        cb: progress,
+        cacheControl,
+        expires,
+      }
+    );
+
+    const { data, uploader } = res;
+
+    const fileEntity: IFileEntityGot = {
+      contentType: '',
+      eTag: data.ETag,
+      key,
+      lastModified: preTimestamp.toISOString(),
+      size: 0,
+      uploader,
+      redirectLocation: url,
       entityState: EntityState.get,
     };
 

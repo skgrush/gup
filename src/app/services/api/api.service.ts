@@ -140,6 +140,8 @@ export class ApiService {
       throw new Error('Missing location');
     }
 
+    console.debug('uploadRedir');
+
     const s3 = this._s3 ?? this.initS3();
 
     const managed = s3.upload(
@@ -160,6 +162,8 @@ export class ApiService {
     if (opts?.cb) {
       managed.on('httpUploadProgress', opts.cb);
     }
+
+    console.debug('uploadRedir2');
 
     const data = await managed.promise();
 

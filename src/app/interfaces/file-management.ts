@@ -27,6 +27,7 @@ export interface IFileEntityHeaded extends IFileEntityBase {
 export interface IFileEntityGot extends IFileEntityBase {
   entityState: EntityState.get;
   contentType: string;
+  redirectLocation?: string;
   uploader?: string;
 }
 
@@ -40,10 +41,17 @@ export type IProgress =
   | { success: true }
   | { success: false; error: string };
 
-export interface IFileFormValue {
+interface IBaseFormValue {
   name: string;
-  file: File;
   progress: (p: IProgress) => void;
   maxAge?: number;
   expires?: Date;
+}
+
+export interface IFileFormValue extends IBaseFormValue {
+  file: File;
+}
+
+export interface IUrlFormValue extends IBaseFormValue {
+  url: string;
 }
