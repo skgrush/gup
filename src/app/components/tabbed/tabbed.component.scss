@@ -1,0 +1,47 @@
+:host {
+  border: solid 1px;
+  border-radius: 5px;
+
+  & > [role="tablist"] {
+    display: flex;
+    flex-direction: row;
+    padding: 0.1em 0.2em 0 0.2em;
+    border-bottom: solid 0.1em;
+    margin-bottom: -0.1em;
+    margin-top: 0.1em;
+
+    & > [role="tab"] {
+      position: relative;
+      display: inline-block;
+      margin: 0 0.3em;
+      padding: 0.1em;
+      border: 1px solid var(--primary-color);
+      border-bottom: unset;
+      border-radius: 0.3em 0.3em 0 0;
+
+      background-color: var(--secondary-color);
+      color: var(--primary-color);
+      font: inherit;
+      font-size: smaller;
+
+      &[aria-selected="true"] {
+        background-color: var(--background-color);
+        outline: 0;
+
+        &::after {
+          position: absolute;
+          z-index: 3;
+          bottom: -0.1em;
+          left: 0;
+          right: 0;
+          height: 0.3em;
+          background-color: var(--background-color);
+          content: "";
+        }
+      }
+    }
+  }
+  & > .gup-tabbed-body {
+    padding: 5px;
+  }
+}
