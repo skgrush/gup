@@ -104,6 +104,21 @@ export class FileManagerService extends Readyable {
     }
   }
 
+  _handleError(exc: any) {
+    // always store the error, but only rethrow unexpected non-AWSErrors.
+    this._lastError = exc;
+    console.log('_lastError:', [exc]);
+    if (exc instanceof Error) {
+      if (['InvalidAccessKeyId', 'ExpiredToken'].includes(exc.name)) {
+        console.warn('Credentials expired with error', exc.name);
+        this._auth.noCredentials();
+      } else {
+        console.warn('Non-credentials-expired error');
+      }
+    }
+    throw exc;
+  }
+
   async refreshFileStore() {
     this.readyOrThrow();
     const { awsS3EndpointARN, awsS3Prefix } = this._env;
@@ -116,18 +131,7 @@ export class FileManagerService extends Readyable {
 
       this._processListObjects(listResponse);
     } catch (exc) {
-      // always store the error, but only rethrow unexpected non-AWSErrors.
-      this._lastError = exc;
-      console.log('_lastError:', [exc]);
-      if (exc instanceof Error) {
-        if (['InvalidAccessKeyId', 'ExpiredToken'].includes(exc.name)) {
-          console.warn('Credentials expired with error', exc.name);
-          this._auth.noCredentials();
-        } else {
-          console.warn('Non-credentials-expired error');
-        }
-      }
-      throw exc;
+      this._handleError(exc);
     }
   }
 
@@ -139,26 +143,31 @@ export class FileManagerService extends Readyable {
 
     progress({ loaded: 0, total: file.size });
 
-    const res = await this._api.uploadObjectBlob(this.bucketName, key, file, {
-      cb: progress,
-      cacheControl,
-      expires,
-    });
+    try {
+      const res = await this._api.uploadObjectBlob(this.bucketName, key, file, {
+        cb: progress,
+        cacheControl,
+        expires,
+      });
 
-    const { data, uploader } = res;
+      const { data, uploader } = res;
 
-    const fileEntity: IFileEntityGot = {
-      contentType: file.type,
-      eTag: data.ETag,
-      key,
-      lastModified: preTimestamp.toISOString(),
-      size: file.size,
-      uploader,
-      entityState: EntityState.get,
-    };
+      const fileEntity: IFileEntityGot = {
+        contentType: file.type,
+        eTag: data.ETag,
+        key,
+        lastModified: preTimestamp.toISOString(),
+        size: file.size,
+        uploader,
+        entityState: EntityState.get,
+      };
 
-    this._store.push(fileEntity);
-    this._sortTheStore();
+      this._store.push(fileEntity);
+      this._sortTheStore();
+    } catch (exc) {
+      progress({ success: false, error: exc });
+      this._handleError(exc);
+    }
   }
 
   async uploadUrl({ url, name, progress, maxAge, expires }: IUrlFormValue) {
@@ -169,32 +178,37 @@ export class FileManagerService extends Readyable {
 
     progress({ loaded: 0 });
 
-    const res = await this._api.uploadObjectRedirect(
-      this.bucketName,
-      key,
-      url,
-      {
-        cb: progress,
-        cacheControl,
-        expires,
-      }
-    );
+    try {
+      const res = await this._api.uploadObjectRedirect(
+        this.bucketName,
+        key,
+        url,
+        {
+          cb: progress,
+          cacheControl,
+          expires,
+        }
+      );
 
-    const { data, uploader } = res;
+      const { data, uploader } = res;
 
-    const fileEntity: IFileEntityGot = {
-      contentType: '',
-      eTag: data.ETag,
-      key,
-      lastModified: preTimestamp.toISOString(),
-      size: 0,
-      uploader,
-      redirectLocation: url,
-      entityState: EntityState.get,
-    };
+      const fileEntity: IFileEntityGot = {
+        contentType: '',
+        eTag: data.ETag,
+        key,
+        lastModified: preTimestamp.toISOString(),
+        size: 0,
+        uploader,
+        redirectLocation: url,
+        entityState: EntityState.get,
+      };
 
-    this._store.push(fileEntity);
-    this._sortTheStore();
+      this._store.push(fileEntity);
+      this._sortTheStore();
+    } catch (exc) {
+      progress({ success: false, error: exc });
+      this._handleError(exc);
+    }
   }
 
   private _sortTheStore() {

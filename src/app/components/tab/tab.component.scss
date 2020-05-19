@@ -1,0 +1,33 @@
+:host {
+  position: relative;
+  display: inline-block;
+  margin: 0 0.3em;
+  padding: 0.1em;
+  border: 1px solid var(--primary-color);
+  border-bottom: unset;
+  border-radius: 0.3em 0.3em 0 0;
+
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  font: inherit;
+  font-size: smaller;
+
+  &[aria-selected="true"] {
+    background-color: var(--background-color);
+    outline: 0;
+
+    &::after {
+      position: absolute;
+      z-index: 3;
+      bottom: -0.1em;
+      left: 0;
+      right: 0;
+      height: 0.3em;
+      background-color: var(--background-color);
+      content: "";
+    }
+  }
+  &:not([aria-selected="true"]) {
+    cursor: pointer;
+  }
+}

@@ -11,8 +11,8 @@
       input {
         &.ng-invalid,
         &:invalid {
-          box-shadow: inset red 0 0 5px;
-          outline: red 1px solid;
+          box-shadow: inset red 0 0 5px, red 0 0 5px;
+          outline: 0;
         }
       }
 

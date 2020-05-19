@@ -142,7 +142,7 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
     } else {
       console.warn('unexpected tab selected:', tabName);
     }
-    this.formGroup.updateValueAndValidity();
+    setTimeout(() => this.formGroup.controls.name.updateValueAndValidity());
   }
 
   /**

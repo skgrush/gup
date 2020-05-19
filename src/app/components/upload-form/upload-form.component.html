@@ -14,8 +14,9 @@
       [tabNames]="['Upload', 'Link']"
       defaultSelection="Link"
       (tabSelected)="onTabSelected($event)"
+      id="upload-form-tabbed"
     >
-      <ng-template tab>
+      <gup-tab-panel tabName="Upload">
         <label>
           File:
           <input
@@ -26,8 +27,8 @@
             formControlName="file"
           />
         </label>
-      </ng-template>
-      <ng-template tab>
+      </gup-tab-panel>
+      <gup-tab-panel tabName="Link">
         <label>
           URL:
           <input
@@ -39,7 +40,7 @@
             formControlName="url"
           />
         </label>
-      </ng-template>
+      </gup-tab-panel>
     </gup-tabbed>
 
     <label>

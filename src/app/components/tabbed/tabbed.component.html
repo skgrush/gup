@@ -1,5 +1,5 @@
 <menu class="gup-tabbed-tabs" role="tablist">
-  <button
+  <!-- <button
     *ngFor="let tabName of tabNames; index as i"
     role="tab"
     [id]="tabName"
@@ -8,11 +8,20 @@
     (click)="selectTab($event, tabName)"
   >
     {{ tabName }}
-  </button>
+  </button> -->
+  <gup-tab
+    *ngFor="let tabPanel of tabPanels; index as i"
+    [controls]="tabPanel"
+    (click)="selectTab($event, tabPanel.tabName)"
+  >
+    {{ tabPanel.tabName }}
+  </gup-tab>
 </menu>
 
 <div class="gup-tabbed-body">
-  <ng-container *ngFor="let tab of tabs; index as i">
+  <ng-content></ng-content>
+  <!-- <ng-container *ngFor="let tab of tabs; index as i">
+
     <section
       [style.display]="tabIsHidden(i) ? 'none' : 'block'"
       role="tabpanel"
@@ -21,5 +30,5 @@
     >
       <ng-container [ngTemplateOutlet]="tab"></ng-container>
     </section>
-  </ng-container>
+  </ng-container> -->
 </div>

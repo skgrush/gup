@@ -28,6 +28,8 @@ import { DraggableHeaderDirective } from './directives/draggable-header.directiv
 import { SHOW_DEBUG } from './tokens';
 import { UploadFormComponent } from './components/upload-form/upload-form.component';
 import { TabbedComponent } from './components/tabbed/tabbed.component';
+import { TabPanelComponent } from './components/tab-panel/tab-panel.component';
+import { TabComponent } from './components/tab/tab.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,8 @@ import { TabbedComponent } from './components/tabbed/tabbed.component';
     DraggableHeaderDirective,
     UploadFormComponent,
     TabbedComponent,
+    TabPanelComponent,
+    TabComponent,
   ],
   imports: [
     AppRoutingModule,
