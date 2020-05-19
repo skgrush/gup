@@ -4,6 +4,12 @@ $primary-dark: $primary-light;
 $secondary-light: black;
 $secondary-dark: white;
 
+$input-light: $secondary-light;
+$input-dark: $secondary-dark;
+
+$input-bg-light: white;
+$input-bg-dark: rgb(100, 100, 100);
+
 $background-light: rgb(255, 255, 255);
 $background-dark: rgb(0, 0, 0);
 
@@ -13,6 +19,8 @@ $background-dark: rgb(0, 0, 0);
 
     --primary-color: #{$primary-light};
     --secondary-color: #{$secondary-light};
+    --input-color: #{$input-light};
+    --input-background-color: #{$input-bg-light};
     --background-color: #{$background-light};
   }
 
@@ -20,6 +28,8 @@ $background-dark: rgb(0, 0, 0);
     :root {
       --primary-color: #{$primary-dark};
       --secondary-color: #{$secondary-dark};
+      --input-color: #{$input-dark};
+      --input-background-color: #{$input-bg-dark};
       --background-color: #{$background-dark};
     }
   }

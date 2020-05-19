@@ -1,0 +1,22 @@
+@mixin global {
+  input,
+  button,
+  select,
+  textarea {
+    color: var(--input-color);
+    background-color: var(--input-background-color);
+    border: none;
+    border-radius: 0.5em;
+  }
+
+  input {
+    &::-webkit-input-placeholder {
+      color: var(--input-color);
+      opacity: 0.4;
+    }
+    &::-moz-placeholder {
+      color: var(--input-color);
+      opacity: 0.4;
+    }
+  }
+}

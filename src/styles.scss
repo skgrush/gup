@@ -3,10 +3,12 @@
 @use 'style/font';
 @use 'style/color';
 @use 'style/shims';
+@use 'style/theme';
 
 @include color.global;
 @include font.global;
 @include shims.global;
+@include theme.global;
 
 html {
   @include font.family;
