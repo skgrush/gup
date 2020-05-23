@@ -11,8 +11,8 @@
 @include theme.global;
 
 html {
-  @include font.family;
-  @include font.size;
+  font-family: var(--main-font-family);
+  font-size: var(--main-font-size);
 
   color: var(--primary-color);
   background: var(--background-color);

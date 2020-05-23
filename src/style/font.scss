@@ -1,13 +1,14 @@
-@use './color';
+$main-font-family: "VT323", monospace;
+
+$main-font-size: 16px;
+$large-font-size: 24px;
 
 @mixin global {
   @import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
-}
 
-@mixin family {
-  font-family: "VT323", monospace;
-}
-
-@mixin size {
-  font-size: 24px;
+  :root {
+    --main-font-family: #{$main-font-family};
+    --main-font-size: #{$main-font-size};
+    --large-font-size: #{$large-font-size};
+  }
 }
