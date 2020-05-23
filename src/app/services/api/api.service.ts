@@ -149,6 +149,7 @@ export class ApiService {
         Key: key,
         Bucket: bucket,
         Body: '',
+        ContentType: '',
         CacheControl: opts?.cacheControl,
         Expires: opts?.expires,
         Metadata: {

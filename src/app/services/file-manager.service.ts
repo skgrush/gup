@@ -104,7 +104,7 @@ export class FileManagerService extends Readyable {
     }
   }
 
-  _handleError(exc: any) {
+  private _handleError(exc: any) {
     // always store the error, but only rethrow unexpected non-AWSErrors.
     this._lastError = exc;
     console.log('_lastError:', [exc]);

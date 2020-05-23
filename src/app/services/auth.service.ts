@@ -72,6 +72,10 @@ export class AuthService {
     this.providerChain.unshift(credentialsFunct);
   }
 
+  /**
+   * What to do when we find out there are no credentials
+   * (e.g. redirect to auth endpoint)
+   */
   noCredentials() {
     const cb = this._credentials.noCredentialsCallback;
     if (cb) {
