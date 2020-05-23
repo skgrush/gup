@@ -1,4 +1,4 @@
-import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
+import { Observable, BehaviorSubject, forkJoin, of } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 export class NotReadyError extends Error {
@@ -88,6 +88,9 @@ export abstract class Readyable {
    * Still make sure to check that it's actually ready!
    */
   observeReadyFinalize(): Observable<ReadyState.Failed | ReadyState.Ready> {
+    if (readyStateFinalized(this.currentState)) {
+      return of(this.currentState);
+    }
     return Readyable.observeMultiple(...this.ReadyConditions);
   }
 

@@ -30,16 +30,11 @@ export class FileManagerComponent implements OnInit {
       fileManager,
       fileManager.currentState
     );
-    if (this.fileManager.isReady) {
-      this.ready = true;
+    this.fileManager.observeReadyFinalize().subscribe((state) => {
+      console.debug('fileManager finalized:', state);
       this.loading = false;
-    } else {
-      this.fileManager.observeReadyFinalize().subscribe((state) => {
-        console.debug('fileManager finalized:', state);
-        this.loading = false;
-        this.ready = state === ReadyState.Ready;
-      });
-    }
+      this.ready = state === ReadyState.Ready;
+    });
 
     this.fileManager.sortedStore.subscribe((data) => {
       console.debug('received new sorted files');
