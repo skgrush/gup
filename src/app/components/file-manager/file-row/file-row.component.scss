@@ -1,9 +1,12 @@
 :host {
   display: table-row;
+
   vertical-align: inherit;
   border: inherit;
 
   & > th {
+    display: flex;
+    justify-content: space-between;
     white-space: nowrap;
     text-overflow: ellipsis;
     border: inherit;

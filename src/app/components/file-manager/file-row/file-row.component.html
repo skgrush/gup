@@ -6,6 +6,7 @@
   [style.text-align]="'left'"
 >
   {{ fileEntity?.key }}
+  <gup-copy-link *ngIf="publicRoot" [url]="getUrl(fileEntity)"></gup-copy-link>
 </th>
 <ng-container *ngFor="let cellComponent of cellComponents">
   <ng-container

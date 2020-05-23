@@ -21,6 +21,7 @@
     [sortField]="fileManager.sortField"
     [sortOrder]="fileManager.sortOrder"
     [columnOrder]="columnOrder"
+    [publicRoot]="fileManager.publicRoot"
     (changeSort)="fileManager.changeSort($event)"
     (moveHeaderFromTo)="fileManager.changeColumnOrder($event[0], $event[1])"
   ></gup-file-list>

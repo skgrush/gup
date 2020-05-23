@@ -38,6 +38,7 @@ export class FileManagerService extends Readyable {
 
   bucketName!: string;
   prefix?: string;
+  publicRoot?: string;
 
   get errorMessage() {
     return this._lastError?.message;
@@ -72,6 +73,7 @@ export class FileManagerService extends Readyable {
 
       this.bucketName = env.awsS3EndpointARN;
       this.prefix = env.awsS3Prefix;
+      this.publicRoot = env.publicRoot;
     });
 
     this._columnOrder.next([...FEMovableKeys]);

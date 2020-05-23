@@ -24,6 +24,9 @@ export class FileRowComponent implements OnInit {
   @Input()
   cellComponents!: Array<typeof BaseFileCellComponent>;
 
+  @Input()
+  publicRoot?: string;
+
   @HostBinding('attr.data-key')
   get dataKey() {
     return this.fileEntity?.key;
@@ -59,4 +62,10 @@ export class FileRowComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  getUrl(fileEntity: IFileEntity) {
+    if (this.publicRoot && fileEntity) {
+      return this.publicRoot + fileEntity.key;
+    }
+  }
 }

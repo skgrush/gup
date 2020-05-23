@@ -47,6 +47,9 @@ export class FileListComponent implements OnInit, OnChanges {
   @Input()
   columnOrder: FEMovableKeyType[] = [];
 
+  @Input()
+  publicRoot?: string;
+
   @Output()
   changeSort = new EventEmitter<FEKeyType>();
 

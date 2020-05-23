@@ -30,6 +30,8 @@ export interface IEnv {
   /** OAuth provider information */
   oauth: IEnvOAuth;
   GOOGLE_HD?: string;
+  /** Public root URL to prepend to key for linking. */
+  publicRoot?: string;
 }
 
 export abstract class IEnvConfigService extends Readyable {

@@ -116,6 +116,14 @@ export class EnvConfigService extends IEnvConfigService {
       );
     }
 
+    if (env.publicRoot !== undefined && typeof env.publicRoot !== 'string') {
+      throw new EnvConfigValidationError(
+        ['publicRoot'],
+        [env.publicRoot],
+        'must be a string or omitted'
+      );
+    }
+
     return Object.freeze(env);
   }
 }
