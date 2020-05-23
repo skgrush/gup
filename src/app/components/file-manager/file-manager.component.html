@@ -1,8 +1,19 @@
-<div class="gup-file-manager-toolbar">
-  <button (click)="refresh()" [disabled]="!ready || loading">Refresh</button>
-  <div *ngIf="fileManager.errorMessage">{{ fileManager.errorMessage }}</div>
-  <button (click)="uploadForm.open()">Upload</button>
+<div class="gup-file-manager-header">
+  <menu type="toolbar" role="toolbar" class="gup-file-manager-toolbar">
+    <li>
+      <button (click)="refresh()" [disabled]="!ready || loading">
+        Refresh
+      </button>
+    </li>
+    <li>
+      <button (click)="uploadForm.open()">Upload</button>
+    </li>
+  </menu>
+  <div *ngIf="fileManager.errorMessage" class="gup-file-manager-message">
+    {{ fileManager.errorMessage }}
+  </div>
 </div>
+
 <div class="gup-file-manager-table-container">
   <gup-file-list
     [fileData]="sortedFiles"

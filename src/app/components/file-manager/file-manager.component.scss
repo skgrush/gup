@@ -1,11 +1,37 @@
 :host {
   display: block;
 
-  & > .gup-file-manager-toolbar {
+  width: fit-content;
+  max-width: 100%;
+
+  & > .gup-file-manager-header {
+    border: var(--structural-color) 3px solid;
+
+    & > .gup-file-manager-toolbar {
+      display: flex;
+      margin: 0.5em;
+
+      & > li {
+        display: block;
+        margin-right: 0.5em;
+      }
+    }
+    & > .gup-file-manager-message {
+      border-top: inherit;
+      border-top-width: 1px;
+    }
   }
 
   & > .gup-file-manager-table-container {
+    width: fit-content;
+    max-width: 100%;
+
     overflow-x: scroll;
-    padding-bottom: 10px;
+    padding-bottom: 20px;
+
+    gup-file-list {
+      width: fit-content;
+      max-width: 100%;
+    }
   }
 }
