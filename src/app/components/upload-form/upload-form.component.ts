@@ -152,8 +152,7 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
     if ('success' in p) {
       this.inProgress = false;
       if (p.success) {
-        this.reset();
-        this.isOpen = false;
+        this.close();
       } else {
         this.formGroup.enable();
         // failed
@@ -172,6 +171,7 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
     this._namePlaceholder = '';
     this.file = undefined;
     this.formGroup.reset();
+    this.formGroup.enable();
   }
 
   validateNameOrPlaceholder: ValidatorFn = (control: AbstractControl) => {
