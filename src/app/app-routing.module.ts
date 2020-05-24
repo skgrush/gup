@@ -1,18 +1,17 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
-import { MainComponent } from './components/main/main.component';
-import { AuthGuard } from './guards/auth.guard';
-import { OauthComponent } from './components/oauth/oauth.component';
-import { LogoutGuard } from './guards/logout.guard';
+import { AuthGuard } from './public/guards/auth.guard';
+import { OauthComponent } from './public/components/oauth/oauth.component';
+import { LogoutGuard } from './public/guards/logout.guard';
 
 const DummyComponent = Object;
 
 const routes: Routes = [
   {
     path: '',
-    component: MainComponent,
-    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./authorized/authorized.module').then((m) => m.AuthorizedModule),
+    canLoad: [AuthGuard],
     pathMatch: 'full',
   },
   {
