@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { OAuthProvider } from '../../services/oauth/oauth-provider.interface';
 import { ReadyState } from 'src/app/classes/readyable';
 
@@ -7,7 +7,7 @@ import { ReadyState } from 'src/app/classes/readyable';
   templateUrl: './oauth.component.html',
   styleUrls: ['./oauth.component.scss'],
 })
-export class OauthComponent implements OnInit {
+export class OauthComponent {
   get additionalParams() {
     if (!this.oauthService.additionalParams) {
       return [];
@@ -22,6 +22,4 @@ export class OauthComponent implements OnInit {
       this.ready = state === ReadyState.Ready;
     });
   }
-
-  ngOnInit(): void {}
 }

@@ -23,8 +23,6 @@ export class TabService {
     return this._updatedSubject.asObservable();
   }
 
-  constructor() {}
-
   registerMultiple(
     panels: ITabPanel[],
     idBaseBase: string,

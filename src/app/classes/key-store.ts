@@ -28,6 +28,7 @@ export class KeyStore {
     'identity',
     'accessKeyId',
     'secretKey',
+    'accessToken',
     'sessionToken',
     'expiredTime',
     'idToken',

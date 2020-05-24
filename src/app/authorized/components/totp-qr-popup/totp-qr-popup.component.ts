@@ -9,7 +9,7 @@ import {
   SimpleChanges,
   OnChanges,
 } from '@angular/core';
-import { FormControl, FormGroup, RequiredValidator } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 
 export interface IConfirmGood {
   deviceName: string;
@@ -66,8 +66,6 @@ export class TotpQrPopupComponent implements OnChanges {
     deviceName: new FormControl(''),
     confirmCode: new FormControl(''),
   });
-
-  constructor() {}
 
   open() {
     this.keyUri = this.generateKeyUri();

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { OAuthProvider } from '../../services/oauth/oauth-provider.interface';
 import { ApiAuthService } from '../../services/api/api-auth.service';
 import { ApiService } from 'src/app/authorized/services/api/api.service';
@@ -12,7 +12,7 @@ import { Readyable, readyStateFinalized } from 'src/app/classes/readyable';
   templateUrl: './test-ui.component.html',
   styleUrls: ['./test-ui.component.scss'],
 })
-export class TestUiComponent implements OnInit {
+export class TestUiComponent {
   readonly keyStore = new KeyStore();
 
   readonly keyStoreProps: Array<keyof KeyStore> = [
@@ -69,8 +69,6 @@ export class TestUiComponent implements OnInit {
     });
     console.debug('TestUI', this);
   }
-
-  ngOnInit(): void {}
 
   authNoCredentials() {
     this.auth.noCredentials();

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostBinding } from '@angular/core';
+import { Component, Input, HostBinding } from '@angular/core';
 import { TabService } from '../../services/tab.service';
 
 @Component({
@@ -6,7 +6,7 @@ import { TabService } from '../../services/tab.service';
   template: `<ng-content></ng-content>`,
   styleUrls: ['./tab-panel.component.scss'],
 })
-export class TabPanelComponent implements OnInit {
+export class TabPanelComponent {
   @Input()
   tabName?: string;
 
@@ -28,13 +28,10 @@ export class TabPanelComponent implements OnInit {
 
   constructor(readonly tabService: TabService) {
     this.tabService.updatedAsObservable.subscribe((map) => {
-      console.debug('panel upddate?');
       const info = map.get(this);
       this.id = info?.panelId;
       this.tabId = info?.labelId;
       this.selected = info?.selected;
     });
   }
-
-  ngOnInit(): void {}
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 import {
   FileManagerService,
@@ -16,7 +16,7 @@ import {
   templateUrl: './file-manager.component.html',
   styleUrls: ['./file-manager.component.scss'],
 })
-export class FileManagerComponent implements OnInit {
+export class FileManagerComponent {
   ready = false;
   loading = true;
 
@@ -44,8 +44,6 @@ export class FileManagerComponent implements OnInit {
       this.columnOrder = cols;
     });
   }
-
-  ngOnInit(): void {}
 
   refresh() {
     if (this.loading) {

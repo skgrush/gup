@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   ViewChild,
   Input,
   OnChanges,
@@ -14,7 +13,7 @@ import * as QRCode from 'qrcode';
   templateUrl: './qr.component.html',
   styleUrls: ['./qr.component.scss'],
 })
-export class QrComponent implements OnInit, OnChanges {
+export class QrComponent implements OnChanges {
   @ViewChild('qrCanvas')
   qrCanvas!: ElementRef<HTMLCanvasElement>;
 
@@ -23,10 +22,6 @@ export class QrComponent implements OnInit, OnChanges {
 
   loading = false;
   error?: string;
-
-  constructor() {}
-
-  ngOnInit(): void {}
 
   ngAfterViewInit() {
     if (this.code) {

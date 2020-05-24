@@ -57,8 +57,6 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
     }
   }
 
-  constructor() {}
-
   open() {
     this.reset();
     this.isOpen = true;
@@ -175,7 +173,6 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
   }
 
   validateNameOrPlaceholder: ValidatorFn = (control: AbstractControl) => {
-    console.debug('validateNameOrPlaceholder', control, this.formGroup);
     if (this.formGroup && !control.value && !this.namePlaceholder) {
       return { missingName: { value: control.value } };
     }

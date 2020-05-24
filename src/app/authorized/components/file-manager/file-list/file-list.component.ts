@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   Input,
   Output,
   EventEmitter,
@@ -31,7 +30,7 @@ interface IHeaderEntry {
   templateUrl: './file-list.component.html',
   styleUrls: ['./file-list.component.scss'],
 })
-export class FileListComponent implements OnInit, OnChanges {
+export class FileListComponent implements OnChanges {
   @Input()
   fileData?: ReadonlyArray<Readonly<IFileEntity>>;
 
@@ -90,8 +89,6 @@ export class FileListComponent implements OnInit, OnChanges {
     }
     return entries;
   }
-
-  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges) {
     // If column order has changed refresh everything,

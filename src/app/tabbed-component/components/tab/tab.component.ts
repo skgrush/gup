@@ -25,7 +25,6 @@ export class TabComponent {
 
   constructor(readonly tabService: TabService) {
     this.tabService.updatedAsObservable.subscribe((map) => {
-      console.debug('tab update?');
       if (this.controls) {
         const info = map.get(this.controls);
         this.id = info?.labelId;
@@ -34,13 +33,4 @@ export class TabComponent {
       }
     });
   }
-
-  ngOnInit() {}
-
-  // ngOnInit(): void {
-  //   console.debug('tab.ngOnInit:', this, this.controls);
-  //   if (this.controls) {
-  //     this.controls.labelledBy = this;
-  //   }
-  // }
 }

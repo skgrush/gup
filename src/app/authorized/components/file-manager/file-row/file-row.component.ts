@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   Input,
   HostBinding,
   Injector,
@@ -15,7 +14,7 @@ import { FILE_ENTITY } from 'src/app/tokens';
   templateUrl: './file-row.component.html',
   styleUrls: ['./file-row.component.scss'],
 })
-export class FileRowComponent implements OnInit {
+export class FileRowComponent {
   readonly EntityState = EntityState;
 
   @Input()
@@ -60,8 +59,6 @@ export class FileRowComponent implements OnInit {
       console.debug('row colComponents updated', this.cellComponents);
     }
   }
-
-  ngOnInit(): void {}
 
   getUrl(fileEntity?: IFileEntity) {
     if (this.publicRoot && fileEntity) {
