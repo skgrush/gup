@@ -1,6 +1,16 @@
 import { KeyStore } from './key-store';
 import { Credentials } from 'aws-sdk/lib/core';
 
+export class NoKeyStoreCredsError extends Error {
+  readonly name = 'NoKeyStoreCredsError';
+  constructor(...params: any[]) {
+    super();
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, NoKeyStoreCredsError);
+    }
+  }
+}
+
 export class KeyStoreCredentials extends Credentials {
   /**
    * Called if we determine we can't find credentials.
@@ -54,10 +64,10 @@ export class KeyStoreCredentials extends Credentials {
 
       callback();
     } else {
-      callback(new Error('No credentials stored'));
-      if (this.noCredentialsCallback) {
-        this.noCredentialsCallback();
-      }
+      callback(new NoKeyStoreCredsError('No credentials stored'));
+      // if (this.noCredentialsCallback) {
+      //   this.noCredentialsCallback();
+      // }
     }
   }
 }

@@ -5,7 +5,10 @@ import { provider } from 'aws-sdk/lib/credentials/credential_provider_chain';
 
 import { IMyCredentialsOptions } from 'src/app/interfaces/my-credentials-options';
 import { KeyStore } from 'src/app/classes/key-store';
-import { KeyStoreCredentials } from 'src/app/classes/key-store-credentials';
+import {
+  KeyStoreCredentials,
+  NoKeyStoreCredsError,
+} from 'src/app/classes/key-store-credentials';
 
 export enum AuthStatus {
   authenticated = 0,
@@ -55,8 +58,15 @@ export class AuthService {
   }
 
   async isAuthenticated(): Promise<boolean> {
-    const creds = await this._credProvider.resolvePromise();
-    return !creds.needsRefresh();
+    try {
+      const creds = await this._credProvider.resolvePromise();
+      return !creds.needsRefresh();
+    } catch (exc) {
+      if (!(exc instanceof NoKeyStoreCredsError)) {
+        console.error('Unexpected auth error', exc);
+      }
+      return false;
+    }
   }
 
   addCredentials(credentials: Credentials | IMyCredentialsOptions) {
