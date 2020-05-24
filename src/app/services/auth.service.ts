@@ -32,6 +32,10 @@ export class AuthService {
     return this._identity;
   }
 
+  get credentialsExpire(): Date {
+    return this._credentials.expireTime;
+  }
+
   constructor() {
     this._identity = this._keyStore.identity ?? undefined;
     this._credentials = new KeyStoreCredentials(this._keyStore);
@@ -46,9 +50,13 @@ export class AuthService {
     this._credentials.refresh();
   }
 
+  deauthenticate() {
+    this._credentials.clear();
+  }
+
   async isAuthenticated(): Promise<boolean> {
     const creds = await this._credProvider.resolvePromise();
-    return creds.needsRefresh();
+    return !creds.needsRefresh();
   }
 
   addCredentials(credentials: Credentials | IMyCredentialsOptions) {
@@ -83,7 +91,24 @@ export class AuthService {
     }
   }
 
+  /**
+   * Register a function to be called when there are no credentials.
+   * Should be called by the service managing external auth (OAuthProvider).
+   */
   setNoCredentialsCallback(cb: () => void) {
     this._credentials.noCredentialsCallback = cb;
+  }
+
+  checkForCredentialsError(err: Error) {
+    if (err instanceof Error) {
+      if (
+        ['InvalidAccessKeyId', 'ExpiredToken'].includes(err.name) ||
+        (err.name === 'NotAuthorizedException' &&
+          err.message.includes('expired'))
+      ) {
+        console.warn('Credentials expired with error', err.name, [err]);
+        this.noCredentials();
+      }
+    }
   }
 }

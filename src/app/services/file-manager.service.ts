@@ -110,14 +110,7 @@ export class FileManagerService extends Readyable {
     // always store the error, but only rethrow unexpected non-AWSErrors.
     this._lastError = exc;
     console.log('_lastError:', [exc]);
-    if (exc instanceof Error) {
-      if (['InvalidAccessKeyId', 'ExpiredToken'].includes(exc.name)) {
-        console.warn('Credentials expired with error', exc.name);
-        this._auth.noCredentials();
-      } else {
-        console.warn('Non-credentials-expired error');
-      }
-    }
+    this._auth.checkForCredentialsError(exc);
     throw exc;
   }
 

@@ -116,6 +116,13 @@ export class GoogleService extends OAuthProvider {
     ));
   }
 
+  updateIdToken() {
+    return null;
+  }
+  updateAccessToken() {
+    return null;
+  }
+
   private _handleGoogleError(error: string | null): Promise<false> {
     return this._handleError(`Received OAuth2 error from Google: ${error}`);
   }

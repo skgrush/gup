@@ -5,6 +5,7 @@ const _keys = Object.freeze({
   sessionToken: 'gup:sessionToken',
   expiredTime: 'gup:expiryTime',
   // oauth keys
+  idToken: 'gup:OAuthIdToken',
   accessToken: 'gup:OAuthAccessToken',
   oauthState: 'gup:OAuthState',
   // misc
@@ -23,6 +24,16 @@ function _lsExists() {
 }
 
 export class KeyStore {
+  static readonly keys = Object.freeze([
+    'identity',
+    'accessKeyId',
+    'secretKey',
+    'sessionToken',
+    'expiredTime',
+    'idToken',
+    'oauthState',
+  ] as const);
+
   private readonly _storage: Storage = localStorage;
   private readonly _sessionStorage: Storage = sessionStorage;
 
@@ -71,12 +82,22 @@ export class KeyStore {
   }
 
   /**
-   * AWS ID access token
+   * AWS ID token
    */
   get idToken(): string | null {
-    return this._getter(_keys.accessToken);
+    return this._getter(_keys.idToken);
   }
   set idToken(value: string | null) {
+    this._setter(_keys.idToken, value);
+  }
+
+  /**
+   * AWS access token
+   */
+  get accessToken(): string | null {
+    return this._getter(_keys.accessToken);
+  }
+  set accessToken(value: string | null) {
     this._setter(_keys.accessToken, value);
   }
 
@@ -103,6 +124,11 @@ export class KeyStore {
       console.warn('LocalStorage unavailable, falling back to SessionStorage');
       this._storage = sessionStorage;
     }
+  }
+
+  clear() {
+    this._storage.clear();
+    this._sessionStorage.clear();
   }
 
   private _getter(key: string): string | null {

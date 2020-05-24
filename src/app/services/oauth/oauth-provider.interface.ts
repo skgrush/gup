@@ -1,6 +1,11 @@
 import { BehaviorSubject } from 'rxjs';
 
 import { Readyable, ReadyState } from '../../classes/readyable';
+import {
+  CognitoJwt,
+  IIdJWTJson,
+  IAuthJWTJson,
+} from 'src/app/classes/cognito-jwt';
 
 /**
  * Abstract baseclass for OAuth2 providers.
@@ -24,6 +29,8 @@ export abstract class OAuthProvider extends Readyable {
 
   abstract readonly additionalParams?: Readonly<any>;
 
+  oauthIdJWT?: CognitoJwt<IIdJWTJson>;
+  oauthAccessJWT?: CognitoJwt<IAuthJWTJson>;
   abstract lastCallback?: any;
 
   abstract valid: BehaviorSubject<ReadyState>;
@@ -31,6 +38,9 @@ export abstract class OAuthProvider extends Readyable {
   abstract parseOAuthCallback(arg: any): Promise<boolean>;
 
   abstract generateNewState(): string | undefined;
+
+  abstract updateIdToken(): CognitoJwt<IIdJWTJson> | null;
+  abstract updateAccessToken(): CognitoJwt<IAuthJWTJson> | null;
 
   navigateToProvider() {
     const params = new URLSearchParams(this.additionalParams);

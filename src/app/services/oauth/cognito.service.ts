@@ -8,7 +8,11 @@ import { IEnvConfigService } from '../env-config/env-config.interface';
 import { ApiAuthService } from '../api/api-auth.service';
 import { AuthService } from '../auth.service';
 import { ReadyState } from '../../classes/readyable';
-import { CognitoJwt } from 'src/app/classes/cognito-jwt';
+import {
+  CognitoJwt,
+  IIdJWTJson,
+  IAuthJWTJson,
+} from 'src/app/classes/cognito-jwt';
 
 interface ICognitoOAuthResponse {
   /** JWT from Cognito */
@@ -38,7 +42,7 @@ export class CognitoService extends OAuthProvider {
   endpoint = '';
   clientId = '';
   readonly responseType = 'token';
-  readonly scope = 'email openid';
+  readonly scope = 'email openid aws.cognito.signin.user.admin';
   readonly state = undefined;
   readonly additionalParams = undefined;
 
@@ -48,7 +52,6 @@ export class CognitoService extends OAuthProvider {
 
   lastCallback?: EitherResponse;
 
-  oauthIdJWT?: CognitoJwt;
   approximateExpiration?: Date;
 
   private _envPoolRegion = '';
@@ -108,8 +111,10 @@ export class CognitoService extends OAuthProvider {
     const expiresIn = +params.expires_in;
     this.approximateExpiration = new Date(Date.now() + expiresIn * 1e3);
     this._keyStore.idToken = params.id_token;
+    this._keyStore.accessToken = params.access_token;
 
     this.oauthIdJWT = this.updateIdToken(params.id_token);
+    this.oauthAccessJWT = this.updateAccessToken(params.access_token);
 
     const provider = `cognito-idp.${this._envPoolRegion}.amazonaws.com/${this._envUserPool}`;
     const logins = {
@@ -140,8 +145,8 @@ export class CognitoService extends OAuthProvider {
   /**
    * Parse the token, update and return `this.oauthIdJWT`.
    */
-  updateIdToken(idToken: string): CognitoJwt;
-  updateIdToken(idToken?: undefined): CognitoJwt | null;
+  updateIdToken(idToken: string): CognitoJwt<IIdJWTJson>;
+  updateIdToken(idToken?: undefined): CognitoJwt<IIdJWTJson> | null;
   updateIdToken(idToken?: string) {
     if (!idToken) {
       idToken = this._keyStore.idToken ?? undefined;
@@ -150,6 +155,21 @@ export class CognitoService extends OAuthProvider {
       }
     }
     return (this.oauthIdJWT = new CognitoJwt(idToken));
+  }
+
+  /**
+   * Parse the token, update and return `this.oauthAccessJWT`.
+   */
+  updateAccessToken(authToken: string): CognitoJwt<IAuthJWTJson>;
+  updateAccessToken(authToken?: undefined): CognitoJwt<IAuthJWTJson> | null;
+  updateAccessToken(authToken?: string) {
+    if (!authToken) {
+      authToken = this._keyStore.accessToken ?? undefined;
+      if (!authToken) {
+        return null;
+      }
+    }
+    return (this.oauthAccessJWT = new CognitoJwt(authToken));
   }
 
   private _handleErrorCode(params: ICognitoOAuthError): Promise<false> {
