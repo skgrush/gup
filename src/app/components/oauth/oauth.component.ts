@@ -19,7 +19,6 @@ export class OauthComponent implements OnInit {
 
   constructor(readonly oauthService: OAuthProvider) {
     oauthService.observeReadyFinalize().subscribe((state) => {
-      console.debug('oauthService is ready');
       this.ready = state === ReadyState.Ready;
     });
   }

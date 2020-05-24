@@ -63,7 +63,7 @@ export class FileRowComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  getUrl(fileEntity: IFileEntity) {
+  getUrl(fileEntity?: IFileEntity) {
     if (this.publicRoot && fileEntity) {
       return this.publicRoot + fileEntity.key;
     }

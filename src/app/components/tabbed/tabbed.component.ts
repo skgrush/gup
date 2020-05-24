@@ -24,9 +24,6 @@ export class TabbedComponent implements AfterViewInit {
   @Input()
   defaultSelection?: string;
 
-  @Input()
-  tabNames: string[] = [];
-
   @Output()
   tabSelected = new EventEmitter<string>();
 
@@ -59,10 +56,6 @@ export class TabbedComponent implements AfterViewInit {
       this.tabSelected.emit(name);
       return false;
     }
-  }
-
-  tabIsHidden(idx: number) {
-    return this.tabNames[idx] !== this.selectedTab;
   }
 
   tabIsSelected(tabName: string) {

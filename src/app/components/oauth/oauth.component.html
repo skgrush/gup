@@ -1,8 +1,8 @@
 <div>
-  <form *ngIf="ready" method="GET" [action]="oauthService.endpoint">
+  <form #form *ngIf="ready" method="GET" [action]="oauthService.endpoint">
     <div class="sign-in-wrapper">
       <span>Sign in with </span>
-      <button>
+      <button type="submit" (click)="form.submit()">
         <img *ngIf="oauthService.iconSrc" [src]="oauthService.iconSrc" />
         <span>{{ oauthService.name }}</span>
       </button>
