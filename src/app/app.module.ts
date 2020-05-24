@@ -26,14 +26,12 @@ import { FileCellLastmodifiedComponent } from './components/file-manager/file-ce
 import { FileCellUploaderComponent } from './components/file-manager/file-cell/file-cell-uploader.component';
 import { DraggableHeaderDirective } from './directives/draggable-header.directive';
 import { SHOW_DEBUG } from './tokens';
-import { UploadFormComponent } from './components/upload-form/upload-form.component';
-import { TabbedComponent } from './components/tabbed/tabbed.component';
-import { TabPanelComponent } from './components/tab-panel/tab-panel.component';
-import { TabComponent } from './components/tab/tab.component';
 import { CopyLinkComponent } from './components/copy-link/copy-link.component';
 import { TotpQrPopupComponent } from './components/totp-qr-popup/totp-qr-popup.component';
 import { QrComponent } from './components/qr/qr.component';
 import { AuthedSettingsComponent } from './components/authed-settings/authed-settings.component';
+import { TabbedComponentModule } from './tabbed-component/tabbed-component.module';
+import { UploadFormModule } from './upload-form-component/upload-form.module';
 
 @NgModule({
   declarations: [
@@ -50,10 +48,6 @@ import { AuthedSettingsComponent } from './components/authed-settings/authed-set
     FileCellLastmodifiedComponent,
     FileCellUploaderComponent,
     DraggableHeaderDirective,
-    UploadFormComponent,
-    TabbedComponent,
-    TabPanelComponent,
-    TabComponent,
     CopyLinkComponent,
     QrComponent,
     TotpQrPopupComponent,
@@ -67,6 +61,9 @@ import { AuthedSettingsComponent } from './components/authed-settings/authed-set
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
     }),
+    // my modules
+    TabbedComponentModule,
+    UploadFormModule,
   ],
   providers: [
     {
