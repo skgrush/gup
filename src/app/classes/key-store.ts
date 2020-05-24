@@ -126,9 +126,13 @@ export class KeyStore {
     }
   }
 
+  /**
+   * Clear our store values without clearing the *whole* Storage.
+   */
   clear() {
-    this._storage.clear();
-    this._sessionStorage.clear();
+    for (const key of KeyStore.keys) {
+      this[key] = null;
+    }
   }
 
   private _getter(key: string): string | null {

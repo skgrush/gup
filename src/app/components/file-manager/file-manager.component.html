@@ -8,6 +8,9 @@
     <li>
       <button (click)="uploadForm.open()">Upload</button>
     </li>
+    <li>
+      <gup-authed-settings></gup-authed-settings>
+    </li>
   </menu>
   <div *ngIf="fileManager.errorMessage" class="gup-file-manager-message">
     {{ fileManager.errorMessage }}

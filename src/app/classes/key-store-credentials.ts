@@ -26,6 +26,13 @@ export class KeyStoreCredentials extends Credentials {
     this.expired = this._expired();
   }
 
+  clear() {
+    this.accessKeyId = this.secretAccessKey = this.sessionToken = '';
+    this.keyStore.clear();
+    this.expireTime = new Date(Date.now() - 1e4);
+    this.expired = true;
+  }
+
   private _expired() {
     return this.expireTime ? this.expireTime.getTime() < Date.now() : true;
   }

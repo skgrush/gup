@@ -80,7 +80,7 @@ export class TestUiComponent implements OnInit {
     return JSON.stringify(this.keyStore[key]);
   }
 
-  keyStoreClear(key: keyof KeyStore) {
+  keyStoreClear(key: typeof KeyStore.keys[number]) {
     this.keyStore[key] = null;
   }
 

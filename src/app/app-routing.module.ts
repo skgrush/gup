@@ -4,6 +4,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { MainComponent } from './components/main/main.component';
 import { AuthGuard } from './guards/auth.guard';
 import { OauthComponent } from './components/oauth/oauth.component';
+import { LogoutGuard } from './guards/logout.guard';
+
+const DummyComponent = Object;
 
 const routes: Routes = [
   {
@@ -15,12 +18,17 @@ const routes: Routes = [
   {
     path: 'authed',
     canActivate: [AuthGuard],
-    component: Object, // dummy component
+    component: DummyComponent,
   },
   {
     path: 'login',
     component: OauthComponent,
     // canActivate: [AuthGuard],
+  },
+  {
+    path: 'logout',
+    component: DummyComponent,
+    canActivate: [LogoutGuard],
   },
 ];
 

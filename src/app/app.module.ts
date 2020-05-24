@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { LocationStrategy } from '@angular/common';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
@@ -30,6 +30,10 @@ import { UploadFormComponent } from './components/upload-form/upload-form.compon
 import { TabbedComponent } from './components/tabbed/tabbed.component';
 import { TabPanelComponent } from './components/tab-panel/tab-panel.component';
 import { TabComponent } from './components/tab/tab.component';
+import { CopyLinkComponent } from './components/copy-link/copy-link.component';
+import { TotpQrPopupComponent } from './components/totp-qr-popup/totp-qr-popup.component';
+import { QrComponent } from './components/qr/qr.component';
+import { AuthedSettingsComponent } from './components/authed-settings/authed-settings.component';
 
 @NgModule({
   declarations: [
@@ -50,11 +54,16 @@ import { TabComponent } from './components/tab/tab.component';
     TabbedComponent,
     TabPanelComponent,
     TabComponent,
+    CopyLinkComponent,
+    QrComponent,
+    TotpQrPopupComponent,
+    AuthedSettingsComponent,
   ],
   imports: [
     AppRoutingModule,
     BrowserModule,
     ReactiveFormsModule,
+    FormsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
     }),

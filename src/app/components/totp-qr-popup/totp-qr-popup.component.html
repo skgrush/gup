@@ -1,0 +1,25 @@
+<dialog #popup [attr.open]="isOpen">
+  <gup-qr [code]="this.keyUri" *ngIf="this.keyUri && isOpen"></gup-qr>
+
+  <form ngNativeValidate (ngSubmit)="onSubmit($event)" [formGroup]="formGroup">
+    <label>
+      Device Name:
+      <input name="deviceName" required formControlName="deviceName" />
+    </label>
+    <label>
+      Confirm Code:
+      <input
+        required
+        type="tel"
+        name="confirmCode"
+        size="6"
+        maxlength="6"
+        pattern="\d{6}"
+        formControlName="confirmCode"
+        autocomplete="off"
+      />
+    </label>
+    <button type="submit" [disabled]="formGroup.invalid">Submit</button>
+    <button type="reset" (click)="cancel()">Cancel</button>
+  </form>
+</dialog>

@@ -32,6 +32,8 @@ export interface IEnv {
   GOOGLE_HD?: string;
   /** Public root URL to prepend to key for linking. */
   publicRoot?: string;
+  /** Name of the site. Used in titling and TOTP issuer. */
+  siteName: string;
 }
 
 export abstract class IEnvConfigService extends Readyable {

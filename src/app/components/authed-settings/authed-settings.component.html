@@ -1,0 +1,45 @@
+<button class="authed-settings-opener" (click)="open()">⚙</button>
+
+<dialog role="dialog" #settingsDialog [attr.open]="isOpen">
+  <gup-tabbed defaultSelection="Info">
+    <gup-tab-panel tabName="Info">
+      <dl>
+        <dt>Identity</dt>
+        <dd>{{ auth.identity }}</dd>
+
+        <dt>Credentials Expire</dt>
+        <dd>
+          <time [dateTime]="auth.credentialsExpire">
+            {{ auth.credentialsExpire | date: "medium" }}
+          </time>
+        </dd>
+      </dl>
+    </gup-tab-panel>
+
+    <gup-tab-panel tabName="MFA">
+      <div *ngIf="allowMFASetup">
+        <h6>MFA Setup</h6>
+        <div>
+          <button [disabled]="doingMfaSetup" (click)="doMFASetup()">
+            Associate new MFA device
+          </button>
+        </div>
+        <gup-totp-qr-popup
+          #mfaPopup
+          [show]="doingMfaSetup"
+          [secret]="mfaSecret"
+          [issuer]="mfaIssuer"
+          [accountName]="mfaAccountName"
+          (confirm)="confirmMFASetup($event)"
+        ></gup-totp-qr-popup>
+      </div>
+    </gup-tab-panel>
+  </gup-tabbed>
+
+  <div>
+    <button (click)="logout()">Log out</button>
+  </div>
+  <div style.text-align="right">
+    <button (click)="close()">Close</button>
+  </div>
+</dialog>

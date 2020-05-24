@@ -1,0 +1,14 @@
+:host {
+  & > dialog {
+    & > gup-qr {
+      display: block;
+    }
+
+    & > form {
+      & > label {
+        display: block;
+        white-space: nowrap;
+      }
+    }
+  }
+}
