@@ -31,7 +31,7 @@ import { TotpQrPopupComponent } from './components/totp-qr-popup/totp-qr-popup.c
 import { QrComponent } from './components/qr/qr.component';
 import { AuthedSettingsComponent } from './components/authed-settings/authed-settings.component';
 import { TabbedComponentModule } from './tabbed-component/tabbed-component.module';
-import { UploadFormModule } from './upload-form-component/upload-form.module';
+import { UploadFormComponentModule } from './upload-form-component/upload-form-component.module';
 
 @NgModule({
   declarations: [
@@ -63,7 +63,7 @@ import { UploadFormModule } from './upload-form-component/upload-form.module';
     }),
     // my modules
     TabbedComponentModule,
-    UploadFormModule,
+    UploadFormComponentModule,
   ],
   providers: [
     {

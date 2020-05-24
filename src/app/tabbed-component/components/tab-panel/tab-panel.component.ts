@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, HostBinding } from '@angular/core';
-import { TabService } from 'src/app/services/tab.service';
+import { TabService } from '../../services/tab.service';
 
 @Component({
   selector: 'gup-tab-panel',

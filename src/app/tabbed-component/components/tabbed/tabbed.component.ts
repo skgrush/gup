@@ -10,7 +10,7 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { TabPanelComponent } from '../tab-panel/tab-panel.component';
-import { TabService } from 'src/app/services/tab.service';
+import { TabService } from '../../services/tab.service';
 
 @Component({
   selector: 'gup-tabbed',
