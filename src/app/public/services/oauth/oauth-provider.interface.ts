@@ -1,6 +1,5 @@
 import { BehaviorSubject } from 'rxjs';
-
-import { Readyable, ReadyState } from '../../classes/readyable';
+import { Readyable, ReadyState } from 'src/app/classes/readyable';
 import {
   CognitoJwt,
   IIdJWTJson,

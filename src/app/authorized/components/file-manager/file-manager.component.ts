@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import {
   FileManagerService,
   StoreType,
-} from 'src/app/services/file-manager.service';
+} from '../../services/file-manager.service';
 import { ReadyState } from 'src/app/classes/readyable';
 import { FEMovableKeyType } from 'src/app/enums/file-entity-headers.enum';
 import {

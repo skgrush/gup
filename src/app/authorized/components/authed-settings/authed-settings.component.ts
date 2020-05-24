@@ -1,14 +1,14 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
-import { ApiAuthService } from 'src/app/services/api/api-auth.service';
-import { OAuthProvider } from 'src/app/services/oauth/oauth-provider.interface';
-import { IEnvConfigService } from 'src/app/services/env-config/env-config.interface';
 import { Readyable, ReadyState } from 'src/app/classes/readyable';
 import {
   TotpQrPopupComponent,
   IConfirmGood,
 } from '../totp-qr-popup/totp-qr-popup.component';
+import { AuthService } from 'src/app/public/services/auth.service';
+import { OAuthProvider } from 'src/app/public/services/oauth/oauth-provider.interface';
+import { ApiAuthService } from 'src/app/public/services/api/api-auth.service';
+import { IEnvConfigService } from 'src/app/public/services/env-config/env-config.interface';
 
 @Component({
   selector: 'gup-authed-settings',

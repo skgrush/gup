@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { config, CredentialProviderChain } from 'aws-sdk/global';
 import { Credentials } from 'aws-sdk/lib/core';
-
-import { IMyCredentialsOptions } from '../interfaces/my-credentials-options';
-import { KeyStore } from '../classes/key-store';
-import { KeyStoreCredentials } from '../classes/key-store-credentials';
 import { provider } from 'aws-sdk/lib/credentials/credential_provider_chain';
+
+import { IMyCredentialsOptions } from 'src/app/interfaces/my-credentials-options';
+import { KeyStore } from 'src/app/classes/key-store';
+import { KeyStoreCredentials } from 'src/app/classes/key-store-credentials';
 
 export enum AuthStatus {
   authenticated = 0,

@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import * as S3 from 'aws-sdk/clients/s3';
+import { BehaviorSubject } from 'rxjs';
 
 import {
   IFileEntity,
@@ -7,20 +9,21 @@ import {
   IFileEntityListed,
   IFileEntityGot,
   IUrlFormValue,
-} from '../interfaces/file-management';
+} from 'src/app/interfaces/file-management';
 import { ApiService } from './api/api.service';
-import { IEnvConfigService, IEnv } from './env-config/env-config.interface';
-import { Readyable, ReadyState } from '../classes/readyable';
-import * as S3 from 'aws-sdk/clients/s3';
-import { BehaviorSubject } from 'rxjs';
-import { AuthService } from './auth.service';
-import { SortOrder } from '../enums/sort-order.enum';
+import {
+  IEnvConfigService,
+  IEnv,
+} from 'src/app/public/services/env-config/env-config.interface';
+import { Readyable, ReadyState } from 'src/app/classes/readyable';
+import { AuthService } from 'src/app/public/services/auth.service';
+import { SortOrder } from 'src/app/enums/sort-order.enum';
 import {
   FEMovableKeyType,
   FEKeyType,
   FEMovableKeys,
-} from '../enums/file-entity-headers.enum';
-import { sortFactory } from '../utils/sort';
+} from 'src/app/enums/file-entity-headers.enum';
+import { sortFactory } from 'src/app/utils/sort';
 
 export type StoreType = ReadonlyArray<Readonly<IFileEntity>>;
 

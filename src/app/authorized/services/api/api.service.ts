@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as S3 from 'aws-sdk/clients/s3';
 
-import { AuthService } from '../auth.service';
+import { AuthService } from 'src/app/public/services/auth.service';
 import { PromisifyAWS } from 'src/app/utils/aws-sdk-helpers';
 
 type UploadCB = (progress: S3.ManagedUpload.Progress) => void;

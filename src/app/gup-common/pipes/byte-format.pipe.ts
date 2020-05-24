@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { round } from '../utils/utils';
+import { round } from '../../utils/utils';
 
 export type ByteBase = 1000 | 1024;
 

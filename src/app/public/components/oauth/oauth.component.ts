@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { OAuthProvider } from 'src/app/services/oauth/oauth-provider.interface';
+import { OAuthProvider } from '../../services/oauth/oauth-provider.interface';
 import { ReadyState } from 'src/app/classes/readyable';
 
 @Component({
