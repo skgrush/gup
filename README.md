@@ -13,16 +13,18 @@ You **must** provide all "<required:\*>" fields.
   "awsIdentityRegion": "<required>",
   "awsIdentityGuid": "<required>",
   "awsUserPoolSuffix": "<required>",
-  "awsUserPool": "<required>",
+  "awsUserPool": "<optional>",
   "awsS3EndpointARN": "<required>",
-  "awsS3Prefix": "<required|\"\">",
+  "awsS3Prefix": "<optional>",
   "oauth": {
     "provider": "cognito|google",
     "endpoint": "<required|optional>",
     "clientId": "<required>",
     "redirectUri": "<optional>"
   },
-  "GOOGLE_HD": "<optional>"
+  "GOOGLE_HD": "<optional>",
+  "publicRoot": "<optional>",
+  "siteName": "<required>"
 }
 ```
 
