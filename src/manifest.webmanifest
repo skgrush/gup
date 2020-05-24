@@ -1,11 +1,11 @@
 {
-  "name": "grushup",
-  "short_name": "grushup",
+  "name": "GUP",
+  "short_name": "GUP",
   "theme_color": "#3b7c29",
-  "background_color": "#fafafa",
+  "background_color": "#000000",
   "display": "standalone",
-  "scope": "/gup",
-  "start_url": "/gup",
+  "scope": "/gup/",
+  "start_url": "/gup/",
   "icons": [
     {
       "src": "/favicon-16x16.png",

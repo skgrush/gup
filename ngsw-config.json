@@ -1,12 +1,17 @@
 {
   "$schema": "./node_modules/@angular/service-worker/config/schema.json",
-  "index": "/index.html",
+  "index": "/gup/index.html",
   "assetGroups": [
     {
       "name": "gup",
       "installMode": "prefetch",
       "resources": {
-        "files": ["/index.html", "/manifest.webmanifest", "/*.css", "/*.js"]
+        "files": [
+          "/gup/index.html",
+          "/gup/manifest.webmanifest",
+          "/gup/*.css",
+          "/gup/(runtime|main|polyfills).*.js"
+        ]
       }
     },
     {
@@ -15,8 +20,9 @@
       "updateMode": "prefetch",
       "resources": {
         "files": [
-          "/assets/**",
-          "/*.(eot|svg|cur|jpg|png|webp|gif|otf|ttf|woff|woff2|ani)"
+          "/gup/*.js",
+          "/gup/assets/**",
+          "/gup/*.(eot|svg|cur|jpg|png|webp|gif|otf|ttf|woff|woff2|ani)"
         ]
       }
     }

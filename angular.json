@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "grushup": {
+    "gup": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -67,18 +67,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "grushup:build"
+            "browserTarget": "gup:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "grushup:build:production"
+              "browserTarget": "gup:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "grushup:build"
+            "browserTarget": "gup:build"
           }
         },
         "test": {
@@ -108,18 +108,18 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "grushup:serve"
+            "devServerTarget": "gup:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "grushup:serve:production"
+              "devServerTarget": "gup:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "grushup",
+  "defaultProject": "gup",
   "cli": {
     "analytics": "e3bb9e6b-cba6-4a83-8569-88001a8394cc"
   }
