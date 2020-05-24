@@ -6,53 +6,19 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
-import { OauthComponent } from './components/oauth/oauth.component';
-import { OAuthProvider } from './services/oauth/oauth-provider.interface';
-import { TestUiComponent } from './components/test-ui/test-ui.component';
-import { MainComponent } from './components/main/main.component';
 import { AppRoutingModule } from './app-routing.module';
 import { QueryLocationStrategy } from './classes/query-location-strategy';
-import { OAuthProviderPicker } from './services/oauth/oauth-provider-picker';
 import { KeyStore } from './classes/key-store';
-import { IEnvConfigService } from './services/env-config/env-config.interface';
-import { EnvConfigService } from './services/env-config/env-config.service';
-import { FileManagerComponent } from './components/file-manager/file-manager.component';
-import { FileListComponent } from './components/file-manager/file-list/file-list.component';
-import { FileRowComponent } from './components/file-manager/file-row/file-row.component';
-import { ByteFormatPipe } from './pipes/byte-format.pipe';
-import { FileCellSizeComponent } from './components/file-manager/file-cell/file-cell-size.component';
-import { FileCellContenttypeComponent } from './components/file-manager/file-cell/file-cell-contenttype.component';
-import { FileCellLastmodifiedComponent } from './components/file-manager/file-cell/file-cell-lastmodified.component';
-import { FileCellUploaderComponent } from './components/file-manager/file-cell/file-cell-uploader.component';
 import { DraggableHeaderDirective } from './directives/draggable-header.directive';
 import { SHOW_DEBUG } from './tokens';
-import { CopyLinkComponent } from './components/copy-link/copy-link.component';
-import { TotpQrPopupComponent } from './components/totp-qr-popup/totp-qr-popup.component';
-import { QrComponent } from './components/qr/qr.component';
-import { AuthedSettingsComponent } from './components/authed-settings/authed-settings.component';
 import { TabbedComponentModule } from './tabbed-component/tabbed-component.module';
 import { UploadFormComponentModule } from './upload-form-component/upload-form-component.module';
+import { GupCommonModule } from './gup-common/gup-common.module';
+import { AuthorizedModule } from './authorized/authorized.module';
+import { PublicModule } from './public/public.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    OauthComponent,
-    TestUiComponent,
-    MainComponent,
-    FileListComponent,
-    FileManagerComponent,
-    FileRowComponent,
-    ByteFormatPipe,
-    FileCellSizeComponent,
-    FileCellContenttypeComponent,
-    FileCellLastmodifiedComponent,
-    FileCellUploaderComponent,
-    DraggableHeaderDirective,
-    CopyLinkComponent,
-    QrComponent,
-    TotpQrPopupComponent,
-    AuthedSettingsComponent,
-  ],
+  declarations: [AppComponent, DraggableHeaderDirective],
   imports: [
     AppRoutingModule,
     BrowserModule,
@@ -62,23 +28,17 @@ import { UploadFormComponentModule } from './upload-form-component/upload-form-c
       enabled: environment.production,
     }),
     // my modules
+    GupCommonModule,
     TabbedComponentModule,
     UploadFormComponentModule,
+    PublicModule,
   ],
   providers: [
-    {
-      provide: OAuthProvider,
-      useClass: OAuthProviderPicker(),
-    },
     {
       provide: LocationStrategy,
       useClass: QueryLocationStrategy,
     },
     KeyStore,
-    {
-      provide: IEnvConfigService,
-      useClass: EnvConfigService,
-    },
     {
       provide: SHOW_DEBUG,
       useValue: false,
