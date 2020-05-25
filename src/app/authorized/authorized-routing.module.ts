@@ -1,11 +1,11 @@
 import { Routes, RouterModule } from '@angular/router';
-import { MainComponent } from './components/main/main.component';
 import { NgModule } from '@angular/core';
+import { AuthorizedComponent } from './authorized.component';
 
 const authedRoutes: Routes = [
   {
     path: '',
-    component: MainComponent,
+    component: AuthorizedComponent,
   },
 ];
 

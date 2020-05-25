@@ -9,27 +9,16 @@ import { TabbedComponentModule } from '../tabbed-component/tabbed-component.modu
 import { AuthorizedRoutingModule } from './authorized-routing.module';
 
 // This Module's Declarations
-import { AuthedSettingsComponent } from './components/authed-settings/authed-settings.component';
-import { MainComponent } from './components/main/main.component';
-import { QrComponent } from './components/qr/qr.component';
-import { TotpQrPopupComponent } from './components/totp-qr-popup/totp-qr-popup.component';
 import { FileManagerModule } from './file-manager/file-manager.module';
+import { AuthorizedComponent } from './authorized.component';
 
 console.debug('loaded authorized module');
 
 @NgModule({
-  declarations: [
-    AuthedSettingsComponent,
-    MainComponent,
-    QrComponent,
-    TotpQrPopupComponent,
-  ],
+  declarations: [AuthorizedComponent],
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     // my modules
-    GupCommonModule,
-    TabbedComponentModule,
     AuthorizedRoutingModule,
     FileManagerModule,
   ],

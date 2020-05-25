@@ -3,7 +3,7 @@ import { FileCellContenttypeComponent } from './file-cell-contenttype.component'
 import { FileCellLastmodifiedComponent } from './file-cell-lastmodified.component';
 import { FileCellSizeComponent } from './file-cell-size.component';
 import { FileCellUploaderComponent } from './file-cell-uploader.component';
-import { FEKeyType } from 'src/app/enums/file-entity-headers.enum';
+import { FEKeyType } from '../../../enums/file-entity-headers.enum';
 
 export function pickFileCellComponent(
   key: FEKeyType

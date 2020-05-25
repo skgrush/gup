@@ -1,5 +1,5 @@
 import { IFileEntityGot, IFileEntity } from '../interfaces/file-management';
-import { SortOrder } from '../enums/sort-order.enum';
+import { SortOrder } from 'src/app/enums/sort-order.enum';
 
 function sorter<T>(key: string, posRet: number, negRet: number, a: T, b: T) {
   const aval = (a as any)[key];

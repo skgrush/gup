@@ -19,7 +19,7 @@ import {
   IFileFormValue,
   IProgress,
   IUrlFormValue,
-} from 'src/app/interfaces/file-management';
+} from '../../interfaces/file-management';
 
 @Component({
   selector: 'gup-upload-form',
