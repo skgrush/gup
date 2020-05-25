@@ -1,15 +1,9 @@
 import { Component } from '@angular/core';
 
-import {
-  FileManagerService,
-  StoreType,
-} from '../../services/file-manager.service';
+import { FileManagerService, StoreType } from './services/file-manager.service';
 import { ReadyState } from 'src/app/classes/readyable';
-import { FEMovableKeyType } from '../../enums/file-entity-headers.enum';
-import {
-  IFileFormValue,
-  IUrlFormValue,
-} from '../../interfaces/file-management';
+import { FEMovableKeyType } from './enums/file-entity-headers.enum';
+import { IFileFormValue, IUrlFormValue } from './interfaces/file-management';
 
 @Component({
   selector: 'gup-file-manager',
@@ -47,6 +41,7 @@ export class FileManagerComponent {
 
   refresh() {
     if (this.loading) {
+      console.warn('Ignoring call to FileManagerComponent#refresh mid-refresh');
       return;
     }
     this.loading = true;

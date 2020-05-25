@@ -4,8 +4,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // My Modules
-import { GupCommonModule } from '../gup-common/gup-common.module';
-import { TabbedComponentModule } from '../tabbed-component/tabbed-component.module';
 import { AuthorizedRoutingModule } from './authorized-routing.module';
 
 // This Module's Declarations

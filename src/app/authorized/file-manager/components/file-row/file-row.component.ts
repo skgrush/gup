@@ -5,7 +5,7 @@ import {
   Injector,
   SimpleChanges,
 } from '@angular/core';
-import { IFileEntity, EntityState } from '../../../interfaces/file-management';
+import { IFileEntity, EntityState } from '../../interfaces/file-management';
 import { BaseFileCellComponent } from '../file-cell/base-file-cell.component';
 import { FILE_ENTITY } from 'src/app/tokens';
 

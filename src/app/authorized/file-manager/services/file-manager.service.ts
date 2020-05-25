@@ -79,6 +79,8 @@ export class FileManagerService extends Readyable {
       this.publicRoot = env.publicRoot;
     });
 
+    console.debug('new FileManagerService');
+
     this._columnOrder.next([...FEMovableKeys]);
   }
 

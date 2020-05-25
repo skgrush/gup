@@ -6,14 +6,14 @@ import {
   SimpleChanges,
   OnChanges,
 } from '@angular/core';
-import { IFileEntity } from '../../../interfaces/file-management';
+import { IFileEntity } from '../../interfaces/file-management';
 import { SortOrder } from 'src/app/enums/sort-order.enum';
 import {
   FEHeaderId,
   FEHeaderName,
   FEMovableKeyType,
   FEKeyType,
-} from '../../../enums/file-entity-headers.enum';
+} from '../../enums/file-entity-headers.enum';
 import { BaseFileCellComponent } from '../file-cell/base-file-cell.component';
 import { pickFileCellComponent } from '../file-cell/pick-file-cell';
 

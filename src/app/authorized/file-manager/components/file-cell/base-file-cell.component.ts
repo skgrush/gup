@@ -1,6 +1,6 @@
 import { HostBinding, Inject } from '@angular/core';
-import { IFileEntity } from '../../../interfaces/file-management';
-import { FEHeaderId } from '../../../enums/file-entity-headers.enum';
+import { IFileEntity } from '../../interfaces/file-management';
+import { FEHeaderId } from '../../enums/file-entity-headers.enum';
 import { FILE_ENTITY } from 'src/app/tokens';
 
 export abstract class BaseFileCellComponent {

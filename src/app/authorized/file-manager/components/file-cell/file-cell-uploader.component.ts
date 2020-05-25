@@ -1,6 +1,6 @@
 import { Component, HostBinding } from '@angular/core';
 import { BaseFileCellComponent } from './base-file-cell.component';
-import { FEHeaderId } from '../../../enums/file-entity-headers.enum';
+import { FEHeaderId } from '../../enums/file-entity-headers.enum';
 
 @Component({
   selector: 'gup-file-cell-uploader',
