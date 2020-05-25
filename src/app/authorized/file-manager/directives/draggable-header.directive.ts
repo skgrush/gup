@@ -6,7 +6,7 @@ import {
   Input,
   HostBinding,
 } from '@angular/core';
-import { FEMovableKeyType } from '../../../enums/file-entity-headers.enum';
+import { FEMovableKeyType } from '../enums/file-entity-headers.enum';
 
 const HEADER_CONTENT_TYPE = 'gup/is-a-header';
 const KEY_CONTENT_TYPE = 'gup/key';

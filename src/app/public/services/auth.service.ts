@@ -3,7 +3,7 @@ import { config, CredentialProviderChain } from 'aws-sdk/global';
 import { Credentials } from 'aws-sdk/lib/core';
 import { provider } from 'aws-sdk/lib/credentials/credential_provider_chain';
 
-import { IMyCredentialsOptions } from 'src/app/interfaces/my-credentials-options';
+import { IMyCredentialsOptions } from '../interfaces/my-credentials-options';
 import { KeyStore } from 'src/app/classes/key-store';
 import {
   KeyStoreCredentials,

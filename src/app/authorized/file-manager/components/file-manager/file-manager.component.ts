@@ -5,11 +5,11 @@ import {
   StoreType,
 } from '../../services/file-manager.service';
 import { ReadyState } from 'src/app/classes/readyable';
-import { FEMovableKeyType } from 'src/app/enums/file-entity-headers.enum';
+import { FEMovableKeyType } from '../../enums/file-entity-headers.enum';
 import {
   IFileFormValue,
   IUrlFormValue,
-} from 'src/app/interfaces/file-management';
+} from '../../interfaces/file-management';
 
 @Component({
   selector: 'gup-file-manager',

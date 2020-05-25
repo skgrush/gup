@@ -9,7 +9,7 @@ import {
   IFileEntityListed,
   IFileEntityGot,
   IUrlFormValue,
-} from 'src/app/interfaces/file-management';
+} from '../interfaces/file-management';
 import { ApiService } from '../../services/api/api.service';
 import {
   IEnvConfigService,
@@ -22,8 +22,8 @@ import {
   FEMovableKeyType,
   FEKeyType,
   FEMovableKeys,
-} from 'src/app/enums/file-entity-headers.enum';
-import { sortFactory } from 'src/app/utils/sort';
+} from '../enums/file-entity-headers.enum';
+import { sortFactory } from '../utilities/sort';
 
 export type StoreType = ReadonlyArray<Readonly<IFileEntity>>;
 
