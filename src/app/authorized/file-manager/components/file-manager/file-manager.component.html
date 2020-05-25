@@ -9,7 +9,7 @@
       <button (click)="uploadForm.open()">Upload</button>
     </li>
     <li>
-      <gup-authed-settings></gup-authed-settings>
+      <ng-content selector="settings"></ng-content>
     </li>
   </menu>
   <div *ngIf="fileManager.errorMessage" class="gup-file-manager-message">

@@ -13,6 +13,9 @@ import { FileRowComponent } from './components/file-manager/file-row/file-row.co
 import { FileCellLastmodifiedComponent } from './components/file-manager/file-cell/file-cell-lastmodified.component';
 import { FileCellSizeComponent } from './components/file-manager/file-cell/file-cell-size.component';
 import { DraggableHeaderDirective } from './directives/draggable-header.directive';
+import { UploadFormComponent } from './components/upload-form/upload-form.component';
+import { TabbedComponentModule } from 'src/app/tabbed-component/tabbed-component.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -23,11 +26,14 @@ import { DraggableHeaderDirective } from './directives/draggable-header.directiv
     FileCellSizeComponent,
     CopyLinkComponent,
     DraggableHeaderDirective,
+    UploadFormComponent,
   ],
   imports: [
     CommonModule,
     // my modules
     GupCommonModule,
+    TabbedComponentModule,
+    ReactiveFormsModule,
   ],
   exports: [FileManagerComponent],
 })

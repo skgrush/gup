@@ -10,7 +10,7 @@ import {
   IFileEntityGot,
   IUrlFormValue,
 } from 'src/app/interfaces/file-management';
-import { ApiService } from './api/api.service';
+import { ApiService } from '../../services/api/api.service';
 import {
   IEnvConfigService,
   IEnv,

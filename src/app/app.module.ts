@@ -6,7 +6,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 // My Modules
 import { TabbedComponentModule } from './tabbed-component/tabbed-component.module';
-import { UploadFormComponentModule } from './upload-form-component/upload-form-component.module';
 import { GupCommonModule } from './gup-common/gup-common.module';
 import { PublicModule } from './public/public.module';
 import { AppRoutingModule } from './app-routing.module';
@@ -36,7 +35,6 @@ import { environment } from '../environments/environment';
     // my modules
     GupCommonModule,
     TabbedComponentModule,
-    UploadFormComponentModule,
     PublicModule,
   ],
   providers: [
