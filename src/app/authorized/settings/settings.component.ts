@@ -4,16 +4,16 @@ import { Readyable, ReadyState } from 'src/app/classes/readyable';
 import {
   TotpQrPopupComponent,
   IConfirmGood,
-} from '../totp-qr-popup/totp-qr-popup.component';
+} from './components/totp-qr-popup/totp-qr-popup.component';
 import { AuthService } from 'src/app/public/services/auth.service';
 import { OAuthProvider } from 'src/app/public/services/oauth/oauth-provider.interface';
 import { ApiAuthService } from 'src/app/public/services/api/api-auth.service';
 import { IEnvConfigService } from 'src/app/public/services/env-config/env-config.interface';
 
 @Component({
-  selector: 'gup-authed-settings',
-  templateUrl: './authed-settings.component.html',
-  styleUrls: ['./authed-settings.component.scss'],
+  selector: 'gup-settings',
+  templateUrl: './settings.component.html',
+  styleUrls: ['./settings.component.scss'],
 })
 export class AuthedSettingsComponent extends Readyable implements OnInit {
   readonly ReadyConditions = [this.oauth, this.apiAuth, this.envConfig];
