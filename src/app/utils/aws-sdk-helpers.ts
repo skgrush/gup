@@ -8,6 +8,7 @@ type IAWSMethod<ThisT, ReturnT, ErrorT, ParamT> = (
   callback: (err: ErrorT, data: ReturnT) => any
 ) => Request<ReturnT, ErrorT>;
 
+/** @deprecated AWS responses have `.promise()` making this pointless */
 export function PromisifyAWS<MethodThisT, RetT, ErrT, ParamT>(
   mThis: MethodThisT,
   method: IAWSMethod<MethodThisT, RetT, ErrT, ParamT>,

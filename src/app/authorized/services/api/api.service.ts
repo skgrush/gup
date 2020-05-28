@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import * as S3 from 'aws-sdk/clients/s3';
 
 import { AuthService } from 'src/app/public/services/auth.service';
-import { PromisifyAWS } from 'src/app/utils/aws-sdk-helpers';
 
 type UploadCB = (progress: S3.ManagedUpload.Progress) => void;
 
@@ -29,11 +28,13 @@ export class ApiService {
   async listObjects(bucket: string, prefix?: string, keys?: number) {
     const s3 = this._s3 ?? this.initS3();
 
-    const result = await PromisifyAWS(s3, s3.listObjectsV2, {
-      Bucket: bucket,
-      Prefix: prefix,
-      MaxKeys: keys,
-    });
+    const result = await s3
+      .listObjectsV2({
+        Bucket: bucket,
+        Prefix: prefix,
+        MaxKeys: keys,
+      })
+      .promise();
 
     return result;
   }
@@ -41,10 +42,12 @@ export class ApiService {
   async headObject(bucket: string, key: string) {
     const s3 = this._s3 ?? this.initS3();
 
-    const result = await PromisifyAWS(s3, s3.headObject, {
-      Bucket: bucket,
-      Key: key,
-    });
+    const result = await s3
+      .headObject({
+        Bucket: bucket,
+        Key: key,
+      })
+      .promise();
 
     return result;
   }
@@ -66,16 +69,17 @@ export class ApiService {
     }
 
     const result = await (keys.length === 1
-      ? PromisifyAWS(s3, s3.deleteObject, {
+      ? s3.deleteObject({
           Bucket: bucket,
           Key: keys[0],
         })
-      : PromisifyAWS(s3, s3.deleteObjects, {
+      : s3.deleteObjects({
           Bucket: bucket,
           Delete: {
             Objects: keys.map((k) => ({ Key: k })),
           },
-        }));
+        })
+    ).promise();
 
     return result;
   }

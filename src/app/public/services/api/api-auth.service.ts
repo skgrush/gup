@@ -4,7 +4,6 @@ import { BehaviorSubject } from 'rxjs';
 
 import { IEnv, IEnvConfigService } from '../env-config/env-config.interface';
 import { Readyable, ReadyState } from 'src/app/classes/readyable';
-import { PromisifyAWS } from 'src/app/utils/aws-sdk-helpers';
 import * as CognitoIdentityServiceProvider from 'aws-sdk/clients/cognitoidentityserviceprovider';
 
 type AssociateTokenArg =
@@ -86,11 +85,7 @@ export class ApiAuthService extends Readyable {
       Logins: logins,
     };
 
-    const { IdentityId } = await PromisifyAWS(
-      cognitoIdentity,
-      cognitoIdentity.getId,
-      getIdParams
-    );
+    const { IdentityId } = await cognitoIdentity.getId(getIdParams).promise();
 
     if (!IdentityId) {
       throw new Error('Unexpected undefined "IdentityId" returned by getId()');
@@ -102,11 +97,12 @@ export class ApiAuthService extends Readyable {
       Logins: logins,
     };
 
-    const { Credentials, ...other } = await PromisifyAWS(
-      cognitoIdentity,
-      cognitoIdentity.getCredentialsForIdentity,
-      getCredentialsParams
-    );
+    const {
+      Credentials,
+      ...other
+    } = await cognitoIdentity
+      .getCredentialsForIdentity(getCredentialsParams)
+      .promise();
 
     console.debug('[getIdId,getCredentialsId]', [IdentityId, other.IdentityId]);
 
@@ -136,13 +132,8 @@ export class ApiAuthService extends Readyable {
       Logins: logins,
     };
 
-    const promise = PromisifyAWS(
-      cognitoIdentity,
-      cognitoIdentity.getId,
-      params
-    );
+    const response = await cognitoIdentity.getId(params).promise();
 
-    const response = await promise;
     return response;
   }
 
@@ -150,9 +141,11 @@ export class ApiAuthService extends Readyable {
     const cognitoISP =
       this._cognitoServiceProvider ?? this.initCognitoServiceProvider();
 
-    const result = await PromisifyAWS(cognitoISP, cognitoISP.getUser, {
-      AccessToken: accessToken,
-    });
+    const result = await cognitoISP
+      .getUser({
+        AccessToken: accessToken,
+      })
+      .promise();
 
     return result;
   }
@@ -162,11 +155,7 @@ export class ApiAuthService extends Readyable {
       this._cognitoServiceProvider ?? this.initCognitoServiceProvider();
 
     console.debug('associate pre:', params);
-    const result = await PromisifyAWS(
-      cognitoISP,
-      cognitoISP.associateSoftwareToken,
-      params
-    );
+    const result = await cognitoISP.associateSoftwareToken(params).promise();
     console.debug('associate post:', result);
 
     return result;
@@ -176,28 +165,28 @@ export class ApiAuthService extends Readyable {
     const cognitoISP =
       this._cognitoServiceProvider ?? this.initCognitoServiceProvider();
 
-    const result = await PromisifyAWS(
-      cognitoISP,
-      cognitoISP.verifySoftwareToken,
-      {
+    const result = await cognitoISP
+      .verifySoftwareToken({
         UserCode: code,
         FriendlyDeviceName: deviceName,
         AccessToken: accessToken,
-      }
-    );
+      })
+      .promise();
 
     if (result.Status !== 'SUCCESS') {
       console.warn(`verifySoftwareToken received status ${result.Status}`);
       return false;
     }
 
-    await PromisifyAWS(cognitoISP, cognitoISP.setUserMFAPreference, {
-      AccessToken: accessToken,
-      SoftwareTokenMfaSettings: {
-        Enabled: true,
-        PreferredMfa: true,
-      },
-    });
+    await cognitoISP
+      .setUserMFAPreference({
+        AccessToken: accessToken,
+        SoftwareTokenMfaSettings: {
+          Enabled: true,
+          PreferredMfa: true,
+        },
+      })
+      .promise();
 
     return true;
   }
