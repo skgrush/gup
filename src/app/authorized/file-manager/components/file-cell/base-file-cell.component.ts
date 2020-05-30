@@ -1,7 +1,7 @@
 import { HostBinding, Inject } from '@angular/core';
 import { IFileEntity } from '../../interfaces/file-management';
 import { FEHeaderId } from '../../enums/file-entity-headers.enum';
-import { FILE_ENTITY } from 'src/app/tokens';
+import { FILE_ENTITY } from '../../tokens/file-entity';
 
 export abstract class BaseFileCellComponent {
   @HostBinding('attr.role')

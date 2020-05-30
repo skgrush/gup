@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { IFileEntity, EntityState } from '../../interfaces/file-management';
 import { BaseFileCellComponent } from '../file-cell/base-file-cell.component';
-import { FILE_ENTITY } from 'src/app/tokens';
+import { FILE_ENTITY } from '../../tokens/file-entity';
 
 @Component({
   selector: 'gup-file-row',

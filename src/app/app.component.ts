@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { SHOW_DEBUG } from './tokens';
+import { SHOW_DEBUG } from './shared/tokens/debug';
 import { IEnvConfigService } from './public/services/env-config/env-config.interface';
 
 @Component({
