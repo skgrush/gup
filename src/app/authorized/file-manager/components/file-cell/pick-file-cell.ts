@@ -4,12 +4,14 @@ import { FileCellLastmodifiedComponent } from './file-cell-lastmodified.componen
 import { FileCellSizeComponent } from './file-cell-size.component';
 import { FileCellUploaderComponent } from './file-cell-uploader.component';
 import { FEKeyType } from '../../enums/file-entity-headers.enum';
+import { FileCellStorageclassComponent } from './file-cell-storageclass.component';
 
 const fileCellComponentRegistry = Object.freeze({
   contentType: FileCellContenttypeComponent,
   lastModified: FileCellLastmodifiedComponent,
   size: FileCellSizeComponent,
   uploader: FileCellUploaderComponent,
+  storageClass: FileCellStorageclassComponent,
   /** the key column is rendered by FileRowComponent */
   key: undefined,
 });

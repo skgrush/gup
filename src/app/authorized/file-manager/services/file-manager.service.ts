@@ -24,6 +24,7 @@ import {
   FEMovableKeys,
 } from '../enums/file-entity-headers.enum';
 import { sortFactory } from '../utilities/sort';
+import { StorageClass } from '../interfaces/s3-data';
 
 export type StoreType = ReadonlyArray<Readonly<IFileEntity>>;
 
@@ -135,7 +136,14 @@ export class FileManagerService extends Readyable {
     }
   }
 
-  async uploadFile({ file, name, progress, maxAge, expires }: IFileFormValue) {
+  async uploadFile({
+    file,
+    name,
+    progress,
+    maxAge,
+    expires,
+    storageClass,
+  }: IFileFormValue) {
     this.readyOrThrow();
     const key = (this.prefix ?? '') + name;
     const cacheControl = maxAge ? `max-age=${maxAge}` : undefined;
@@ -160,6 +168,7 @@ export class FileManagerService extends Readyable {
         size: file.size,
         uploader,
         entityState: EntityState.get,
+        storageClass,
       };
 
       this._store.push(fileEntity);
@@ -170,7 +179,14 @@ export class FileManagerService extends Readyable {
     }
   }
 
-  async uploadUrl({ url, name, progress, maxAge, expires }: IUrlFormValue) {
+  async uploadUrl({
+    url,
+    name,
+    progress,
+    maxAge,
+    expires,
+    storageClass,
+  }: IUrlFormValue) {
     this.readyOrThrow();
     const key = (this.prefix ?? '') + name;
     const cacheControl = maxAge ? `max-age=${maxAge}` : undefined;
@@ -201,6 +217,7 @@ export class FileManagerService extends Readyable {
         uploader,
         redirectLocation: url,
         entityState: EntityState.get,
+        storageClass,
       };
 
       this._store.push(fileEntity);
@@ -254,12 +271,15 @@ export class FileManagerService extends Readyable {
         ? (obj.LastModified ?? new Date(-1)).toISOString()
         : obj.LastModified;
 
+    const storageClass = obj.StorageClass as StorageClass | undefined;
+
     const entity: IFileEntity = {
       key: obj.Key ?? 'MISSING_KEY',
       eTag: obj.ETag ?? 'MISSING_ETAG',
       size: obj.Size ?? NaN,
       lastModified,
       entityState: EntityState.list,
+      storageClass,
     };
 
     this._store.push(entity);

@@ -1,3 +1,5 @@
+import { StorageClass } from './s3-data';
+
 export enum EntityState {
   list = 1,
   head,
@@ -11,6 +13,7 @@ export interface IFileEntityBase {
   key: string;
   lastModified: string;
   size: number;
+  storageClass?: StorageClass;
 }
 
 export interface IFileEntityListed extends IFileEntityBase {
@@ -45,6 +48,7 @@ interface IBaseFormValue {
   name: string;
   progress: (p: IProgress) => void;
   maxAge?: number;
+  storageClass?: StorageClass;
   expires?: Date;
 }
 
