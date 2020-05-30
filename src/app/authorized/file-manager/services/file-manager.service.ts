@@ -17,7 +17,7 @@ import {
 } from 'src/app/public/services/env-config/env-config.interface';
 import { Readyable, ReadyState } from 'src/app/classes/readyable';
 import { AuthService } from 'src/app/public/services/auth.service';
-import { SortOrder } from 'src/app/enums/sort-order.enum';
+import { SortOrder } from '../enums/sort-order.enum';
 import {
   FEMovableKeyType,
   FEKeyType,

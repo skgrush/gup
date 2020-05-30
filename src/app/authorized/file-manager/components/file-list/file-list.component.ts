@@ -7,7 +7,7 @@ import {
   OnChanges,
 } from '@angular/core';
 import { IFileEntity } from '../../interfaces/file-management';
-import { SortOrder } from 'src/app/enums/sort-order.enum';
+import { SortOrder } from '../../enums/sort-order.enum';
 import {
   FEHeaderId,
   FEHeaderName,
