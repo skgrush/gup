@@ -26,6 +26,18 @@
             formControlName="file"
           />
         </label>
+        <div *ngIf="!!file">
+          <div>
+            Size:
+            <abbr aria-label="File size" [title]="file?.size">
+              {{ file?.size | byteFormat }}
+            </abbr>
+          </div>
+          <div>
+            MIME:
+            <var aria-label="File MIME">{{ file?.type }}</var>
+          </div>
+        </div>
       </gup-tab-panel>
       <gup-tab-panel tabName="Link">
         <label>
