@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 // My Modules
 import { GupCommonModule } from 'src/app/gup-common/gup-common.module';
-import { TabbedComponentModule } from 'src/app/tabbed-component/tabbed-component.module';
+import { TabbedComponentModule } from '../tabbed-component/tabbed-component.module';
 
 // This Module's Declarations
 import { FileManagerComponent } from './file-manager.component';
