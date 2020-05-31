@@ -1,10 +1,10 @@
 import { BehaviorSubject } from 'rxjs';
-import { Readyable, ReadyState } from 'src/app/classes/readyable';
+import { Readyable, ReadyState } from 'src/app/shared/classes/readyable';
 import {
   CognitoJwt,
   IIdJWTJson,
   IAuthJWTJson,
-} from 'src/app/classes/cognito-jwt';
+} from 'src/app/shared/classes/cognito-jwt';
 
 /**
  * Abstract baseclass for OAuth2 providers.

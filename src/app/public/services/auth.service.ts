@@ -4,11 +4,11 @@ import { Credentials } from 'aws-sdk/lib/core';
 import { provider } from 'aws-sdk/lib/credentials/credential_provider_chain';
 
 import { IMyCredentialsOptions } from '../interfaces/my-credentials-options';
-import { KeyStore } from 'src/app/classes/key-store';
+import { KeyStore } from 'src/app/shared/classes/key-store';
 import {
   KeyStoreCredentials,
   NoKeyStoreCredsError,
-} from 'src/app/classes/key-store-credentials';
+} from 'src/app/shared/classes/key-store-credentials';
 
 export enum AuthStatus {
   authenticated = 0,

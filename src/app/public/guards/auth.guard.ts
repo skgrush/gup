@@ -12,7 +12,7 @@ import { Route } from '@angular/compiler/src/core';
 import { AuthService } from '../services/auth.service';
 import { OAuthProvider } from '../services/oauth/oauth-provider.interface';
 import { urlSearchParamsObject } from 'src/app/shared/utils/utils';
-import { Readyable, ReadyState } from 'src/app/classes/readyable';
+import { Readyable, ReadyState } from 'src/app/shared/classes/readyable';
 
 @Injectable({
   providedIn: 'root',

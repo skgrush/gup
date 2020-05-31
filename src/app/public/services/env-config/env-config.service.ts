@@ -3,7 +3,7 @@ import { ReplaySubject, of, BehaviorSubject } from 'rxjs';
 
 import { EnvConfigValidationError } from './env-config-validation-error';
 import { IEnvConfigService, IEnv } from './env-config.interface';
-import { ReadyState } from 'src/app/classes/readyable';
+import { ReadyState } from 'src/app/shared/classes/readyable';
 
 const _roleArnRE = /^arn:aws:iam:[a-z0-9-]*:\d+:role\/[A-Za-z+=,\.@_/-]+$/;
 

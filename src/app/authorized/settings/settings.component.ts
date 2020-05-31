@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Readyable, ReadyState } from 'src/app/classes/readyable';
+import { Readyable, ReadyState } from 'src/app/shared/classes/readyable';
 import {
   TotpQrPopupComponent,
   IConfirmGood,

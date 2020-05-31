@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { Readyable } from 'src/app/classes/readyable';
+import { Readyable } from 'src/app/shared/classes/readyable';
 
 export type ProviderString = 'cognito' | 'google';
 

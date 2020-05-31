@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { FileManagerService, StoreType } from './services/file-manager.service';
-import { ReadyState } from 'src/app/classes/readyable';
+import { ReadyState } from 'src/app/shared/classes/readyable';
 import { FEMovableKeyType } from './enums/file-entity-headers.enum';
 import { IFileFormValue, IUrlFormValue } from './interfaces/file-management';
 

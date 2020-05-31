@@ -15,8 +15,8 @@ import { AppComponent } from './app.component';
 
 // This Module's Provisions
 import { LocationStrategy } from '@angular/common';
-import { QueryLocationStrategy } from './classes/query-location-strategy';
-import { KeyStore } from './classes/key-store';
+import { QueryLocationStrategy } from 'src/app/shared/classes/query-location-strategy';
+import { KeyStore } from 'src/app/shared/classes/key-store';
 import { SHOW_DEBUG } from './shared/tokens/debug';
 
 // Other References

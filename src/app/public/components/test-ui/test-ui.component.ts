@@ -3,9 +3,12 @@ import { OAuthProvider } from '../../services/oauth/oauth-provider.interface';
 import { ApiAuthService } from '../../services/api/api-auth.service';
 import { ApiService } from 'src/app/authorized/services/api/api.service';
 import { AuthService } from '../../services/auth.service';
-import { KeyStore } from 'src/app/classes/key-store';
+import { KeyStore } from 'src/app/shared/classes/key-store';
 import { EnvConfigService } from '../../services/env-config/env-config.service';
-import { Readyable, readyStateFinalized } from 'src/app/classes/readyable';
+import {
+  Readyable,
+  readyStateFinalized,
+} from 'src/app/shared/classes/readyable';
 
 @Component({
   selector: 'gup-test-ui',

@@ -3,7 +3,7 @@ import * as CognitoIdentity from 'aws-sdk/clients/cognitoidentity';
 import { BehaviorSubject } from 'rxjs';
 
 import { IEnv, IEnvConfigService } from '../env-config/env-config.interface';
-import { Readyable, ReadyState } from 'src/app/classes/readyable';
+import { Readyable, ReadyState } from 'src/app/shared/classes/readyable';
 import * as CognitoIdentityServiceProvider from 'aws-sdk/clients/cognitoidentityserviceprovider';
 
 type AssociateTokenArg =

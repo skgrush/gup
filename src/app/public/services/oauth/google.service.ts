@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { OAuthProvider } from './oauth-provider.interface';
 
-import { KeyStore } from 'src/app/classes/key-store';
+import { KeyStore } from 'src/app/shared/classes/key-store';
 import { bufferToHex } from 'src/app/shared/utils/transform-data';
 import { IEnvConfigService } from '../env-config/env-config.interface';
 import { BehaviorSubject } from 'rxjs';
-import { ReadyState } from 'src/app/classes/readyable';
+import { ReadyState } from 'src/app/shared/classes/readyable';
 
 interface IGoogleOAuthResponse {
   // access_token: string;

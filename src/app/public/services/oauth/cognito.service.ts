@@ -3,16 +3,16 @@ import * as CognitoIdentity from 'aws-sdk/clients/cognitoidentity';
 import { BehaviorSubject } from 'rxjs';
 
 import { OAuthProvider } from './oauth-provider.interface';
-import { KeyStore } from 'src/app/classes/key-store';
+import { KeyStore } from 'src/app/shared/classes/key-store';
 import { IEnvConfigService } from '../env-config/env-config.interface';
 import { ApiAuthService } from '../api/api-auth.service';
 import { AuthService } from '../auth.service';
-import { ReadyState } from 'src/app/classes/readyable';
+import { ReadyState } from 'src/app/shared/classes/readyable';
 import {
   CognitoJwt,
   IIdJWTJson,
   IAuthJWTJson,
-} from 'src/app/classes/cognito-jwt';
+} from 'src/app/shared/classes/cognito-jwt';
 
 interface ICognitoOAuthResponse {
   /** JWT from Cognito */

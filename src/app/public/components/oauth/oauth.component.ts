@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { OAuthProvider } from '../../services/oauth/oauth-provider.interface';
-import { ReadyState } from 'src/app/classes/readyable';
+import { ReadyState } from 'src/app/shared/classes/readyable';
 
 @Component({
   selector: 'gup-oauth',
