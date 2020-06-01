@@ -20,6 +20,8 @@ import { SHOW_DEBUG } from './shared/tokens/debug';
 
 // Other References
 import { environment } from '../environments/environment';
+import { LOG_LEVEL, LOG_STORE } from './shared/tokens/log-level';
+import { LogLevel } from './shared/enums/log-levels';
 
 @NgModule({
   declarations: [AppComponent],
@@ -43,6 +45,14 @@ import { environment } from '../environments/environment';
     KeyStore,
     {
       provide: SHOW_DEBUG,
+      useValue: false,
+    },
+    {
+      provide: LOG_LEVEL,
+      useValue: LogLevel.log,
+    },
+    {
+      provide: LOG_STORE,
       useValue: false,
     },
   ],
