@@ -10,6 +10,7 @@ import {
   OnChanges,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 export interface IConfirmGood {
   deviceName: string;
@@ -67,6 +68,10 @@ export class TotpQrPopupComponent implements OnChanges {
     confirmCode: new FormControl(''),
   });
 
+  constructor(private readonly _logger: LoggerService) {
+    this._logger.initialize('TotpQrPopup', 'component', this);
+  }
+
   open() {
     this.keyUri = this.generateKeyUri();
     this.formGroup.reset();
@@ -94,7 +99,7 @@ export class TotpQrPopupComponent implements OnChanges {
   }
 
   onSubmit(event: Event) {
-    console.debug('onSubmit', event, this.formGroup);
+    this._logger.debug('onSubmit', event, this.formGroup);
     const control = this.formGroup.controls.confirmCode;
     if (this.formGroup.valid && control.value) {
       this.formGroup.disable();
@@ -128,7 +133,7 @@ export class TotpQrPopupComponent implements OnChanges {
     const encodedSecret = this.secret; // base32(this.secret);
 
     const result = `otpauth://totp/${encodedIssuer}:${encodedAccountName}?secret=${encodedSecret}&issuer=${encodedIssuer}`;
-    console.warn('KEY-URI', result);
+    this._logger.debug('KEY-URI', result);
     return result;
   }
 }

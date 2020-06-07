@@ -9,8 +9,23 @@ import { LOG_CONSUMER } from '../../tokens/log-consumer';
 
 const _startTime = Date.now();
 
-type LogInitializeCategory = 'module' | 'service' | 'component' | 'guard';
+type LogInitializeCategory =
+  | 'module'
+  | 'service'
+  | 'component'
+  | 'guard'
+  | 'directive';
 type OtherServiceMethods = 'initialize';
+
+function categoryIsStorable(cat: LogInitializeCategory) {
+  switch (cat) {
+    case 'module':
+    case 'service':
+      return true;
+    default:
+      return false;
+  }
+}
 
 @Injectable({
   providedIn: null,
@@ -94,8 +109,9 @@ export class LoggerService {
     ...log: any[]
   ) {
     const now = Date.now() - _startTime;
-    const msg = `${type} ${category} initialized at ${now}`;
-    this.debug(msg, [caller], ...log);
+    const msg = `Initialized ${type} ${category} at ${now}`;
+    const callerArg = categoryIsStorable(category) ? [caller] : '';
+    this.debug(msg, callerArg, ...log);
   }
 
   // ------------------------------ Log Levels ------------------------------ //

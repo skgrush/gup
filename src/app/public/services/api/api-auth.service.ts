@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { IEnv, IEnvConfigService } from '../env-config/env-config.interface';
 import { Readyable, ReadyState } from 'src/app/shared/classes/readyable';
 import * as CognitoIdentityServiceProvider from 'aws-sdk/clients/cognitoidentityserviceprovider';
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 type AssociateTokenArg =
   | { AccessToken: string; Session?: never }
@@ -39,15 +40,19 @@ export class ApiAuthService extends Readyable {
     return this._env?.awsIdentityPool as string;
   }
 
-  constructor(private readonly _envConfig: IEnvConfigService) {
+  constructor(
+    private readonly _envConfig: IEnvConfigService,
+    private readonly _logger: LoggerService
+  ) {
     super();
+    this._logger.initialize('ApiAuth', 'service', this);
+
     this._envConfig.env.subscribe((c) => {
       this._env = c;
       this._envValid.next(ReadyState.Ready);
       this._envValid.complete();
     });
     this.readyInit();
-    console.debug('api-auth.service:', this);
   }
 
   // initSTS(): STS {
@@ -104,8 +109,6 @@ export class ApiAuthService extends Readyable {
       .getCredentialsForIdentity(getCredentialsParams)
       .promise();
 
-    console.debug('[getIdId,getCredentialsId]', [IdentityId, other.IdentityId]);
-
     if (!Credentials) {
       throw new Error(
         'Unexpected undefined "Credentials" from GetCredentialsForIdentity'
@@ -154,9 +157,7 @@ export class ApiAuthService extends Readyable {
     const cognitoISP =
       this._cognitoServiceProvider ?? this.initCognitoServiceProvider();
 
-    console.debug('associate pre:', params);
     const result = await cognitoISP.associateSoftwareToken(params).promise();
-    console.debug('associate post:', result);
 
     return result;
   }
@@ -174,7 +175,7 @@ export class ApiAuthService extends Readyable {
       .promise();
 
     if (result.Status !== 'SUCCESS') {
-      console.warn(`verifySoftwareToken received status ${result.Status}`);
+      this._logger.warn(`verifySoftwareToken received status ${result.Status}`);
       return false;
     }
 

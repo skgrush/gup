@@ -4,6 +4,7 @@ import { ReplaySubject, of, BehaviorSubject } from 'rxjs';
 import { EnvConfigValidationError } from './env-config-validation-error';
 import { IEnvConfigService, IEnv } from './env-config.interface';
 import { ReadyState } from 'src/app/shared/classes/readyable';
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 const _roleArnRE = /^arn:aws:iam:[a-z0-9-]*:\d+:role\/[A-Za-z+=,\.@_/-]+$/;
 
@@ -19,8 +20,10 @@ export class EnvConfigService extends IEnvConfigService {
     return this._env.asObservable();
   }
 
-  constructor() {
+  constructor(private readonly _logger: LoggerService) {
     super();
+    this._logger.initialize('EnvConfig', 'service', this);
+
     this.readyInit();
     this._load();
   }
@@ -47,7 +50,7 @@ export class EnvConfigService extends IEnvConfigService {
         throw exc;
       }
     } else {
-      console.error('load config failed:', resp);
+      this._logger.error('load config failed:', resp);
       this._envValid.next(ReadyState.Failed);
       this._envValid.complete();
     }
@@ -132,6 +135,7 @@ export class EnvConfigService extends IEnvConfigService {
       );
     }
 
+    this._logger.log('Parsed and validated env:', env);
     return Object.freeze(env);
   }
 }

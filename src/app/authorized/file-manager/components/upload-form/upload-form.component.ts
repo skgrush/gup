@@ -10,7 +10,6 @@ import {
 import {
   FormGroup,
   FormControl,
-  Validators,
   AbstractControl,
   ValidatorFn,
 } from '@angular/forms';
@@ -20,6 +19,7 @@ import {
   IProgress,
   IUrlFormValue,
 } from '../../interfaces/file-management';
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 @Component({
   selector: 'gup-upload-form',
@@ -57,6 +57,8 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
     }
   }
 
+  constructor(readonly logger: LoggerService) {}
+
   open() {
     this.reset();
     this.isOpen = true;
@@ -81,7 +83,6 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
     if (!this.uploadDialog) {
       throw new Error('missing uploadDialog');
     }
-    console.debug('afterViewInit:', this.uploadDialog);
   }
 
   onSubmit(e: Event) {
@@ -90,7 +91,7 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
     const expires: string | null = this.formGroup.value.expires;
     const maxAge: number | null = this.formGroup.value.maxAge;
 
-    console.debug('submit:', e, this.formGroup);
+    this.logger.debug('submit:', e, this.formGroup);
     if (!this.formGroup.invalid) {
       this.inProgress = true;
       this.formGroup.disable();
@@ -118,7 +119,6 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
   }
 
   onFileInput(e: InputEvent) {
-    console.warn('input:', e);
     if (e.target instanceof HTMLInputElement) {
       const { files } = e.target;
       this.file = (files && files[0]) ?? undefined;
@@ -132,13 +132,12 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
   }
 
   onTabSelected(tabName: string) {
-    console.debug('tabSelected:', tabName);
     if (tabName === 'Upload') {
       this.selectedTab = 'file';
     } else if (tabName === 'Link') {
       this.selectedTab = 'url';
     } else {
-      console.warn('unexpected tab selected:', tabName);
+      this.logger.warn('unexpected tab selected:', tabName);
     }
     setTimeout(() => this.formGroup.controls.name.updateValueAndValidity());
   }

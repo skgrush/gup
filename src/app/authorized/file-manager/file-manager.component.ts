@@ -4,6 +4,7 @@ import { FileManagerService, StoreType } from './services/file-manager.service';
 import { ReadyState } from 'src/app/shared/classes/readyable';
 import { FEMovableKeyType } from './enums/file-entity-headers.enum';
 import { IFileFormValue, IUrlFormValue } from './interfaces/file-management';
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 @Component({
   selector: 'gup-file-manager',
@@ -18,20 +19,18 @@ export class FileManagerComponent {
 
   columnOrder = [] as FEMovableKeyType[];
 
-  constructor(readonly fileManager: FileManagerService) {
-    console.debug(
-      'FileManagerComponent:',
-      fileManager,
-      fileManager.currentState
-    );
+  constructor(
+    readonly fileManager: FileManagerService,
+    private readonly _logger: LoggerService
+  ) {
+    _logger.initialize('FileManager', 'component', this);
     this.fileManager.observeReadyFinalize().subscribe((state) => {
-      console.debug('fileManager finalized:', state);
       this.loading = false;
       this.ready = state === ReadyState.Ready;
     });
 
     this.fileManager.sortedStore.subscribe((data) => {
-      console.debug('received new sorted files');
+      _logger.debug('received new sorted files');
       this.sortedFiles = data;
     });
     this.fileManager.columnOrder.subscribe((cols) => {
@@ -41,7 +40,9 @@ export class FileManagerComponent {
 
   refresh() {
     if (this.loading) {
-      console.warn('Ignoring call to FileManagerComponent#refresh mid-refresh');
+      this._logger.warn(
+        'Ignoring call to FileManagerComponent#refresh mid-refresh'
+      );
       return;
     }
     this.loading = true;
@@ -49,7 +50,7 @@ export class FileManagerComponent {
   }
 
   async onFileSubmit(formVal: IFileFormValue) {
-    console.debug('onFileSubmit', formVal);
+    this._logger.debug('onFileSubmit', formVal);
     try {
       const managed = await this.fileManager.uploadFile(formVal);
       formVal.progress({ success: true });
@@ -60,7 +61,7 @@ export class FileManagerComponent {
   }
 
   async onUrlSubmit(formVal: IUrlFormValue) {
-    console.debug('onUrlSubmit', formVal);
+    this._logger.debug('onUrlSubmit', formVal);
     try {
       const managed = await this.fileManager.uploadUrl(formVal);
       formVal.progress({ success: true });

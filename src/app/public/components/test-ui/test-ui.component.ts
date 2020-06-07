@@ -9,6 +9,7 @@ import {
   Readyable,
   readyStateFinalized,
 } from 'src/app/shared/classes/readyable';
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 @Component({
   selector: 'gup-test-ui',
@@ -16,8 +17,6 @@ import {
   styleUrls: ['./test-ui.component.scss'],
 })
 export class TestUiComponent {
-  readonly keyStore = new KeyStore();
-
   readonly keyStoreProps: Array<keyof KeyStore> = [
     'accessKeyId',
     'idToken',
@@ -61,7 +60,9 @@ export class TestUiComponent {
     readonly apiAuth: ApiAuthService,
     readonly api: ApiService,
     readonly auth: AuthService,
-    readonly config: EnvConfigService
+    readonly config: EnvConfigService,
+    readonly keyStore: KeyStore,
+    private readonly _logger: LoggerService
   ) {
     Readyable.observeMultiple(oauthProvider, apiAuth, config).subscribe(
       (state) => (this.ready = readyStateFinalized(state))
@@ -70,7 +71,7 @@ export class TestUiComponent {
       this.apiBucket = env.awsS3EndpointARN;
       this.apiPrefix = env.awsS3Prefix;
     });
-    console.debug('TestUI', this);
+    this._logger.initialize('TestUI', 'component', this);
   }
 
   authNoCredentials() {

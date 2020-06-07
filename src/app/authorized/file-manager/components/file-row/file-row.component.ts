@@ -1,10 +1,4 @@
-import {
-  Component,
-  Input,
-  HostBinding,
-  Injector,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, Input, HostBinding, Injector } from '@angular/core';
 import { IFileEntity, EntityState } from '../../interfaces/file-management';
 import { BaseFileCellComponent } from '../file-cell/base-file-cell.component';
 import { FILE_ENTITY } from '../../tokens/file-entity';
@@ -49,15 +43,6 @@ export class FileRowComponent {
       ],
       parent: injector,
     });
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.fileEntity) {
-      console.debug('row fileEntity updated', this.fileEntity);
-    }
-    if (this.cellComponents) {
-      console.debug('row colComponents updated', this.cellComponents);
-    }
   }
 
   getUrl(fileEntity?: IFileEntity) {

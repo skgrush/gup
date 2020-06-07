@@ -1,4 +1,5 @@
 import { Component, Input, HostBinding, HostListener } from '@angular/core';
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 @Component({
   selector: 'gup-copy-link',
@@ -21,6 +22,8 @@ export class CopyLinkComponent {
   @HostBinding('attr.aria-label')
   readonly ariaLabel = 'Copy URL';
 
+  constructor(private readonly _logger: LoggerService) {}
+
   @HostListener('click')
   async onClick() {
     if (!this.url || !(await this.checkPermissions())) {
@@ -28,7 +31,7 @@ export class CopyLinkComponent {
     }
 
     await window.navigator.clipboard.writeText(this.url);
-    console.log('Successfully copied link to clipboard');
+    this._logger.log('Successfully copied link to clipboard');
   }
 
   async checkPermissions(): Promise<boolean> {
@@ -44,9 +47,10 @@ export class CopyLinkComponent {
             const result = await window.navigator.permissions.query({
               name: 'clipboard-write',
             } as any);
+            this._logger.log('CopyLink permission queried:', result.state);
             granted = result.state !== 'denied';
           } catch (ex) {
-            console.warn('failed to access permissions', [ex]);
+            this._logger.error('failed to access permissions', [ex]);
             granted = false;
           }
         }

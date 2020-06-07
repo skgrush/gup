@@ -1,6 +1,6 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Readyable, ReadyState } from 'src/app/shared/classes/readyable';
+import { Readyable } from 'src/app/shared/classes/readyable';
 import {
   TotpQrPopupComponent,
   IConfirmGood,
@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/public/services/auth.service';
 import { OAuthProvider } from 'src/app/public/services/oauth/oauth-provider.interface';
 import { ApiAuthService } from 'src/app/public/services/api/api-auth.service';
 import { IEnvConfigService } from 'src/app/public/services/env-config/env-config.interface';
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 @Component({
   selector: 'gup-settings',
@@ -41,7 +42,8 @@ export class AuthedSettingsComponent extends Readyable implements OnInit {
     readonly oauth: OAuthProvider,
     readonly router: Router,
     readonly apiAuth: ApiAuthService,
-    readonly envConfig: IEnvConfigService
+    readonly envConfig: IEnvConfigService,
+    private readonly _logger: LoggerService
   ) {
     super();
 
@@ -113,7 +115,7 @@ export class AuthedSettingsComponent extends Readyable implements OnInit {
       throw new Error('Missing AccessToken');
     }
     if (this.doingMfaSetup) {
-      console.warn('Already doing MFA setup!');
+      this._logger.warn('Already doing MFA setup!');
       return;
     }
 

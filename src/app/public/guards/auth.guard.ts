@@ -13,6 +13,7 @@ import { AuthService } from '../services/auth.service';
 import { OAuthProvider } from '../services/oauth/oauth-provider.interface';
 import { urlSearchParamsObject } from 'src/app/shared/utils/utils';
 import { Readyable, ReadyState } from 'src/app/shared/classes/readyable';
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 @Injectable({
   providedIn: 'root',
@@ -26,15 +27,17 @@ export class AuthGuard extends Readyable implements CanActivate, CanLoad {
   constructor(
     readonly authService: AuthService,
     readonly oauthService: OAuthProvider,
-    readonly router: Router
+    readonly router: Router,
+    private readonly _logger: LoggerService
   ) {
     super();
+    this._logger.initialize('Auth', 'guard', this);
 
     this.readyInit();
   }
 
   async canLoad(route: Route) {
-    console.debug('AuthGuard.canLoad:', { route });
+    this._logger.debug('AuthGuard.canLoad:', { route });
 
     if (!(await this._waitTilReady())) {
       return false;
@@ -42,7 +45,7 @@ export class AuthGuard extends Readyable implements CanActivate, CanLoad {
 
     const isAuthed = await this.authService.isAuthenticated();
 
-    console.debug('isAuthenticated:', isAuthed);
+    this._logger.debug('isAuthenticated:', isAuthed);
     if (!isAuthed) {
       this.router.navigate(this.authFailRoute);
     }
@@ -59,7 +62,7 @@ export class AuthGuard extends Readyable implements CanActivate, CanLoad {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Promise<boolean | UrlTree> {
-    console.debug('AuthGuard.canActivate:', { next, state });
+    this._logger.debug('AuthGuard.canActivate:', { next, state });
 
     if (!(await this._waitTilReady())) {
       return false;
@@ -75,7 +78,7 @@ export class AuthGuard extends Readyable implements CanActivate, CanLoad {
     }
     this.oauthService.generateNewState();
 
-    console.debug('AuthGuard success =', success);
+    this._logger.debug('AuthGuard success =', success);
     if (success) {
       return true;
     } else {
@@ -92,7 +95,7 @@ export class AuthGuard extends Readyable implements CanActivate, CanLoad {
       : next.queryParamMap;
     const success = await this.oauthService.parseOAuthCallback(argVal);
 
-    console.debug('handleAuthedEndpoint success =', success);
+    this._logger.debug('handleAuthedEndpoint success =', success);
     if (success) {
       document.location.hash = '';
       return this.router.createUrlTree(['']);
@@ -103,9 +106,7 @@ export class AuthGuard extends Readyable implements CanActivate, CanLoad {
 
   private async _waitTilReady(): Promise<boolean> {
     if (!this.isReady) {
-      console.debug('AuthGuard, waiting for ready');
       const ready = await this.observeReadyFinalize().toPromise();
-      console.debug('AuthGuard ready?', ready);
       if (ready !== ReadyState.Ready) {
         return false;
       }

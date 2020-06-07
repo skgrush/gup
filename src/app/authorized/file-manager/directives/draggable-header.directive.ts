@@ -7,6 +7,7 @@ import {
   HostBinding,
 } from '@angular/core';
 import { FEMovableKeyType } from '../enums/file-entity-headers.enum';
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 const HEADER_CONTENT_TYPE = 'gup/is-a-header';
 const KEY_CONTENT_TYPE = 'gup/key';
@@ -40,6 +41,8 @@ export class DraggableHeaderDirective {
     return !!this.draggable;
   }
 
+  constructor(private readonly _logger: LoggerService) {}
+
   // @HostListener('drag')
   // onDrag(e: DragEvent) {
   //   if (this.draggable && this.dragKey) {
@@ -48,7 +51,7 @@ export class DraggableHeaderDirective {
 
   @HostListener('dragstart', ['$event'])
   onDragStart(e: DragEvent) {
-    // console.debug('onDragStart', e);
+    this._logger.debug('onDragStart', e);
     if (this.draggable && this.dragKey && e?.dataTransfer) {
       e.dataTransfer.setData(HEADER_CONTENT_TYPE, 'true');
       e.dataTransfer.setData(KEY_CONTENT_TYPE, this.dragKey);
@@ -59,7 +62,7 @@ export class DraggableHeaderDirective {
 
   @HostListener('dragenter', ['$event'])
   onDragEnter(e: DragEvent) {
-    // console.debug('onDragEnter', e);
+    this._logger.debug('onDragEnter', e);
     if (this.draggable && this.dragKey && e.dataTransfer) {
       const isAHeader = this._eventIsAHeaderDrag(e);
       if (isAHeader) {
@@ -69,7 +72,7 @@ export class DraggableHeaderDirective {
           this._toggleHoverStyle(true, dest);
         }
         // this confirms that we're an acceptable dropzone
-        console.info('good enter');
+        this._logger.debug('good enter');
         e.preventDefault();
       }
     }
@@ -90,7 +93,7 @@ export class DraggableHeaderDirective {
 
   @HostListener('dragleave', ['$event'])
   onDragLeave(e: DragEvent) {
-    // console.debug('onDragLeave', e);
+    this._logger.debug('onDragLeave', e);
     if (this.draggable && this.dragKey && e.dataTransfer) {
       const isAHeader = this._eventIsAHeaderDrag(e);
       if (isAHeader) {
@@ -101,7 +104,7 @@ export class DraggableHeaderDirective {
 
   @HostListener('dragend', ['$event'])
   onDragEnd(e: DragEvent) {
-    // console.debug('onDragEnd', e);
+    this._logger.debug('onDragEnd', e);
     if (this.draggable && this.dragKey) {
       this._toggleHoverStyle(false, e.target);
     }
@@ -109,7 +112,7 @@ export class DraggableHeaderDirective {
 
   @HostListener('drop', ['$event'])
   onDrop(e: DragEvent) {
-    // console.debug('onDrop', e);
+    this._logger.debug('onDrop', e);
     if (this.draggable && this.dragKey) {
       const isAHeader = this._eventIsAHeaderDrag(e);
       const startKey = this._eventGetStartKey(e);
@@ -117,11 +120,11 @@ export class DraggableHeaderDirective {
         if (startKey !== this.dragKey) {
           e.preventDefault();
           this.moveHeaderFromTo.emit([startKey, this.dragKey]);
-          // console.warn('GOOD DROP!');
+          this._logger.debug('GOOD DROP!');
         }
-      } // else {
-      // console.warn('BAD DROP??');
-      // }
+      } else {
+        this._logger.warn('BAD DROP??', e);
+      }
     }
   }
 
@@ -135,7 +138,6 @@ export class DraggableHeaderDirective {
     return false;
   }
   private _eventGetStartKey(e: DragEvent): FEMovableKeyType | null {
-    // console.debug('_eventGetStartKey');
     return (
       (e.dataTransfer?.getData(KEY_CONTENT_TYPE) as FEMovableKeyType) ?? null
     );

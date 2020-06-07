@@ -20,9 +20,9 @@ export class ApiService {
 
   constructor(
     private readonly _auth: AuthService,
-    readonly logger: LoggerService
+    private readonly _logger: LoggerService
   ) {
-    logger.initialize('Api', 'service', this);
+    _logger.initialize('Api', 'service', this);
   }
 
   initS3() {
@@ -118,7 +118,7 @@ export class ApiService {
           uploader,
         },
       },
-      console.log.bind(console, 'upload complete?:')
+      this._logger.log.bind(console, 'upload complete?:')
     );
 
     if (opts?.cb) {
@@ -141,14 +141,20 @@ export class ApiService {
   ) {
     const uploader = this._auth.identity;
 
+    this._logger.debug('uploadObjectRedir', {
+      bucket,
+      key,
+      location,
+      opts,
+      uploader,
+    });
+
     if (!uploader) {
       throw new Error('Missing uploader');
     }
     if (!location) {
       throw new Error('Missing location');
     }
-
-    console.debug('uploadRedir');
 
     const s3 = this._s3 ?? this.initS3();
 
@@ -165,14 +171,12 @@ export class ApiService {
         },
         WebsiteRedirectLocation: location,
       },
-      console.log.bind(console, 'upload complete?:')
+      this._logger.debug.bind(null, 'upload complete?:')
     );
 
     if (opts?.cb) {
       managed.on('httpUploadProgress', opts.cb);
     }
-
-    console.debug('uploadRedir2');
 
     const data = await managed.promise();
 

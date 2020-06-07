@@ -6,6 +6,7 @@ import { bufferToHex } from 'src/app/shared/utils/transform-data';
 import { IEnvConfigService } from '../env-config/env-config.interface';
 import { BehaviorSubject } from 'rxjs';
 import { ReadyState } from 'src/app/shared/classes/readyable';
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 interface IGoogleOAuthResponse {
   // access_token: string;
@@ -65,9 +66,11 @@ export class GoogleService extends OAuthProvider {
 
   constructor(
     private readonly _keyStore: KeyStore,
-    private readonly _envConfig: IEnvConfigService
+    private readonly _envConfig: IEnvConfigService,
+    private readonly _logger: LoggerService
   ) {
     super();
+    this._logger.initialize('Google', 'service', this);
     throw new Error('GoogleService not yet implemented');
     this._envConfig.env.subscribe((e) => {
       this.endpoint = e.oauth.endpoint;
@@ -85,7 +88,7 @@ export class GoogleService extends OAuthProvider {
   }
 
   async parseOAuthCallback(params: EitherResponse): Promise<boolean> {
-    console.debug('parseOAuthCallback', params);
+    this._logger.debug('parseOAuthCallback', params);
     this.lastCallback = params;
 
     if ('error' in params) {
@@ -128,7 +131,7 @@ export class GoogleService extends OAuthProvider {
   }
 
   private async _handleError(description: string): Promise<false> {
-    console.warn(description);
+    this._logger.warn(description);
     return false;
   }
 }

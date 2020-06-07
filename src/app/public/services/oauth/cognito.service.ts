@@ -13,6 +13,7 @@ import {
   IIdJWTJson,
   IAuthJWTJson,
 } from 'src/app/shared/classes/cognito-jwt';
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 interface ICognitoOAuthResponse {
   /** JWT from Cognito */
@@ -62,10 +63,11 @@ export class CognitoService extends OAuthProvider {
     private readonly _keyStore: KeyStore,
     private readonly _envConfig: IEnvConfigService,
     private readonly _apiAuth: ApiAuthService,
-    private readonly _auth: AuthService
+    private readonly _auth: AuthService,
+    private readonly _logger: LoggerService
   ) {
     super();
-    console.warn('CognitoService:', this);
+    this._logger.initialize('Cognito', 'service', this);
     this._envConfig.env.subscribe((e) => {
       this.endpoint = e.oauth.endpoint;
       this.clientId = e.oauth.clientId;
@@ -93,7 +95,7 @@ export class CognitoService extends OAuthProvider {
   async parseOAuthCallback(params: EitherResponse): Promise<boolean> {
     this.readyOrThrow();
 
-    console.debug('parseOAuthCallback', params);
+    this._logger.debug('parseOAuthCallback', params);
     this.lastCallback = params;
 
     if ('error' in params) {
@@ -180,9 +182,9 @@ export class CognitoService extends OAuthProvider {
 
   private async _handleError(warning: string, errObj?: Error): Promise<false> {
     if (errObj) {
-      console.error(warning, errObj);
+      this._logger.error(warning, errObj);
     } else {
-      console.warn(warning);
+      this._logger.warn(warning);
     }
     return false;
   }

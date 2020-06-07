@@ -9,6 +9,7 @@ import {
   KeyStoreCredentials,
   NoKeyStoreCredsError,
 } from 'src/app/shared/classes/key-store-credentials';
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 export enum AuthStatus {
   authenticated = 0,
@@ -22,7 +23,6 @@ export class AuthService {
     s3: '2006-03-01',
     sts: '2011-06-15',
   });
-  private readonly _keyStore = new KeyStore();
   private _identity?: string;
   private _credentials: KeyStoreCredentials;
   private _credProvider: CredentialProviderChain;
@@ -39,7 +39,10 @@ export class AuthService {
     return this._credentials.expireTime;
   }
 
-  constructor() {
+  constructor(
+    private readonly _logger: LoggerService,
+    private readonly _keyStore: KeyStore
+  ) {
     this._identity = this._keyStore.identity ?? undefined;
     this._credentials = new KeyStoreCredentials(this._keyStore);
     this._credProvider = new CredentialProviderChain([() => this._credentials]);
@@ -49,7 +52,7 @@ export class AuthService {
       credentialProvider: this._credProvider,
     });
 
-    console.warn('authService', this);
+    this._logger.initialize('Auth', 'service', this);
     this._credentials.refresh();
   }
 
@@ -63,7 +66,7 @@ export class AuthService {
       return !creds.needsRefresh();
     } catch (exc) {
       if (!(exc instanceof NoKeyStoreCredsError)) {
-        console.error('Unexpected auth error', exc);
+        this._logger.error('Unexpected auth error', exc);
       }
       return false;
     }
@@ -71,10 +74,10 @@ export class AuthService {
 
   addCredentials(credentials: Credentials | IMyCredentialsOptions) {
     if (credentials instanceof Credentials) {
-      console.debug('Shifting credentials directly into chain[0]');
+      this._logger.debug('Shifting credentials directly into chain[0]');
       this.providerChain.unshift(credentials);
     } else {
-      console.debug('Storing credentials info in KeyStore');
+      this._logger.debug('Storing credentials info in KeyStore');
       this._identity = credentials.identity;
       this._keyStore.identity = credentials.identity ?? null;
       this._keyStore.accessKeyId = credentials.accessKeyId ?? null;
@@ -86,7 +89,7 @@ export class AuthService {
   }
 
   addCredentialsFunction(credentialsFunct: () => Credentials) {
-    console.debug('Shifting credentials function directly into chain[0]');
+    this._logger.debug('Shifting credentials function directly into chain[0]');
     this.providerChain.unshift(credentialsFunct);
   }
 
@@ -116,7 +119,7 @@ export class AuthService {
         (err.name === 'NotAuthorizedException' &&
           err.message.includes('expired'))
       ) {
-        console.warn('Credentials expired with error', err.name, [err]);
+        this._logger.warn('Credentials expired with error', err.name, [err]);
         this.noCredentials();
       }
     }

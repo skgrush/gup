@@ -1,3 +1,6 @@
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
+import { Injectable } from '@angular/core';
+
 const _keys = Object.freeze({
   // aws auth keys
   accessKeyId: 'gup:AWSAccessKeyId',
@@ -23,6 +26,7 @@ function _lsExists() {
   }
 }
 
+@Injectable()
 export class KeyStore {
   static readonly keys = Object.freeze([
     'identity',
@@ -120,9 +124,11 @@ export class KeyStore {
     }
   }
 
-  constructor() {
+  constructor(private readonly _logger: LoggerService) {
     if (!_lsExists()) {
-      console.warn('LocalStorage unavailable, falling back to SessionStorage');
+      this._logger.warn(
+        'LocalStorage unavailable, falling back to SessionStorage'
+      );
       this._storage = sessionStorage;
     }
   }

@@ -52,7 +52,6 @@ export class KeyStoreCredentials extends Credentials {
   }
 
   load(callback: (err?: any) => void) {
-    console.warn('key-store-credentials LOAD');
     const { accessKeyId, secretKey, sessionToken, expiredTime } = this.keyStore;
 
     if (accessKeyId && secretKey && expiredTime) {

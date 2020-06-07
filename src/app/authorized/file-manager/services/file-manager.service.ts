@@ -25,6 +25,7 @@ import {
 } from '../enums/file-entity-headers.enum';
 import { sortFactory } from '../utilities/sort';
 import { StorageClass } from '../interfaces/s3-data';
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 export type StoreType = ReadonlyArray<Readonly<IFileEntity>>;
 
@@ -66,7 +67,8 @@ export class FileManagerService extends Readyable {
   constructor(
     private readonly _api: ApiService,
     private readonly _envConfig: IEnvConfigService,
-    private readonly _auth: AuthService
+    private readonly _auth: AuthService,
+    private readonly _logger: LoggerService
   ) {
     super();
     this.readyInit();
@@ -80,7 +82,7 @@ export class FileManagerService extends Readyable {
       this.publicRoot = env.publicRoot;
     });
 
-    console.debug('new FileManagerService');
+    _logger.initialize('FileManager', 'service', this);
 
     this._columnOrder.next([...FEMovableKeys]);
   }
@@ -106,7 +108,7 @@ export class FileManagerService extends Readyable {
     const newIndex = currentOrder.indexOf(destination);
 
     if (oldIndex >= 0 && newIndex >= 0) {
-      console.debug('changeColumnOrder', oldIndex, newIndex);
+      this._logger.debug('changeColumnOrder', oldIndex, newIndex);
       currentOrder.splice(newIndex, 0, currentOrder.splice(oldIndex, 1)[0]);
       this._columnOrder.next(currentOrder);
     }
@@ -115,7 +117,7 @@ export class FileManagerService extends Readyable {
   private _handleError(exc: any) {
     // always store the error, but only rethrow unexpected non-AWSErrors.
     this._lastError = exc;
-    console.log('_lastError:', [exc]);
+    this._logger.error('FileManagerService handled error', exc);
     this._auth.checkForCredentialsError(exc);
     throw exc;
   }
@@ -230,7 +232,7 @@ export class FileManagerService extends Readyable {
 
   private _sortTheStore() {
     const { sortField, sortOrder } = this;
-    console.debug('sorting the store on ', sortField, sortOrder);
+    this._logger.debug('sorting the store on ', sortField, sortOrder);
     if (!sortField) {
       this._sortedStore.next([...this._store]);
     } else {
@@ -247,10 +249,10 @@ export class FileManagerService extends Readyable {
    */
   private _processListObjects(listResponse: S3.ListObjectsV2Output): void {
     if (listResponse.IsTruncated) {
-      console.warn('listObjects was truncated', listResponse);
+      this._logger.warn('listObjects was truncated', listResponse);
     }
     if (!listResponse.Contents) {
-      console.warn('listObjects has undefined Contents', listResponse);
+      this._logger.warn('listObjects has undefined Contents', listResponse);
       throw new Error('listObjects response was missing Contents');
     }
 
@@ -264,7 +266,7 @@ export class FileManagerService extends Readyable {
 
   private _processListObject(obj: S3.Object): IFileEntityListed {
     if (!obj.Key || !obj.ETag || obj.Size === undefined || !obj.LastModified) {
-      console.warn('Missing a crucial key in obj:', obj);
+      this._logger.warn('Missing a crucial key in obj:', obj);
     }
     const lastModified =
       typeof obj.LastModified !== 'string'
@@ -290,7 +292,7 @@ export class FileManagerService extends Readyable {
 
   private _headEntity(ent: IFileEntity): void {
     if (ent.entityState > EntityState.list) {
-      console.warn('_headEntity called on already headed entity:', ent);
+      this._logger.warn('_headEntity called on already headed entity:', ent);
       return;
     }
 

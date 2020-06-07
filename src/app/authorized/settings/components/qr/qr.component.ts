@@ -5,15 +5,17 @@ import {
   OnChanges,
   SimpleChanges,
   ElementRef,
+  AfterViewInit,
 } from '@angular/core';
 import * as QRCode from 'qrcode';
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 @Component({
   selector: 'gup-qr',
   templateUrl: './qr.component.html',
   styleUrls: ['./qr.component.scss'],
 })
-export class QrComponent implements OnChanges {
+export class QrComponent implements OnChanges, AfterViewInit {
   @ViewChild('qrCanvas')
   qrCanvas!: ElementRef<HTMLCanvasElement>;
 
@@ -22,6 +24,10 @@ export class QrComponent implements OnChanges {
 
   loading = false;
   error?: string;
+
+  constructor(private readonly _logger: LoggerService) {
+    this._logger.initialize('Qr', 'component', this);
+  }
 
   ngAfterViewInit() {
     if (this.code) {
@@ -44,13 +50,13 @@ export class QrComponent implements OnChanges {
         this.loading = true;
         await QRCode.toCanvas(this.qrCanvas.nativeElement, value);
       } catch (err) {
-        console.warn('QR ERROR:', [err]);
+        this._logger.error('QR ERROR:', [err]);
         this.error = err.toString();
       } finally {
         this.loading = false;
       }
     } else {
-      console.warn('Call to generateQR while already generating');
+      this._logger.warn('Call to generateQR while already generating');
     }
   }
 }
