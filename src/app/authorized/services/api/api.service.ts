@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as S3 from 'aws-sdk/clients/s3';
 
 import { AuthService } from 'src/app/public/services/auth.service';
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 type UploadCB = (progress: S3.ManagedUpload.Progress) => void;
 
@@ -17,8 +18,11 @@ interface IUploadOptions {
 export class ApiService {
   private _s3?: S3;
 
-  constructor(private readonly _auth: AuthService) {
-    console.warn('API SERVICE:', this);
+  constructor(
+    private readonly _auth: AuthService,
+    readonly logger: LoggerService
+  ) {
+    logger.initialize('Api', 'service', this);
   }
 
   initS3() {

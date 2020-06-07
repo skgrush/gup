@@ -2,8 +2,6 @@ import { Injectable, Inject } from '@angular/core';
 import { ILogConsumer } from '../log-consumer.interface';
 import { LogLevel } from 'src/app/shared/enums/log-levels';
 import { LOG_STORE } from 'src/app/shared/tokens/log-level';
-import { ILogger } from '../logger.interface';
-import { LoggerService } from '../logger.service';
 
 interface ILogLine {
   readonly level: LogLevel;
@@ -12,7 +10,7 @@ interface ILogLine {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: null,
 })
 export class SerializationAdapterService extends ILogConsumer {
   #loggedData: ILogLine[] = [];
@@ -21,32 +19,8 @@ export class SerializationAdapterService extends ILogConsumer {
     return this.#loggedData;
   }
 
-  constructor(
-    @Inject(LOG_STORE) doStore: boolean,
-    readonly logger: LoggerService
-  ) {
+  constructor(@Inject(LOG_STORE) readonly doStore: boolean) {
     super();
-
-    if (doStore) {
-      this.logger.observables[LogLevel.debug].subscribe((d) =>
-        this.debug(...d)
-      );
-      this.logger.observables[LogLevel.table].subscribe(([t, p]) =>
-        this.table(t, p)
-      );
-      this.logger.observables[LogLevel.log].subscribe((d) => this.log(...d));
-      this.logger.observables[LogLevel.info].subscribe((d) => this.info(...d));
-      this.logger.observables[LogLevel.assert].subscribe(([c, d]) =>
-        this.assert(c, ...d)
-      );
-      this.logger.observables[LogLevel.trace].subscribe((d) =>
-        this.trace(...d)
-      );
-      this.logger.observables[LogLevel.warn].subscribe((d) => this.warn(...d));
-      this.logger.observables[LogLevel.error].subscribe((d) =>
-        this.error(...d)
-      );
-    }
   }
 
   private _logger(logLevel: LogLevel, args: any[]): void {

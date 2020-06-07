@@ -17,7 +17,8 @@ import { FileCellSizeComponent } from './components/file-cell/file-cell-size.com
 import { DraggableHeaderDirective } from './directives/draggable-header.directive';
 import { UploadFormComponent } from './components/upload-form/upload-form.component';
 
-console.debug('loaded file-manager module');
+// other references
+import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 @NgModule({
   declarations: [
@@ -39,4 +40,8 @@ console.debug('loaded file-manager module');
   ],
   exports: [FileManagerComponent],
 })
-export class FileManagerModule {}
+export class FileManagerModule {
+  constructor(readonly logger: LoggerService) {
+    logger.initialize('FileManager', 'module', logger);
+  }
+}

@@ -15,8 +15,7 @@ import { IEnvConfigService } from './services/env-config/env-config.interface';
 import { EnvConfigService } from './services/env-config/env-config.service';
 
 // Other References
-
-console.debug('loaded public module');
+import { LoggerService } from '../gup-common/services/logger/logger.service';
 
 @NgModule({
   declarations: [OauthComponent, TestUiComponent],
@@ -33,4 +32,8 @@ console.debug('loaded public module');
   ],
   exports: [CommonModule, OauthComponent, TestUiComponent],
 })
-export class PublicModule {}
+export class PublicModule {
+  constructor(readonly logger: LoggerService) {
+    logger.initialize('Public', 'module', this);
+  }
+}

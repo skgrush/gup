@@ -21,7 +21,7 @@ import { SHOW_DEBUG } from './shared/tokens/debug';
 // Other References
 import { environment } from '../environments/environment';
 import { LOG_LEVEL, LOG_STORE } from './shared/tokens/log-level';
-import { LogLevel } from './shared/enums/log-levels';
+import { LoggerService } from './gup-common/services/logger/logger.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -49,7 +49,7 @@ import { LogLevel } from './shared/enums/log-levels';
     },
     {
       provide: LOG_LEVEL,
-      useValue: LogLevel.log,
+      useValue: environment.logLevel,
     },
     {
       provide: LOG_STORE,
@@ -58,4 +58,8 @@ import { LogLevel } from './shared/enums/log-levels';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(readonly logger: LoggerService) {
+    logger.initialize('App', 'module', this);
+  }
+}
