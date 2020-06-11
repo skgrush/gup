@@ -2,9 +2,27 @@
 
 > Authenticated S3 file manager.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.1.
+GUP is a file manager for hosting on AWS (Amazon Web Services).
+Made for deployment on, and management of, Amazon S3 (Simple Storage Service)
+and authenticated through Amazon Cognito.
 
-## Environment variables
+This is my experimental project into Angular and AWS.
+
+## Getting Started
+
+### Prerequisites
+
+The project itself only depends on node|yarn or any other JavaScript package
+manager that may come along.
+
+But this project is built for AWS, so you'll need
+an account and some infrastructure configured that I still don't 100%
+have conceptualized either... I've left all my findings summed up in
+[AWS Configuration and lessons](#aws-configuration-and-lessons) below.
+By the time I got around to this project I already had S3 set up, so that
+stage is presumed but should eventually be added here.
+
+### Environment variables
 
 You'll need to define the file [`env.json`](env.json) to set your specific variable values.
 You **must** provide all "<required:\*>" fields.
@@ -19,12 +37,11 @@ You **must** provide all "<required:\*>" fields.
   "awsS3EndpointARN": "<required>",
   "awsS3Prefix": "<optional>",
   "oauth": {
-    "provider": "cognito|google",
-    "endpoint": "<required|optional>",
+    "provider": "cognito",
+    "endpoint": "<required>",
     "clientId": "<required>",
     "redirectUri": "<optional>"
   },
-  "GOOGLE_HD": "<optional>",
   "publicRoot": "<optional>",
   "siteName": "<required>"
 }
@@ -32,27 +49,25 @@ You **must** provide all "<required:\*>" fields.
 
 This interface to match against is [`src/app/services/env-config/env-config.interface.ts`](src/app/services/env-config/env-config.interface.ts).
 
-**Google OAuth is not currently supported, but can be used through Cognito.**
+### Angular Stuff
 
-## Angular Stuff
-
-### Development server
+#### Development server
 
 Run `npm run http-server` to start the HTTP server and `npm run build:watch` to start a live build process. Navigate to `http://localhost:8080/`.
 
-### Code scaffolding
+#### Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-### Build
+#### Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-### Running unit tests
+#### Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-### Running end-to-end tests
+#### Running end-to-end tests
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
@@ -161,3 +176,7 @@ Since we utilize S3's HTTP endpoints, our browsers _will_ care about CORS settin
   </CORSRule>
 </CORSConfiguration>
 ```
+
+## Author
+
+- **Samuel K. Grush**

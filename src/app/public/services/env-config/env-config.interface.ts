@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { Readyable } from 'src/app/shared/classes/readyable';
 
-export type ProviderString = 'cognito' | 'google';
+export type ProviderString = 'cognito';
 
 export interface IEnvOAuth {
   provider: ProviderString;
