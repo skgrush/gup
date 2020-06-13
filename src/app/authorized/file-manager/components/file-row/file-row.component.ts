@@ -1,5 +1,16 @@
-import { Component, Input, HostBinding, Injector } from '@angular/core';
-import { IFileEntity, EntityState } from '../../interfaces/file-management';
+import {
+  Component,
+  Input,
+  HostBinding,
+  Injector,
+  Output,
+  EventEmitter,
+} from '@angular/core';
+import {
+  IFileEntity,
+  EntityState,
+  IFileEntityHeaded,
+} from '../../interfaces/file-management';
 import { BaseFileCellComponent } from '../file-cell/base-file-cell.component';
 import { FILE_ENTITY } from '../../tokens/file-entity';
 
@@ -19,6 +30,9 @@ export class FileRowComponent {
 
   @Input()
   publicRoot?: string;
+
+  @Output()
+  selectedFile = new EventEmitter<IFileEntityHeaded>();
 
   @HostBinding('attr.data-key')
   get dataKey() {
@@ -43,6 +57,12 @@ export class FileRowComponent {
       ],
       parent: injector,
     });
+  }
+
+  select() {
+    if (this.fileEntity?.entityState === EntityState.head) {
+      this.selectedFile.emit(this.fileEntity);
+    }
   }
 
   getUrl(fileEntity?: IFileEntity) {

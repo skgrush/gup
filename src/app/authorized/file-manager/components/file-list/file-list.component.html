@@ -26,6 +26,7 @@
       [cellComponents]="cellComponents"
       [fileEntity]="file"
       [publicRoot]="publicRoot"
+      (selectedFile)="selectedFile.emit($event)"
     ></gup-file-row>
   </tbody>
 </table>

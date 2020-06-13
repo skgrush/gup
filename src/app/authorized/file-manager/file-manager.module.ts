@@ -19,6 +19,7 @@ import { UploadFormComponent } from './components/upload-form/upload-form.compon
 
 // other references
 import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
+import { FileDetailsComponent } from './components/file-details/file-details.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { LoggerService } from 'src/app/gup-common/services/logger/logger.service
     CopyLinkComponent,
     DraggableHeaderDirective,
     UploadFormComponent,
+    FileDetailsComponent,
   ],
   imports: [
     CommonModule,

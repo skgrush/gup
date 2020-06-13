@@ -11,5 +11,10 @@
     text-overflow: ellipsis;
     border: inherit;
     padding: 0.25rem;
+
+    & > .clickable {
+      cursor: pointer;
+      text-decoration: underline;
+    }
   }
 }

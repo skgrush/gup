@@ -1,0 +1,32 @@
+<dialog #dialog [attr.open]="isOpen" aria-modal="true">
+  <dl *ngIf="!!file">
+    <dt>Key</dt>
+    <dd>{{ file!.key }}</dd>
+
+    <dt>eTag</dt>
+    <dd>{{ file!.eTag }}</dd>
+
+    <dt>Size</dt>
+    <dd>{{ file!.size | byteFormat }} ({{ file!.size | number }} bytes)</dd>
+
+    <dt>Last modified</dt>
+    <dd>
+      <time [dateTime]="file!.lastModified">
+        {{ file!.lastModified | date: "medium" }}
+      </time>
+    </dd>
+
+    <dt>Content type</dt>
+    <dd>{{ file!.contentType }}</dd>
+
+    <dt>Uploader</dt>
+    <dd>{{ file!.uploader }}</dd>
+
+    <dt>Storage class</dt>
+    <dd>{{ file!.storageClass || "" }}</dd>
+  </dl>
+
+  <div style.text-align="right">
+    <button (click)="closeDialog.emit()">Close</button>
+  </div>
+</dialog>

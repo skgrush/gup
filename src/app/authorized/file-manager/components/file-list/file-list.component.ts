@@ -6,7 +6,10 @@ import {
   SimpleChanges,
   OnChanges,
 } from '@angular/core';
-import { IFileEntity } from '../../interfaces/file-management';
+import {
+  IFileEntity,
+  IFileEntityHeaded,
+} from '../../interfaces/file-management';
 import { SortOrder } from '../../enums/sort-order.enum';
 import {
   FEHeaderId,
@@ -54,6 +57,9 @@ export class FileListComponent implements OnChanges {
 
   @Output()
   moveHeaderFromTo = new EventEmitter<[FEMovableKeyType, FEMovableKeyType]>();
+
+  @Output()
+  selectedFile = new EventEmitter<IFileEntityHeaded>();
 
   cellComponents: Array<typeof BaseFileCellComponent>;
   headerEntries: IHeaderEntry[];

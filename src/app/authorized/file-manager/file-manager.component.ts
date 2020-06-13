@@ -3,7 +3,11 @@ import { Component } from '@angular/core';
 import { FileManagerService, StoreType } from './services/file-manager.service';
 import { ReadyState } from 'src/app/shared/classes/readyable';
 import { FEMovableKeyType } from './enums/file-entity-headers.enum';
-import { IFileFormValue, IUrlFormValue } from './interfaces/file-management';
+import {
+  IFileFormValue,
+  IUrlFormValue,
+  IFileEntityHeaded,
+} from './interfaces/file-management';
 import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 @Component({
@@ -14,6 +18,8 @@ import { LoggerService } from 'src/app/gup-common/services/logger/logger.service
 export class FileManagerComponent {
   ready = false;
   loading = true;
+
+  selectedFile?: IFileEntityHeaded;
 
   sortedFiles: StoreType = [];
 
@@ -32,6 +38,7 @@ export class FileManagerComponent {
     this.fileManager.sortedStore.subscribe((data) => {
       _logger.debug('received new sorted files');
       this.sortedFiles = data;
+      this.selectedFile = undefined;
     });
     this.fileManager.columnOrder.subscribe((cols) => {
       this.columnOrder = cols;
@@ -47,6 +54,10 @@ export class FileManagerComponent {
     }
     this.loading = true;
     this.fileManager.refreshFileStore().finally(() => (this.loading = false));
+  }
+
+  selectFile(file?: IFileEntityHeaded) {
+    this.selectedFile = file;
   }
 
   async onFileSubmit(formVal: IFileFormValue) {

@@ -27,6 +27,7 @@
     [publicRoot]="fileManager.publicRoot"
     (changeSort)="fileManager.changeSort($event)"
     (moveHeaderFromTo)="fileManager.changeColumnOrder($event[0], $event[1])"
+    (selectedFile)="selectFile($event)"
   ></gup-file-list>
 </div>
 
@@ -35,3 +36,8 @@
   (fileSubmit)="onFileSubmit($event)"
   (urlSubmit)="onUrlSubmit($event)"
 ></gup-upload-form>
+
+<gup-file-details
+  [file]="selectedFile"
+  (closeDialog)="selectFile()"
+></gup-file-details>
