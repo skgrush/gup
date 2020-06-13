@@ -30,3 +30,5 @@
     <button (click)="closeDialog.emit()">Close</button>
   </div>
 </dialog>
+
+<div class="dialog-overlay" *ngIf="isOpen" (click)="closeDialog.emit()"></div>

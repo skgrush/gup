@@ -1,6 +1,6 @@
 <button class="authed-settings-opener" (click)="open()">⚙</button>
 
-<dialog role="dialog" #settingsDialog [attr.open]="isOpen">
+<dialog role="dialog" #settingsDialog [attr.open]="isOpen" aria-modal="true">
   <gup-tabbed defaultSelection="Info">
     <gup-tab-panel tabName="Info">
       <dl>
@@ -43,3 +43,5 @@
     <button (click)="close()">Close</button>
   </div>
 </dialog>
+
+<div class="dialog-overlay" *ngIf="isOpen" (click)="close()"></div>

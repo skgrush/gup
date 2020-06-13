@@ -1,4 +1,4 @@
-<dialog #popup [attr.open]="isOpen">
+<dialog #popup [attr.open]="isOpen" aria-modal="true">
   <gup-qr [code]="this.keyUri" *ngIf="this.keyUri && isOpen"></gup-qr>
 
   <form ngNativeValidate (ngSubmit)="onSubmit($event)" [formGroup]="formGroup">
@@ -23,3 +23,5 @@
     <button type="reset" (click)="cancel()">Cancel</button>
   </form>
 </dialog>
+
+<div class="dialog-overlay" *ngIf="isOpen" (click)="cancel()"></div>

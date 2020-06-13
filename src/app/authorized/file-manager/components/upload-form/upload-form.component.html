@@ -1,5 +1,5 @@
-<dialog #uploadDialog [attr.open]="this.isOpen || null">
-  <form (ngSubmit)="this.onSubmit($event)" [formGroup]="formGroup">
+<dialog #uploadDialog [attr.open]="isOpen || null" aria-modal="true">
+  <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup">
     <label>
       Name:
       <input
@@ -66,7 +66,7 @@
 
     <menu>
       <button type="submit">Submit</button>
-      <button type="button" (click)="this.close()">Cancel</button>
+      <button type="button" (click)="close()">Cancel</button>
     </menu>
   </form>
   <div class="progress-container" *ngIf="inProgress">
@@ -91,3 +91,5 @@
     </div>
   </div>
 </dialog>
+
+<div class="dialog-overlay" *ngIf="isOpen" (click)="close()"></div>
