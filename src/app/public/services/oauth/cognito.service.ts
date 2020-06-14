@@ -49,15 +49,11 @@ export class CognitoService extends OAuthProvider {
 
   readonly valid = new BehaviorSubject(ReadyState.Init);
 
-  readonly ReadyConditions = [this.valid, this._envConfig, this._apiAuth];
+  readonly ReadyConditions = [this._envConfig, this._apiAuth];
 
   lastCallback?: EitherResponse;
 
   approximateExpiration?: Date;
-
-  private _envPoolRegion = '';
-  private _envUserPool = '';
-  private _envIdentityPool = '';
 
   constructor(
     private readonly _keyStore: KeyStore,
@@ -71,17 +67,6 @@ export class CognitoService extends OAuthProvider {
     this._envConfig.env.subscribe((e) => {
       this.endpoint = e.oauth.endpoint;
       this.clientId = e.oauth.clientId;
-      if (e.oauth.redirectUri) {
-        (this.redirectUri as any) = e.oauth.redirectUri;
-      }
-      this._envPoolRegion = e.awsIdentityRegion;
-      this._envUserPool = e.awsUserPool;
-      this._envIdentityPool = e.awsIdentityPool;
-
-      this.valid.next(
-        this.endpoint && this.clientId ? ReadyState.Ready : ReadyState.Failed
-      );
-      this.valid.complete();
     });
     this.readyInit();
 
@@ -95,10 +80,10 @@ export class CognitoService extends OAuthProvider {
   async parseOAuthCallback(params: EitherResponse): Promise<boolean> {
     this.readyOrThrow();
 
-    this._logger.debug('parseOAuthCallback', params);
     this.lastCallback = params;
 
     if ('error' in params) {
+      this._logger.error('parseOAuthCallback error', params);
       this.oauthIdJWT = undefined;
       this.approximateExpiration = undefined;
       this._keyStore.idToken = null;
@@ -109,6 +94,7 @@ export class CognitoService extends OAuthProvider {
         `Unexpected token_type from Cognito: ${params.token_type}, expected 'Bearer'`
       );
     }
+    this._logger.debug('parseOAuthCallback success:', params);
 
     const expiresIn = +params.expires_in;
     this.approximateExpiration = new Date(Date.now() + expiresIn * 1e3);
@@ -118,17 +104,16 @@ export class CognitoService extends OAuthProvider {
     this.oauthIdJWT = this.updateIdToken(params.id_token);
     this.oauthAccessJWT = this.updateAccessToken(params.access_token);
 
-    const provider = `cognito-idp.${this._envPoolRegion}.amazonaws.com/${this._envUserPool}`;
+    const provider = this.oauthIdJWT.issuer.startsWith('https://')
+      ? this.oauthIdJWT.issuer.substring(8)
+      : this.oauthIdJWT.issuer;
     const logins = {
       [provider]: this.oauthIdJWT.rawJWT,
     };
 
     let credentials: CognitoIdentity.Credentials;
     try {
-      credentials = await this._apiAuth.getCredentialsFromLogins(
-        this._envIdentityPool,
-        logins
-      );
+      credentials = await this._apiAuth.getCredentialsFromLogins(logins);
     } catch (exc) {
       return this._handleError('Error in getId/getCredentials:', exc);
     }

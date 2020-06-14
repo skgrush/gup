@@ -24,21 +24,12 @@ export class ApiAuthService extends Readyable {
   // private _sts?: STS;
   private _cognitoServiceProvider?: CognitoIdentityServiceProvider;
   private _cognitoIdentity?: CognitoIdentity;
-  private _env?: Readonly<IEnv> = undefined;
 
-  private readonly _envValid = new BehaviorSubject(ReadyState.Init);
+  private _roleArn?: string;
+  private _identityRegion!: string;
+  private _identityPool!: string;
 
-  readonly ReadyConditions = [this._envConfig, this._envValid];
-
-  get defaultRoleARN(): string | undefined {
-    this.readyOrThrow();
-    return this._env?.awsRoleArn;
-  }
-
-  get defaultIdentityPool(): string {
-    this.readyOrThrow();
-    return this._env?.awsIdentityPool as string;
-  }
+  readonly ReadyConditions = [this._envConfig];
 
   constructor(
     private readonly _envConfig: IEnvConfigService,
@@ -48,9 +39,9 @@ export class ApiAuthService extends Readyable {
     this._logger.initialize('ApiAuth', 'service', this);
 
     this._envConfig.env.subscribe((c) => {
-      this._env = c;
-      this._envValid.next(ReadyState.Ready);
-      this._envValid.complete();
+      this._roleArn = c.awsRoleArn;
+      this._identityRegion = c.awsIdentityRegion;
+      this._identityPool = `${c.awsIdentityRegion}:${c.awsIdentityGuid}`;
     });
     this.readyInit();
   }
@@ -62,7 +53,7 @@ export class ApiAuthService extends Readyable {
   initCognito(): CognitoIdentity {
     this.readyOrThrow();
     this._cognitoIdentity = new CognitoIdentity({
-      region: this._env?.awsIdentityRegion,
+      region: this._identityRegion,
     });
     return this._cognitoIdentity;
   }
@@ -70,23 +61,22 @@ export class ApiAuthService extends Readyable {
   initCognitoServiceProvider(): CognitoIdentityServiceProvider {
     this.readyOrThrow();
     this._cognitoServiceProvider = new CognitoIdentityServiceProvider({
-      region: this._env!.awsIdentityRegion,
+      region: this._identityRegion,
     });
     return this._cognitoServiceProvider;
   }
 
   async getCredentialsFromLogins(
-    identityPoolId: string,
     logins: CognitoIdentity.LoginsMap,
     roleARN?: string
   ) {
     // the following will check readiness
     const cognitoIdentity = this._cognitoIdentity ?? this.initCognito();
 
-    roleARN = roleARN ?? this.defaultRoleARN ?? undefined;
+    roleARN = roleARN ?? this._roleArn;
 
     const getIdParams = {
-      IdentityPoolId: identityPoolId,
+      IdentityPoolId: this._identityPool,
       Logins: logins,
     };
 

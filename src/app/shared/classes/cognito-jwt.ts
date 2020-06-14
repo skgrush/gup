@@ -68,6 +68,7 @@ export class CognitoJwt<T extends _IEitherJWTJson> {
   readonly issueTime: Date;
   readonly audience: string;
   readonly subject: string;
+  readonly issuer: string;
   readonly cognitoUsername: string;
 
   readonly _parsedResult: T;
@@ -80,6 +81,7 @@ export class CognitoJwt<T extends _IEitherJWTJson> {
     this.expireTime = new Date(parsed.exp * 1000);
     this.issueTime = new Date(parsed.iat * 1000);
     this.subject = parsed.sub;
+    this.issuer = parsed.iss;
 
     if (parsed.token_use === 'id') {
       const parsedT = parsed as IIdJWTJson;

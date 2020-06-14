@@ -74,32 +74,20 @@ export class EnvConfigService extends IEnvConfigService {
         ''
       );
     }
-    env.awsIdentityPool = `${env.awsIdentityRegion}:${env.awsIdentityGuid}`;
-    if (!env.awsUserPoolSuffix) {
-      throw new EnvConfigValidationError(
-        ['awsUserPoolSuffix'],
-        [env.awsUserPoolSuffix],
-        ''
-      );
-    }
-    if (!env.awsUserPool) {
-      env.awsUserPool = `${env.awsIdentityRegion}_${env.awsUserPoolSuffix}`;
-    }
+    // env.awsIdentityPool = `${env.awsIdentityRegion}:${env.awsIdentityGuid}`;
+    // if (!env.awsUserPoolSuffix) {
+    //   throw new EnvConfigValidationError(
+    //     ['awsUserPoolSuffix'],
+    //     [env.awsUserPoolSuffix],
+    //     ''
+    //   );
+    // }
+    // env.awsUserPool = `${env.awsIdentityRegion}_${env.awsUserPoolSuffix}`;
 
     // validate oauth
-    if (
-      !env.oauth ||
-      !['cognito', 'google'].includes(env.oauth.provider) ||
-      !env.oauth.clientId?.length
-    ) {
+    const oauthKeys = ['endpoint', 'clientId'] as const;
+    if (!env.oauth || !oauthKeys.every((p) => env.oauth[p]?.length)) {
       throw new EnvConfigValidationError(['oauth'], [env.oauth], '');
-    }
-    if (!env.oauth.endpoint && ['cognito'].includes(env.oauth.provider)) {
-      throw new EnvConfigValidationError(
-        ['oauth.endpoint'],
-        [env.oauth.endpoint],
-        `endpoint mandatory for 'env.oauth.provider' value "${env.oauth.provider}"`
-      );
     }
     env.oauth = Object.freeze(env.oauth);
 
@@ -115,7 +103,7 @@ export class EnvConfigService extends IEnvConfigService {
       throw new EnvConfigValidationError(
         ['awsS3Prefix'],
         [env.awsS3Prefix],
-        'must at least be a string'
+        ''
       );
     }
 

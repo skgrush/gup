@@ -6,31 +6,30 @@ import { CommonModule } from '@angular/common';
 
 // This Module's Declarations
 import { OauthComponent } from './components/oauth/oauth.component';
-import { TestUiComponent } from './components/test-ui/test-ui.component';
 
 // This Module's Provisions
 import { OAuthProvider } from './services/oauth/oauth-provider.interface';
-import { OAuthProviderPicker } from './services/oauth/oauth-provider-picker';
 import { IEnvConfigService } from './services/env-config/env-config.interface';
 import { EnvConfigService } from './services/env-config/env-config.service';
 
 // Other References
 import { LoggerService } from '../gup-common/services/logger/logger.service';
+import { CognitoService } from './services/oauth/cognito.service';
 
 @NgModule({
-  declarations: [OauthComponent, TestUiComponent],
+  declarations: [OauthComponent],
   imports: [CommonModule],
   providers: [
     {
       provide: OAuthProvider,
-      useClass: OAuthProviderPicker(),
+      useClass: CognitoService,
     },
     {
       provide: IEnvConfigService,
       useClass: EnvConfigService,
     },
   ],
-  exports: [CommonModule, OauthComponent, TestUiComponent],
+  exports: [CommonModule, OauthComponent],
 })
 export class PublicModule {
   constructor(readonly logger: LoggerService) {
