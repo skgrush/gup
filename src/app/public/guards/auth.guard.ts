@@ -106,7 +106,7 @@ export class AuthGuard extends Readyable implements CanActivate, CanLoad {
 
   private async _waitTilReady(): Promise<boolean> {
     if (!this.isReady) {
-      const ready = await this.observeReadyFinalize().toPromise();
+      const ready = await this.finalObservable.toPromise();
       if (ready !== ReadyState.Ready) {
         return false;
       }

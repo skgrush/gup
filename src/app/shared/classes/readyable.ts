@@ -36,8 +36,16 @@ type ReadyCondition = Readyable | BehaviorSubject<ReadyState>;
 /**
  * Abstract base class for classes that have an asynchronous ready state
  * based on observable conditions, its `ReadyConditions`.
+ *
+ * Readyable classes **must** call `readyInit()`, preferably in their
+ * constructor, once all of their ReadyConditions are established.
  */
 export abstract class Readyable {
+  /**
+   * The conditions which must be satisfied for this to be ready.
+   * Each condition is either another Readyable, or a BehaviorSubject
+   * of ReadyState.
+   */
   protected abstract readonly ReadyConditions: ReadyCondition[];
 
   #ready = new BehaviorSubject(ReadyState.Init);
@@ -50,16 +58,30 @@ export abstract class Readyable {
     return this.currentState === ReadyState.Ready;
   }
 
+  get readyObservable() {
+    if (this.#ready.isStopped) {
+      return of(this.currentState);
+    }
+    return this.#ready.asObservable();
+  }
+
+  get finalObservable() {
+    return this.readyObservable.pipe(filter(readyStateFinalized));
+  }
+
   /**
-   * Wait until the ReadyCondition objects are in a final state,
-   * then return `Ready` if all area ready, or `Failed` if any failed.
+   * Wait until the ReadyCondition objects are in a final state then return
+   * the overall state.
+   * @returns `ReadyState.Ready` if *all* are ready
+   * @returns `ReadyState.Failed` if *any* failed
    */
-  static observeMultiple(...readyables: ReadyCondition[]) {
+  static observeMultipleFinalized(...readyables: ReadyCondition[]) {
     const observables = readyables.map((r) =>
-      r instanceof Readyable
-        ? r.observeReadyFinalize()
-        : r.pipe(filter(readyStateFinalized))
+      (r instanceof Readyable ? r.readyObservable : r).pipe(
+        filter(readyStateFinalized)
+      )
     );
+    // TODO: allow short-circuit on first fail
     return forkJoin(observables).pipe(
       map((states) => {
         return states.every((s) => s === ReadyState.Ready)
@@ -72,26 +94,23 @@ export abstract class Readyable {
   /**
    * Initialize the Readyable.
    * This should be called in the constructor, or at the earliest
-   * point when `this.ReadyConditions` is initialized.
+   * point when `this.ReadyConditions` has all its values.
    */
   readyInit() {
-    this.observeReadyFinalize().subscribe((state) => {
-      if (!this.#ready.closed) {
-        this.#ready.next(state);
-        this.#ready.complete();
-      }
-    });
-  }
-
-  /**
-   * Returns an observable which emits only when in a finalized state.
-   * Still make sure to check that it's actually ready!
-   */
-  observeReadyFinalize(): Observable<ReadyState.Failed | ReadyState.Ready> {
-    if (readyStateFinalized(this.currentState)) {
-      return of(this.currentState);
+    if (this.currentState === ReadyState.Init) {
+      this.#ready.next(ReadyState.Readying);
+      Readyable.observeMultipleFinalized(...this.ReadyConditions).subscribe(
+        (state) => {
+          if (!this.#ready.closed) {
+            this.#ready.next(state);
+            this.#ready.complete();
+          }
+        }
+      );
+    } else {
+      // ICK. But at least most classes will use the logger as intended.
+      ((this as any)._logger ?? console).warn('Invalid call to readyInit');
     }
-    return Readyable.observeMultiple(...this.ReadyConditions);
   }
 
   /**

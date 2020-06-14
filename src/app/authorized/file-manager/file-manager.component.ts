@@ -31,9 +31,12 @@ export class FileManagerComponent {
     private readonly _logger: LoggerService
   ) {
     _logger.initialize('FileManager', 'component', this);
-    this.fileManager.observeReadyFinalize().subscribe((state) => {
+    this.fileManager.finalObservable.subscribe((state) => {
       this.loading = false;
       this.ready = state === ReadyState.Ready;
+      if (this.ready) {
+        this.fileManager.refreshFileStore();
+      }
     });
 
     this.fileManager.sortedStore.subscribe((data) => {

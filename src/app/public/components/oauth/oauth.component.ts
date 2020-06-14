@@ -18,7 +18,7 @@ export class OauthComponent {
   ready = false;
 
   constructor(readonly oauthService: OAuthProvider) {
-    oauthService.observeReadyFinalize().subscribe((state) => {
+    oauthService.finalObservable.subscribe((state) => {
       this.ready = state === ReadyState.Ready;
     });
   }

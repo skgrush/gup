@@ -16,7 +16,7 @@ import { LoggerService } from 'src/app/gup-common/services/logger/logger.service
   templateUrl: './test-ui.component.html',
   styleUrls: ['./test-ui.component.scss'],
 })
-export class TestUiComponent {
+export class TestUiComponent extends Readyable {
   readonly keyStoreProps: Array<keyof KeyStore> = [
     'accessKeyId',
     'idToken',
@@ -55,6 +55,8 @@ export class TestUiComponent {
 
   ready = false;
 
+  readonly ReadyConditions = [this.oauthProvider, this.apiAuth, this.config];
+
   constructor(
     readonly oauthProvider: OAuthProvider,
     readonly apiAuth: ApiAuthService,
@@ -64,9 +66,8 @@ export class TestUiComponent {
     readonly keyStore: KeyStore,
     private readonly _logger: LoggerService
   ) {
-    Readyable.observeMultiple(oauthProvider, apiAuth, config).subscribe(
-      (state) => (this.ready = readyStateFinalized(state))
-    );
+    super();
+    this.readyInit();
     config.env.subscribe((env) => {
       this.apiBucket = env.awsS3EndpointARN;
       this.apiPrefix = env.awsS3Prefix;
