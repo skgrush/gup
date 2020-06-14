@@ -1,33 +1,52 @@
-<dialog #dialog [attr.open]="isOpen" aria-modal="true">
-  <dl *ngIf="!!file">
-    <dt>Key</dt>
-    <dd>{{ file!.key }}</dd>
+<dialog [attr.open]="isOpen" aria-modal="true">
+  <gup-tabbed *ngIf="!!file" defaultSelection="Details">
+    <gup-tab-panel tabName="Details">
+      <dl>
+        <dt>Key</dt>
+        <dd>{{ file!.key }}</dd>
 
-    <dt>eTag</dt>
-    <dd>{{ file!.eTag }}</dd>
+        <dt>eTag</dt>
+        <dd>{{ file!.eTag }}</dd>
 
-    <dt>Size</dt>
-    <dd>{{ file!.size | byteFormat }} ({{ file!.size | number }} bytes)</dd>
+        <dt>Size</dt>
+        <dd>{{ file!.size | byteFormat }} ({{ file!.size | number }} bytes)</dd>
 
-    <dt>Last modified</dt>
-    <dd>
-      <time [dateTime]="file!.lastModified">
-        {{ file!.lastModified | date: "medium" }}
-      </time>
-    </dd>
+        <dt>Content type</dt>
+        <dd>{{ file!.contentType }}</dd>
 
-    <dt>Content type</dt>
-    <dd>{{ file!.contentType }}</dd>
+        <dt>Uploader</dt>
+        <dd>{{ file!.uploader }}</dd>
 
-    <dt>Uploader</dt>
-    <dd>{{ file!.uploader }}</dd>
+        <dt>Storage class</dt>
+        <dd>{{ file!.storageClass || "" }}</dd>
 
-    <dt>Storage class</dt>
-    <dd>{{ file!.storageClass || "" }}</dd>
-  </dl>
+        <dt>Last modified</dt>
+        <dd>
+          <time [dateTime]="file!.lastModified">
+            {{ file!.lastModified | date: "medium" }}
+          </time>
+        </dd>
 
-  <div style.text-align="right">
+        <dt>Cache control</dt>
+        <dd *ngIf="!file!.cacheControl">N/A</dd>
+        <dd *ngIf="!!file!.cacheControl">{{ file!.cacheControl }}</dd>
+      </dl>
+    </gup-tab-panel>
+    <gup-tab-panel tabName="Delete">
+      <p>
+        Are you sure you want to delete the file
+        <var>{{ file!.key }}</var>
+        ?
+      </p>
+      <button class="gup-delete-button" (click)="deleteFile.emit(file)">
+        Permanently delete
+      </button>
+    </gup-tab-panel>
+  </gup-tabbed>
+
+  <div style.text-align="right" *ngIf="!!file">
     <button (click)="closeDialog.emit()">Close</button>
+    <gup-copy-link [url]="url">Copy link</gup-copy-link>
   </div>
 </dialog>
 

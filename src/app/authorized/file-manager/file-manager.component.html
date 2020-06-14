@@ -39,5 +39,7 @@
 
 <gup-file-details
   [file]="selectedFile"
+  [publicRoot]="fileManager.publicRoot"
   (closeDialog)="selectFile()"
+  (deleteFile)="deleteFile($event)"
 ></gup-file-details>

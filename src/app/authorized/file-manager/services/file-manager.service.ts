@@ -114,7 +114,7 @@ export class FileManagerService extends Readyable {
     }
   }
 
-  private _handleError(exc: any) {
+  private _handleError(exc: any): never {
     // always store the error, but only rethrow unexpected non-AWSErrors.
     this._lastError = exc;
     this._logger.error('FileManagerService handled error', exc);
@@ -230,6 +230,23 @@ export class FileManagerService extends Readyable {
     }
   }
 
+  async deleteFile(file: IFileEntity) {
+    this.readyOrThrow();
+    const { key } = file;
+
+    try {
+      const res = await this._api.deleteObject(this.bucketName, key);
+
+      const idx = this._store.indexOf(file);
+      if (idx >= 0) {
+        this._store.splice(idx, 1);
+        this._sortTheStore();
+      }
+    } catch (exc) {
+      this._handleError(exc);
+    }
+  }
+
   private _sortTheStore() {
     const { sortField, sortOrder } = this;
     this._logger.debug('sorting the store on ', sortField, sortOrder);
@@ -248,6 +265,7 @@ export class FileManagerService extends Readyable {
    * #TODO: this should merge new into old.
    */
   private _processListObjects(listResponse: S3.ListObjectsV2Output): void {
+    this._logger.info('processListObjects:', listResponse);
     if (listResponse.IsTruncated) {
       this._logger.warn('listObjects was truncated', listResponse);
     }
@@ -285,12 +303,13 @@ export class FileManagerService extends Readyable {
     };
 
     this._store.push(entity);
+    // don't await headEntity, these can queue async
     this._headEntity(entity);
 
     return entity;
   }
 
-  private _headEntity(ent: IFileEntity): void {
+  private async _headEntity(ent: IFileEntity) {
     if (ent.entityState > EntityState.list) {
       this._logger.warn('_headEntity called on already headed entity:', ent);
       return;
@@ -298,22 +317,24 @@ export class FileManagerService extends Readyable {
 
     const { awsS3EndpointARN } = this._env;
 
-    this._api.headObject(awsS3EndpointARN, ent.key).then((result) => {
-      // add the new fields to the entity directly, unless it's already bee updated
-      if (ent.entityState < EntityState.head) {
-        const redirectLocation = result.WebsiteRedirectLocation;
-        const contentType =
-          redirectLocation !== undefined
-            ? `redirect=${redirectLocation}`
-            : result.ContentType ?? '';
+    const result = await this._api.headObject(awsS3EndpointARN, ent.key);
+    this._logger.info('Headed entity:', ent.key, result);
 
-        Object.assign(ent, {
-          entityState: EntityState.head,
-          contentType,
-          uploader: result.Metadata?.uploader,
-          redirectLocation,
-        });
-      }
-    });
+    // add the new fields to the entity directly, unless it's already bee updated
+    if (ent.entityState < EntityState.head) {
+      const redirectLocation = result.WebsiteRedirectLocation;
+      const contentType =
+        redirectLocation !== undefined
+          ? `redirect=${redirectLocation}`
+          : result.ContentType ?? '';
+
+      Object.assign(ent, {
+        entityState: EntityState.head,
+        contentType,
+        uploader: result.Metadata?.uploader,
+        cacheControl: result.CacheControl,
+        redirectLocation,
+      });
+    }
   }
 }

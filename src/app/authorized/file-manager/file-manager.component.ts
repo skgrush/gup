@@ -7,6 +7,7 @@ import {
   IFileFormValue,
   IUrlFormValue,
   IFileEntityHeaded,
+  IFileEntity,
 } from './interfaces/file-management';
 import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
@@ -58,6 +59,16 @@ export class FileManagerComponent {
 
   selectFile(file?: IFileEntityHeaded) {
     this.selectedFile = file;
+  }
+
+  async deleteFile(file?: IFileEntity) {
+    if (!file) {
+      return;
+    }
+    this._logger.info('Delete file:', file);
+    await this.fileManager.deleteFile(file);
+
+    this.selectFile();
   }
 
   async onFileSubmit(formVal: IFileFormValue) {

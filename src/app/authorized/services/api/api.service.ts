@@ -85,6 +85,8 @@ export class ApiService {
         })
     ).promise();
 
+    this._logger.debug('deleteObject', result);
+
     return result;
   }
 

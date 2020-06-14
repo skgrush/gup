@@ -25,6 +25,7 @@ export interface IFileEntityHeaded extends IFileEntityBase {
   contentType: string;
   redirectLocation?: string;
   uploader?: string;
+  cacheControl?: string;
 }
 
 export interface IFileEntityGot extends IFileEntityBase {
