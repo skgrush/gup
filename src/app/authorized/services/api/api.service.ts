@@ -8,7 +8,6 @@ type UploadCB = (progress: S3.ManagedUpload.Progress) => void;
 
 interface IUploadOptions {
   cacheControl?: string;
-  expires?: Date;
   cb?: UploadCB;
 }
 
@@ -115,7 +114,6 @@ export class ApiService {
         Body: blob,
         ContentType,
         CacheControl: opts?.cacheControl,
-        Expires: opts?.expires,
         Metadata: {
           uploader,
         },
@@ -167,7 +165,6 @@ export class ApiService {
         Body: '',
         ContentType: '',
         CacheControl: opts?.cacheControl,
-        Expires: opts?.expires,
         Metadata: {
           uploader,
         },

@@ -49,8 +49,7 @@ interface IBaseFormValue {
   name: string;
   progress: (p: IProgress) => void;
   maxAge?: number;
-  storageClass?: StorageClass;
-  expires?: Date;
+  storageClass: StorageClass;
 }
 
 export interface IFileFormValue extends IBaseFormValue {

@@ -12,6 +12,7 @@ import {
   FormControl,
   AbstractControl,
   ValidatorFn,
+  Validators,
 } from '@angular/forms';
 
 import {
@@ -20,6 +21,7 @@ import {
   IUrlFormValue,
 } from '../../interfaces/file-management';
 import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
+import { StorageClasses, StorageClass } from '../../interfaces/s3-data';
 
 @Component({
   selector: 'gup-upload-form',
@@ -27,6 +29,8 @@ import { LoggerService } from 'src/app/gup-common/services/logger/logger.service
   styleUrls: ['./upload-form.component.scss'],
 })
 export class UploadFormComponent implements OnInit, AfterViewInit {
+  readonly StorageClasses = StorageClasses;
+
   @Output()
   fileSubmit = new EventEmitter<IFileFormValue>();
 
@@ -57,7 +61,7 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
     }
   }
 
-  constructor(readonly logger: LoggerService) {}
+  constructor(private readonly _logger: LoggerService) {}
 
   open() {
     this.reset();
@@ -74,9 +78,10 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
       name: new FormControl('', [this.validateNameOrPlaceholder]),
       file: new FormControl(''),
       url: new FormControl(''),
-      expires: new FormControl('', [validateDateField]),
+      storageClass: new FormControl('', [Validators.required]),
       maxAge: new FormControl(''),
     });
+    this._setFormDefaults();
   }
 
   ngAfterViewInit(): void {
@@ -88,10 +93,10 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
   onSubmit(e: Event) {
     const name: string = this.formGroup.value.name ?? this.namePlaceholder;
     const progress = this.progress.bind(this);
-    const expires: string | null = this.formGroup.value.expires;
+    const storageClass: StorageClass = this.formGroup.value.storageClass;
     const maxAge: number | null = this.formGroup.value.maxAge;
 
-    this.logger.debug('submit:', e, this.formGroup);
+    this._logger.debug('submit:', e, this.formGroup);
     if (!this.formGroup.invalid) {
       this.inProgress = true;
       this.formGroup.disable();
@@ -100,7 +105,7 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
         this.fileSubmit.emit({
           file: this.file,
           name,
-          expires: expires ? new Date(expires) : undefined,
+          storageClass,
           maxAge: maxAge ?? undefined,
           progress,
         });
@@ -109,7 +114,7 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
         this.urlSubmit.emit({
           url,
           name,
-          expires: expires ? new Date(expires) : undefined,
+          storageClass,
           maxAge: maxAge ?? undefined,
           progress,
         });
@@ -137,7 +142,7 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
     } else if (tabName === 'Link') {
       this.selectedTab = 'url';
     } else {
-      this.logger.warn('unexpected tab selected:', tabName);
+      this._logger.warn('unexpected tab selected:', tabName);
     }
     setTimeout(() => this.formGroup.controls.name.updateValueAndValidity());
   }
@@ -168,7 +173,13 @@ export class UploadFormComponent implements OnInit, AfterViewInit {
     this._namePlaceholder = '';
     this.file = undefined;
     this.formGroup.reset();
+    this._setFormDefaults();
     this.formGroup.enable();
+  }
+
+  private _setFormDefaults() {
+    this.formGroup.controls.maxAge.setValue(3600);
+    this.formGroup.controls.storageClass.setValue('STANDARD');
   }
 
   validateNameOrPlaceholder: ValidatorFn = (control: AbstractControl) => {

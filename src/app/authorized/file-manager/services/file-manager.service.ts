@@ -143,7 +143,6 @@ export class FileManagerService extends Readyable {
     name,
     progress,
     maxAge,
-    expires,
     storageClass,
   }: IFileFormValue) {
     this.readyOrThrow();
@@ -157,7 +156,6 @@ export class FileManagerService extends Readyable {
       const res = await this._api.uploadObjectBlob(this.bucketName, key, file, {
         cb: progress,
         cacheControl,
-        expires,
       });
 
       const { data, uploader } = res;
@@ -186,7 +184,6 @@ export class FileManagerService extends Readyable {
     name,
     progress,
     maxAge,
-    expires,
     storageClass,
   }: IUrlFormValue) {
     this.readyOrThrow();
@@ -204,7 +201,6 @@ export class FileManagerService extends Readyable {
         {
           cb: progress,
           cacheControl,
-          expires,
         }
       );
 

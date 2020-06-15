@@ -55,8 +55,15 @@
     </gup-tabbed>
 
     <label>
-      Expires:
-      <input type="datetime-local" name="expires" formControlName="expires" />
+      Storage:
+      <select name="storageClass" formControlName="storageClass">
+        <option
+          *ngFor="let storageClass of StorageClasses"
+          [value]="storageClass"
+        >
+          {{ storageClass }}
+        </option>
+      </select>
     </label>
 
     <label>
