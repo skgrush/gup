@@ -1,4 +1,8 @@
 @mixin global {
+  :root {
+    --border-radius: 1em;
+  }
+
   input,
   button,
   select,

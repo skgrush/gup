@@ -7,6 +7,9 @@
   & > .gup-file-manager-header {
     border: var(--structural-color) 3px solid;
 
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+
     & > .gup-file-manager-toolbar {
       display: flex;
       margin: 0.5em;

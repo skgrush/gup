@@ -29,4 +29,11 @@
       (selectedFile)="selectedFile.emit($event)"
     ></gup-file-row>
   </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="10">
+        <var>{{ fileData!.length || "Loading" }}</var> file(s)
+      </td>
+    </tr>
+  </tfoot>
 </table>

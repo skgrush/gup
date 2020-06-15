@@ -4,7 +4,7 @@
   & > table {
     flex: auto;
 
-    border-collapse: collapse;
+    border-spacing: 0;
 
     & > thead,
     & > tbody {
@@ -53,6 +53,16 @@
             content: "⇑";
           }
         }
+      }
+    }
+
+    & > tfoot {
+      & > tr > td:first-child:last-child {
+        border-bottom-left-radius: var(--border-radius);
+        border-bottom-right-radius: var(--border-radius);
+        border-color: var(--structural-color);
+        border-style: solid;
+        padding: 0.3em 2em;
       }
     }
   }
