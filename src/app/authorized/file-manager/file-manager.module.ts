@@ -20,6 +20,8 @@ import { UploadFormComponent } from './components/upload-form/upload-form.compon
 // other references
 import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 import { FileDetailsComponent } from './components/file-details/file-details.component';
+import { IFileManagerService } from './services/file-manager.interface';
+import { FileManagerService } from './services/file-manager.service';
 
 @NgModule({
   declarations: [
@@ -40,6 +42,7 @@ import { FileDetailsComponent } from './components/file-details/file-details.com
     TabbedComponentModule,
     ReactiveFormsModule,
   ],
+  providers: [{ provide: IFileManagerService, useClass: FileManagerService }],
   exports: [FileManagerComponent],
 })
 export class FileManagerModule {

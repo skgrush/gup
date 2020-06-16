@@ -44,10 +44,6 @@ import { LoggerService } from './gup-common/services/logger/logger.service';
     },
     KeyStore,
     {
-      provide: SHOW_DEBUG,
-      useValue: false,
-    },
-    {
       provide: LOG_LEVEL,
       useValue: environment.logLevel,
     },

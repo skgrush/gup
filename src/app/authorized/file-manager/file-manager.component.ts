@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 
-import { FileManagerService, StoreType } from './services/file-manager.service';
+import {
+  StoreType,
+  IFileManagerService,
+} from './services/file-manager.interface';
 import { ReadyState } from 'src/app/shared/classes/readyable';
 import { FEMovableKeyType } from './enums/file-entity-headers.enum';
 import {
@@ -27,7 +30,7 @@ export class FileManagerComponent {
   columnOrder = [] as FEMovableKeyType[];
 
   constructor(
-    readonly fileManager: FileManagerService,
+    readonly fileManager: IFileManagerService,
     private readonly _logger: LoggerService
   ) {
     _logger.initialize('FileManager', 'component', this);

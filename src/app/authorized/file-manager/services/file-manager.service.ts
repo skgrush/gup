@@ -15,7 +15,7 @@ import {
   IEnvConfigService,
   IEnv,
 } from 'src/app/public/services/env-config/env-config.interface';
-import { Readyable, ReadyState } from 'src/app/shared/classes/readyable';
+import { ReadyState } from 'src/app/shared/classes/readyable';
 import { AuthService } from 'src/app/public/services/auth.service';
 import { SortOrder } from '../enums/sort-order.enum';
 import {
@@ -26,31 +26,31 @@ import {
 import { sortFactory } from '../utilities/sort';
 import { StorageClass } from '../interfaces/s3-data';
 import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
+import { IFileManagerService, StoreType } from './file-manager.interface';
 
-export type StoreType = ReadonlyArray<Readonly<IFileEntity>>;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class FileManagerService extends Readyable {
+@Injectable()
+export class FileManagerService extends IFileManagerService {
   private _envValid = new BehaviorSubject(ReadyState.Init);
-  protected readonly ReadyConditions = [this._envValid];
+  protected readonly ReadyConditions = [this._envValid, this._envConfig];
   private readonly _store: IFileEntity[] = [];
   private readonly _sortedStore = new BehaviorSubject([] as StoreType);
   private readonly _columnOrder = new BehaviorSubject<FEMovableKeyType[]>([]);
   private _env!: Readonly<IEnv>;
   private _lastError?: Error;
 
-  bucketName!: string;
-  prefix?: string;
-  publicRoot?: string;
+  private _bucketName!: string;
+  private _prefix?: string;
+  private _publicRoot?: string;
+
+  private _sortField: FEKeyType = 'key';
+  private _sortOrder: SortOrder = SortOrder.Ascending;
 
   get errorMessage() {
     return this._lastError?.message;
   }
 
-  get store(): StoreType {
-    return this._store;
+  get publicRoot() {
+    return this._publicRoot;
   }
 
   get sortedStore() {
@@ -61,8 +61,13 @@ export class FileManagerService extends Readyable {
     return this._columnOrder.asObservable();
   }
 
-  sortField: FEKeyType = 'key';
-  sortOrder: SortOrder = SortOrder.Ascending;
+  get sortField() {
+    return this._sortField;
+  }
+
+  get sortOrder() {
+    return this._sortOrder;
+  }
 
   constructor(
     private readonly _api: ApiService,
@@ -77,9 +82,9 @@ export class FileManagerService extends Readyable {
       this._envValid.complete();
       this._env = env;
 
-      this.bucketName = env.awsS3EndpointARN;
-      this.prefix = env.awsS3Prefix;
-      this.publicRoot = env.publicRoot;
+      this._bucketName = env.awsS3EndpointARN;
+      this._prefix = env.awsS3Prefix;
+      this._publicRoot = env.publicRoot;
     });
 
     _logger.initialize('FileManager', 'service', this);
@@ -88,16 +93,16 @@ export class FileManagerService extends Readyable {
   }
 
   changeSort(key: FEKeyType) {
-    if (key === this.sortField) {
-      this.sortOrder = this.flipSortOrder();
+    if (key === this._sortField) {
+      this._sortOrder = this.flipSortOrder();
     } else {
-      this.sortField = key;
+      this._sortField = key;
     }
     this._sortTheStore();
   }
 
   flipSortOrder() {
-    return this.sortOrder === SortOrder.Ascending
+    return this._sortOrder === SortOrder.Ascending
       ? SortOrder.Descending
       : SortOrder.Ascending;
   }
@@ -146,17 +151,22 @@ export class FileManagerService extends Readyable {
     storageClass,
   }: IFileFormValue) {
     this.readyOrThrow();
-    const key = (this.prefix ?? '') + name;
+    const key = (this._prefix ?? '') + name;
     const cacheControl = maxAge ? `max-age=${maxAge}` : undefined;
     const preTimestamp = new Date();
 
     progress({ loaded: 0, total: file.size });
 
     try {
-      const res = await this._api.uploadObjectBlob(this.bucketName, key, file, {
-        cb: progress,
-        cacheControl,
-      });
+      const res = await this._api.uploadObjectBlob(
+        this._bucketName,
+        key,
+        file,
+        {
+          cb: progress,
+          cacheControl,
+        }
+      );
 
       const { data, uploader } = res;
 
@@ -187,7 +197,7 @@ export class FileManagerService extends Readyable {
     storageClass,
   }: IUrlFormValue) {
     this.readyOrThrow();
-    const key = (this.prefix ?? '') + name;
+    const key = (this._prefix ?? '') + name;
     const cacheControl = maxAge ? `max-age=${maxAge}` : undefined;
     const preTimestamp = new Date();
 
@@ -195,7 +205,7 @@ export class FileManagerService extends Readyable {
 
     try {
       const res = await this._api.uploadObjectRedirect(
-        this.bucketName,
+        this._bucketName,
         key,
         url,
         {
@@ -231,7 +241,7 @@ export class FileManagerService extends Readyable {
     const { key } = file;
 
     try {
-      const res = await this._api.deleteObject(this.bucketName, key);
+      const res = await this._api.deleteObject(this._bucketName, key);
 
       const idx = this._store.indexOf(file);
       if (idx >= 0) {
@@ -244,7 +254,7 @@ export class FileManagerService extends Readyable {
   }
 
   private _sortTheStore() {
-    const { sortField, sortOrder } = this;
+    const { _sortField: sortField, _sortOrder: sortOrder } = this;
     this._logger.debug('sorting the store on ', sortField, sortOrder);
     if (!sortField) {
       this._sortedStore.next([...this._store]);
