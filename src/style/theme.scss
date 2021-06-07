@@ -23,4 +23,21 @@
       opacity: 0.4;
     }
   }
+
+  form.flex-form {
+    display: flex;
+    flex-direction: column;
+
+    & > * {
+      margin-bottom: 0.2em;
+    }
+
+    input {
+      &.ng-invalid,
+      &:invalid {
+        box-shadow: inset red 0 0 5px, red 0 0 5px;
+        outline: 0;
+      }
+    }
+  }
 }

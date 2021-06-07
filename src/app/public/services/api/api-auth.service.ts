@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as CognitoIdentity from 'aws-sdk/clients/cognitoidentity';
-import { BehaviorSubject } from 'rxjs';
-
-import { IEnv, IEnvConfigService } from '../env-config/env-config.interface';
-import { Readyable, ReadyState } from 'src/app/shared/classes/readyable';
 import * as CognitoIdentityServiceProvider from 'aws-sdk/clients/cognitoidentityserviceprovider';
+
+import { IEnvConfigService } from '../env-config/env-config.interface';
+import { Readyable } from 'src/app/shared/classes/readyable';
 import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
 type AssociateTokenArg =

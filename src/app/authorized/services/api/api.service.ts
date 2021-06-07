@@ -3,6 +3,11 @@ import * as S3 from 'aws-sdk/clients/s3';
 
 import { AuthService } from 'src/app/public/services/auth.service';
 import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
+import {
+  IFileEntityHeaded,
+  IModifyParameters,
+} from '../../file-manager/interfaces/file-management';
+import { StorageClass } from '../../file-manager/interfaces/s3-data';
 
 type UploadCB = (progress: S3.ManagedUpload.Progress) => void;
 
@@ -93,6 +98,7 @@ export class ApiService {
     bucket: string,
     key: string,
     blob: Blob,
+    storageClass: StorageClass,
     opts?: IUploadOptions
   ) {
     const ContentType = blob.type;
@@ -113,6 +119,7 @@ export class ApiService {
         Bucket: bucket,
         Body: blob,
         ContentType,
+        StorageClass: storageClass,
         CacheControl: opts?.cacheControl,
         Metadata: {
           uploader,
@@ -137,6 +144,7 @@ export class ApiService {
     bucket: string,
     key: string,
     location: string,
+    storageClass: StorageClass,
     opts?: IUploadOptions
   ) {
     const uploader = this._auth.identity;
@@ -147,6 +155,7 @@ export class ApiService {
       location,
       opts,
       uploader,
+      storageClass,
     });
 
     if (!uploader) {
@@ -158,30 +167,75 @@ export class ApiService {
 
     const s3 = this._s3 ?? this.initS3();
 
-    const managed = s3.upload(
-      {
+    const data = await s3
+      .upload({
         Key: key,
         Bucket: bucket,
         Body: '',
         ContentType: '',
         CacheControl: opts?.cacheControl,
+        StorageClass: storageClass,
         Metadata: {
           uploader,
         },
         WebsiteRedirectLocation: location,
-      },
-      this._logger.debug.bind(null, 'upload complete?:')
-    );
-
-    if (opts?.cb) {
-      managed.on('httpUploadProgress', opts.cb);
-    }
-
-    const data = await managed.promise();
+      })
+      .promise();
 
     return {
       data,
       uploader,
     };
+  }
+
+  async modifyObject(
+    bucket: string,
+    file: IFileEntityHeaded,
+    params: IModifyParameters
+  ) {
+    const s3 = this._s3 ?? this.initS3();
+
+    const oldFileKey = file.key;
+
+    const response = await s3
+      .copyObject({
+        // required
+        Bucket: bucket,
+        CopySource: oldFileKey,
+        Key: params.key ?? file.key,
+        // optional parameters
+        StorageClass: params.storageClass,
+        CacheControl: params.cacheControl,
+      })
+      .promise();
+
+    const result = response.CopyObjectResult;
+
+    if (result?.ETag && file.eTag) {
+      this._logger.warn(
+        'eTag for modified file appeared to change',
+        file,
+        result
+      );
+    } else {
+      this._logger.debug('copied file', file, result);
+    }
+
+    file.eTag = result?.ETag ?? file.eTag;
+    file.lastModified =
+      result?.LastModified?.toISOString() ?? file.lastModified;
+    file.storageClass = params.storageClass ?? file.storageClass;
+    file.cacheControl = params.cacheControl ?? file.cacheControl;
+
+    if (params.key && params.key !== oldFileKey) {
+      // the key changed
+      file.key = params.key;
+
+      this._logger.debug('deleting old key');
+      await this.deleteObject(bucket, oldFileKey);
+      this._logger.debug('deleted old key successfully', oldFileKey);
+    }
+
+    return file;
   }
 }

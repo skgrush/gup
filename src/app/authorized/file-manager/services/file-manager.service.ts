@@ -9,6 +9,8 @@ import {
   IFileEntityListed,
   IFileEntityGot,
   IUrlFormValue,
+  MissingFieldValues,
+  IModifyParameters,
 } from '../interfaces/file-management';
 import { ApiService } from '../../services/api/api.service';
 import {
@@ -119,14 +121,6 @@ export class FileManagerService extends IFileManagerService {
     }
   }
 
-  private _handleError(exc: any): never {
-    // always store the error, but only rethrow unexpected non-AWSErrors.
-    this._lastError = exc;
-    this._logger.error('FileManagerService handled error', exc);
-    this._auth.checkForCredentialsError(exc);
-    throw exc;
-  }
-
   async refreshFileStore() {
     this.readyOrThrow();
     const { awsS3EndpointARN, awsS3Prefix } = this._env;
@@ -162,6 +156,7 @@ export class FileManagerService extends IFileManagerService {
         this._bucketName,
         key,
         file,
+        storageClass,
         {
           cb: progress,
           cacheControl,
@@ -208,6 +203,7 @@ export class FileManagerService extends IFileManagerService {
         this._bucketName,
         key,
         url,
+        storageClass,
         {
           cb: progress,
           cacheControl,
@@ -249,6 +245,25 @@ export class FileManagerService extends IFileManagerService {
         this._sortTheStore();
       }
     } catch (exc) {
+      this._handleError(exc);
+    }
+  }
+
+  async modifyFile(file: IFileEntity, changes: IModifyParameters) {
+    this.readyOrThrow();
+
+    try {
+      if (file.entityState !== EntityState.head) {
+        throw new Error(
+          `Modifying a file expects 'head' state, got '${file.entityState}'`
+        );
+      }
+
+      const res = await this._api.modifyObject(this._bucketName, file, changes);
+      this._sortTheStore();
+    } catch (exc) {
+      // even a partial success will still possibly require a re-sort.
+      this._sortTheStore();
       this._handleError(exc);
     }
   }
@@ -300,8 +315,8 @@ export class FileManagerService extends IFileManagerService {
     const storageClass = obj.StorageClass as StorageClass | undefined;
 
     const entity: IFileEntity = {
-      key: obj.Key ?? 'MISSING_KEY',
-      eTag: obj.ETag ?? 'MISSING_ETAG',
+      key: obj.Key ?? MissingFieldValues.key,
+      eTag: obj.ETag ?? MissingFieldValues.eTag,
       size: obj.Size ?? NaN,
       lastModified,
       entityState: EntityState.list,
@@ -342,5 +357,13 @@ export class FileManagerService extends IFileManagerService {
         redirectLocation,
       });
     }
+  }
+
+  private _handleError(exc: any): never {
+    // always store the error, but only rethrow unexpected non-AWSErrors.
+    this._lastError = exc;
+    this._logger.error('FileManagerService handled error', exc);
+    this._auth.checkForCredentialsError(exc);
+    throw exc;
   }
 }

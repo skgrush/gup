@@ -1,4 +1,4 @@
-import { Request } from 'aws-sdk/global';
+import { Request } from 'aws-sdk/lib/request';
 
 type NonFunction<T> = T extends () => void ? never : T;
 

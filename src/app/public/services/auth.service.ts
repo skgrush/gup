@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { config, CredentialProviderChain } from 'aws-sdk/global';
-import { Credentials } from 'aws-sdk/lib/core';
+import { config } from 'aws-sdk/global';
+import { Credentials, CredentialProviderChain } from 'aws-sdk/lib/core';
 import { provider } from 'aws-sdk/lib/credentials/credential_provider_chain';
 
 import { IMyCredentialsOptions } from '../interfaces/my-credentials-options';

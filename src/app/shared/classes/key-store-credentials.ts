@@ -1,5 +1,5 @@
 import { KeyStore } from './key-store';
-import { Credentials } from 'aws-sdk/lib/core';
+import { Credentials } from 'aws-sdk/global';
 
 export class NoKeyStoreCredsError extends Error {
   readonly name = 'NoKeyStoreCredsError';

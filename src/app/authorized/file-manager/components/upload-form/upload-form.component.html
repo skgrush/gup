@@ -1,5 +1,5 @@
 <dialog #uploadDialog [attr.open]="isOpen || null" aria-modal="true">
-  <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup">
+  <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup" class="flex-form">
     <label>
       Name:
       <input

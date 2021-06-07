@@ -2,6 +2,7 @@ import { Readyable } from 'src/app/shared/classes/readyable';
 import {
   IFileEntity,
   IFileFormValue,
+  IModifyParameters,
   IUrlFormValue,
 } from '../interfaces/file-management';
 import { Observable } from 'rxjs';
@@ -32,4 +33,5 @@ export abstract class IFileManagerService extends Readyable {
   abstract uploadFile(formValue: IFileFormValue): Promise<void>;
   abstract uploadUrl(formValue: IUrlFormValue): Promise<void>;
   abstract deleteFile(file: IFileEntity): Promise<void>;
+  abstract modifyFile(file: IFileEntity, changes: IModifyParameters): Promise<void>;
 }

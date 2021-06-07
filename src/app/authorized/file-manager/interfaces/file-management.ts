@@ -6,6 +6,11 @@ export enum EntityState {
   get,
 }
 
+export const MissingFieldValues = Object.freeze({
+  key: 'MISSING_KEY',
+  eTag: 'MISSING_ETAG',
+});
+
 export interface IFileEntityBase {
   entityState: EntityState;
 
@@ -58,4 +63,10 @@ export interface IFileFormValue extends IBaseFormValue {
 
 export interface IUrlFormValue extends IBaseFormValue {
   url: string;
+}
+
+export interface IModifyParameters {
+  key?: string;
+  storageClass?: StorageClass;
+  cacheControl?: string;
 }

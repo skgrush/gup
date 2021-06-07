@@ -42,6 +42,41 @@
         Permanently delete
       </button>
     </gup-tab-panel>
+    <gup-tab-panel tabName="Modify">
+      <form
+        (ngSubmit)="onSubmitModify($event)"
+        [formGroup]="formGroup"
+        class="flex-form"
+      >
+        <label>
+          Key:
+          <input type="text" name="key" formControlName="key" />
+        </label>
+        <label>
+          Storage:
+          <select name="storageClass" formControlName="storageClass">
+            <option
+              *ngFor="let storageClass of StorageClasses"
+              [value]="storageClass"
+            >
+              {{ storageClass }}
+            </option>
+          </select>
+        </label>
+        <label>
+          Cache-control:
+          <input
+            type="text"
+            name="cacheControl"
+            formControlName="cacheControl"
+          />
+        </label>
+
+        <button class="gup-modify-button" type="submit">
+          Modify
+        </button>
+      </form>
+    </gup-tab-panel>
   </gup-tabbed>
 
   <div style.text-align="right" *ngIf="!!file">
