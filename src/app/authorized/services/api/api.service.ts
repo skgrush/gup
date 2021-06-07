@@ -197,6 +197,8 @@ export class ApiService {
 
     const oldFileKey = file.key;
 
+    this._logger.info('Moving:', file.key, params);
+
     const response = await s3
       .copyObject({
         // required
@@ -206,6 +208,7 @@ export class ApiService {
         // optional parameters
         StorageClass: params.storageClass,
         CacheControl: params.cacheControl,
+        ContentType: file.contentType,
       })
       .promise();
 

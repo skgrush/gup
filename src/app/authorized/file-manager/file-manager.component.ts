@@ -11,6 +11,7 @@ import {
   IUrlFormValue,
   IFileEntityHeaded,
   IFileEntity,
+  IModifyParameters,
 } from './interfaces/file-management';
 import { LoggerService } from 'src/app/gup-common/services/logger/logger.service';
 
@@ -65,6 +66,12 @@ export class FileManagerComponent {
 
   selectFile(file?: IFileEntityHeaded) {
     this.selectedFile = file;
+  }
+
+  modifyFile([file, params]: [IFileEntity, IModifyParameters]) {
+    this.fileManager.modifyFile(file, params)
+      .then(() => this._logger.log('Successfully modified file!'))
+      .catch((reason) => this._logger.warn('Failure modifying', reason))
   }
 
   async deleteFile(file?: IFileEntity) {

@@ -62,6 +62,16 @@ export class FileDetailsComponent implements OnChanges {
   onSubmitModify(e: Event) {
     console.warn('MODIFY', e, this.file, this.formGroup);
 
+    const { key, storageClass, cacheControl } = this.formGroup.value;
+
+    if (this.file) {
+      this.modifyFile.emit([this.file, {
+        cacheControl,
+        key,
+        storageClass,
+      }]);
+    }
+
     e.preventDefault();
   }
 
